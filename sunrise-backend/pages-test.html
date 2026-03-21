@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pages API Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 24px;
+      background: #f5f7fb;
+      color: #1f2937;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: #ffffff;
+      border: 1px solid #dbe3f0;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+    }
+
+    h1, h2 {
+      margin-top: 0;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    input, textarea {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 10px 12px;
+      margin-bottom: 16px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    textarea {
+      min-height: 160px;
+      resize: vertical;
+    }
+
+    button {
+      background: #1d4ed8;
+      color: #ffffff;
+      border: 0;
+      border-radius: 8px;
+      padding: 10px 16px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    button:hover {
+      background: #1e40af;
+    }
+
+    code {
+      background: #e2e8f0;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    pre {
+      background: #0f172a;
+      color: #e2e8f0;
+      padding: 16px;
+      border-radius: 10px;
+      overflow: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Pages API Test</h1>
+    <p>Default API base URL: <code>http://localhost:8000</code></p>
+
+    <div class="card">
+      <h2>Fetch Page</h2>
+      <label for="baseUrl">API Base URL</label>
+      <input id="baseUrl" type="text" value="http://localhost:8000">
+
+      <label for="getSlug">Page Slug</label>
+      <input id="getSlug" type="text" value="about-school">
+
+      <button id="fetchPageButton" type="button">Fetch Page</button>
+    </div>
+
+    <div class="card">
+      <h2>Update Or Insert Page</h2>
+      <label for="slug">Slug</label>
+      <input id="slug" type="text" value="about-school">
+
+      <label for="title">Title</label>
+      <input id="title" type="text" value="About School">
+
+      <label for="content">Content</label>
+      <textarea id="content">Sunrise School builds strong values, academic excellence, and all-round development.</textarea>
+
+      <button id="savePageButton" type="button">Save Page</button>
+    </div>
+
+    <div class="card">
+      <h2>JSON Response</h2>
+      <pre id="responseOutput">Run a GET or POST request to see the JSON response here.</pre>
+    </div>
+  </div>
+
+  <script>
+    const baseUrlInput = document.getElementById('baseUrl');
+    const getSlugInput = document.getElementById('getSlug');
+    const slugInput = document.getElementById('slug');
+    const titleInput = document.getElementById('title');
+    const contentInput = document.getElementById('content');
+    const responseOutput = document.getElementById('responseOutput');
+
+    function showResponse(data) {
+      responseOutput.textContent = JSON.stringify(data, null, 2);
+    }
+
+    function buildUrl(path) {
+      return `${baseUrlInput.value.replace(/\/+$/, '')}${path}`;
+    }
+
+    async function fetchPage() {
+      const slug = getSlugInput.value.trim();
+
+      if (!slug) {
+        showResponse({ success: false, message: 'Please enter a slug.' });
+        return;
+      }
+
+      try {
+        const response = await fetch(buildUrl(`/api/pages/${encodeURIComponent(slug)}`), {
+          headers: {
+            Accept: 'application/json'
+          }
+        });
+
+        const data = await response.json();
+        showResponse(data);
+      } catch (error) {
+        showResponse({
+          success: false,
+          message: 'Request failed.',
+          error: error.message
+        });
+      }
+    }
+
+    async function savePage() {
+      const payload = {
+        slug: slugInput.value.trim(),
+        title: titleInput.value.trim(),
+        content: contentInput.value.trim()
+      };
+
+      try {
+        const response = await fetch(buildUrl('/api/pages/update'), {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+        showResponse(data);
+      } catch (error) {
+        showResponse({
+          success: false,
+          message: 'Request failed.',
+          error: error.message
+        });
+      }
+    }
+
+    document.getElementById('fetchPageButton').addEventListener('click', fetchPage);
+    document.getElementById('savePageButton').addEventListener('click', savePage);
+  </script>
+</body>
+</html>

@@ -1,7 +1,14 @@
+import { Route, Routes } from 'react-router-dom'
+import AdminLayout from './components/AdminLayout.jsx'
+import HomePage from './pages/HomePage.jsx'
+import './App.css'
+
 export default function App() {
   return (
-    <h1 className="text-3xl font-bold underline">
-      Hello world!
-    </h1>
+    <Routes>
+      <Route element={<AdminLayout />}>
+        <Route path="/" element={<HomePage />} />
+      </Route>
+    </Routes>
   )
-} 
+}
