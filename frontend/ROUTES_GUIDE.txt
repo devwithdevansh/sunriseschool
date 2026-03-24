@@ -1,0 +1,29 @@
+SUNRISE SCHOOL PUBLIC FRONTEND ROUTES
+=====================================
+
+This folder contains the public website frontend.
+
+Main route files:
+- src/main.jsx
+- src/App.jsx
+
+Shared layout:
+- src/components/SiteLayout.jsx
+
+Current routes:
+- /       -> src/pages/HomePage.jsx
+- /about  -> src/pages/AboutPage.jsx
+- *       -> src/pages/NotFoundPage.jsx
+
+API services:
+- src/services/api.js
+- src/services/pages.js
+
+API base:
+- axios uses /api
+- Vite proxy forwards /api to http://localhost/sunrise-backend
+
+Purpose:
+- frontend/ is the public-facing website
+- admin-frontend/ is the CMS
+- sunrise-backend/ is the PHP backend

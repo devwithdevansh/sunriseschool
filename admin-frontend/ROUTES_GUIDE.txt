@@ -1,0 +1,411 @@
+SUNRISE SCHOOL CMS FRONTEND ROUTES GUIDE
+========================================
+
+Project type:
+- React + Vite admin panel
+- React Router based frontend navigation
+- PHP backend is separate and already working
+
+
+1. MAIN ROUTING FILE
+--------------------
+
+Frontend route definitions are in:
+- src/App.jsx
+
+This file is the central route map for the admin panel.
+It connects URL paths to page components.
+
+Router setup entry point:
+- src/main.jsx
+
+This file wraps the app with:
+- BrowserRouter
+
+
+2. MAIN LAYOUT
+--------------
+
+Shared admin layout is in:
+- src/components/AdminLayout.jsx
+
+This component provides:
+- left sidebar
+- navigation links
+- main content area
+- common admin shell layout
+
+All page routes are rendered inside:
+- <Outlet />
+
+That means every page uses the same admin layout automatically.
+
+
+3. CURRENT FRONTEND ROUTES
+--------------------------
+
+Route: /
+Used for:
+- Admin dashboard home
+- About page preview
+- About page edit form
+
+Component:
+- src/pages/HomePage.jsx
+
+Visible in sidebar:
+- Yes
+
+Backend usage:
+- GET page data
+- POST page update
+
+Current API use:
+- GET /pages/about-school
+- POST /pages/update
+
+
+Route: /pages
+Used for:
+- Pages management section
+- Future page listing and page editor screens
+
+Component:
+- src/pages/PagesPage.jsx
+
+Visible in sidebar:
+- Yes
+
+Current status:
+- UI scaffold only
+
+
+Route: /staff
+Used for:
+- Staff directory admin section
+- Teacher and department management
+
+Component:
+- src/pages/StaffPage.jsx
+
+Visible in sidebar:
+- Yes
+
+Current status:
+- UI scaffold only
+
+
+Route: /media
+Used for:
+- Media library admin section
+- Images, videos, PDFs
+
+Component:
+- src/pages/MediaPage.jsx
+
+Visible in sidebar:
+- Yes
+
+Current status:
+- UI scaffold only
+
+
+Route: /activities
+Used for:
+- Activities management
+- Sports and co-curricular content
+
+Component:
+- src/pages/ActivitiesPage.jsx
+
+Visible in sidebar:
+- Yes
+
+Current status:
+- UI scaffold only
+
+
+Route: /results
+Used for:
+- Results management
+- Result files by class, stream, medium, year
+
+Component:
+- src/pages/ResultsPage.jsx
+
+Visible in sidebar:
+- Yes
+
+Current status:
+- UI scaffold only
+
+
+Route: /notices
+Used for:
+- Notices and announcements section
+
+Component:
+- src/pages/NoticesPage.jsx
+
+Visible in sidebar:
+- Yes
+
+Current status:
+- UI scaffold only
+
+
+Route: /alumni
+Used for:
+- Alumni stories and batch management
+
+Component:
+- src/pages/AlumniPage.jsx
+
+Visible in sidebar:
+- Yes
+
+Current status:
+- UI scaffold only
+
+
+Route: /exams
+Used for:
+- Exams section
+- Exam details, schedules, yearly data
+
+Component:
+- src/pages/ExamsPage.jsx
+
+Visible in sidebar:
+- Yes
+
+Current status:
+- UI scaffold only
+
+
+Route: /admin-users
+Used for:
+- Admin user management
+- CMS access and account management
+
+Component:
+- src/pages/AdminUsersPage.jsx
+
+Visible in sidebar:
+- Yes
+
+Current status:
+- UI scaffold only
+
+
+Route: *
+Used for:
+- Catch-all route for invalid frontend URLs
+- Shows custom 404 page
+
+Component:
+- src/pages/NotFoundPage.jsx
+
+Visible in sidebar:
+- No
+
+
+4. REUSABLE SECTION COMPONENT
+-----------------------------
+
+Reusable page scaffold:
+- src/components/SectionPage.jsx
+
+This component is used by:
+- PagesPage.jsx
+- StaffPage.jsx
+- MediaPage.jsx
+- ActivitiesPage.jsx
+- ResultsPage.jsx
+- NoticesPage.jsx
+- AlumniPage.jsx
+- ExamsPage.jsx
+- AdminUsersPage.jsx
+
+Purpose:
+- Keep placeholder admin module pages consistent
+- Reuse common title, description, status, and planned actions layout
+
+
+5. FRONTEND SERVICES
+--------------------
+
+API service files are in:
+- src/services/
+
+Current files:
+- src/services/api.js
+- src/services/pages.js
+
+src/services/api.js
+Purpose:
+- Creates shared axios instance
+- Uses Vite environment variable:
+  VITE_API_BASE_URL
+
+Current .env:
+- frontend/.env
+
+Current backend base URL:
+- http://localhost/sunrise-backend/api
+
+
+src/services/pages.js
+Purpose:
+- Handles page-related API calls
+
+Current functions:
+- getPage(slug)
+- updatePage(payload)
+
+Used in:
+- src/pages/HomePage.jsx
+
+
+6. CURRENT LIVE FEATURE
+-----------------------
+
+The only module currently connected to real backend data is:
+- HomePage.jsx
+
+What it does:
+- fetches the About page using slug: about-school
+- displays page preview
+- allows editing title and content
+- saves updates back to backend
+
+This is the current real working CRUD integration in the frontend.
+
+
+7. SIDEBAR NAVIGATION
+---------------------
+
+Sidebar links are defined in:
+- src/components/AdminLayout.jsx
+
+If you want to:
+- add a new frontend route
+- show it in navigation
+
+You usually need to update:
+1. src/App.jsx
+2. src/components/AdminLayout.jsx
+3. create a page under src/pages/
+
+
+8. HOW ROUTES ARE USED IN THE FRONTEND
+--------------------------------------
+
+Home dashboard:
+- landing page for admin
+- shows quick summary and About page editor
+
+Pages route:
+- should later show full page list or page editor modules
+
+Staff route:
+- should later manage staff table records
+
+Media route:
+- should later manage uploads and file listing
+
+Activities route:
+- should later manage sports and co-curricular data
+
+Results route:
+- should later manage result documents
+
+Notices route:
+- should later manage announcements and notice files
+
+Alumni route:
+- should later manage alumni stories
+
+Exams route:
+- should later manage exams data
+
+Admin users route:
+- should later manage admin accounts and access controls
+
+
+9. FILE STRUCTURE REFERENCE
+---------------------------
+
+frontend/
+  .env
+  src/
+    App.jsx
+    main.jsx
+    App.css
+    index.css
+    components/
+      AdminLayout.jsx
+      SectionPage.jsx
+    pages/
+      HomePage.jsx
+      PagesPage.jsx
+      StaffPage.jsx
+      MediaPage.jsx
+      ActivitiesPage.jsx
+      ResultsPage.jsx
+      NoticesPage.jsx
+      AlumniPage.jsx
+      ExamsPage.jsx
+      AdminUsersPage.jsx
+      NotFoundPage.jsx
+    services/
+      api.js
+      pages.js
+
+
+10. HOW TO VIEW THE ADMIN PANEL
+-------------------------------
+
+Commands:
+- cd frontend
+- npm run dev
+
+Then open the Vite URL shown in terminal.
+Usually:
+- http://localhost:5173/
+
+
+11. WHAT IS DONE VS NOT DONE
+----------------------------
+
+Done:
+- React Router setup
+- Admin layout
+- Sidebar navigation
+- Route scaffolding for all main CMS sections
+- 404 route
+- About page fetch and update integration
+
+Not done yet:
+- Full CRUD forms for staff
+- Full CRUD forms for media
+- Full CRUD forms for activities
+- Full CRUD forms for results
+- Full CRUD forms for notices
+- Full CRUD forms for alumni
+- Full CRUD forms for exams
+- Admin user management UI
+- Table views, filters, search, pagination
+
+
+12. BEST PLACE TO CONTINUE NEXT
+-------------------------------
+
+Recommended next steps:
+1. Build full Pages management route
+2. Add Staff CRUD UI
+3. Add Media upload UI
+4. Add Notices management
+5. Add Results management
+
+This file is meant to be a simple route and structure reference for the frontend admin panel.

@@ -41,7 +41,6 @@ function normalizeRequestPath(string $requestUri): string
         return '/';
     }
 
-    // REMOVE project folder from path
     $basePath = '/sunrise-backend';
     if (str_starts_with($path, $basePath)) {
         $path = substr($path, strlen($basePath));
@@ -67,8 +66,24 @@ function routeRequest(): void
     $normalizedPath = normalizeRequestPath($requestUri);
 
     try {
+        if ($normalizedPath === '/api/pages') {
+            if ($method !== 'GET') {
+                sendMethodNotAllowed(['GET']);
+            }
 
-        // ✅ FIRST: handle specific route (IMPORTANT FIX)
+            require __DIR__ . '/../modules/pages/getAllPages.php';
+            return;
+        }
+
+        if ($normalizedPath === '/api/pages/create') {
+            if ($method !== 'POST') {
+                sendMethodNotAllowed(['POST']);
+            }
+
+            require __DIR__ . '/../modules/pages/createPage.php';
+            return;
+        }
+
         if ($normalizedPath === '/api/pages/update') {
             if ($method !== 'POST') {
                 sendMethodNotAllowed(['POST']);
@@ -78,25 +93,28 @@ function routeRequest(): void
             return;
         }
 
-        // ✅ THEN: dynamic slug route
         $pageSlugPattern = '#^/api/pages/(?P<slug>[A-Za-z0-9_-]+)$#';
 
         if (preg_match($pageSlugPattern, $normalizedPath, $matches) === 1) {
-            if ($method !== 'GET') {
-                sendMethodNotAllowed(['GET']);
+            if (!in_array($method, ['GET', 'DELETE'], true)) {
+                sendMethodNotAllowed(['GET', 'DELETE']);
             }
 
             $_GET['slug'] = $matches['slug'];
-            require __DIR__ . '/../modules/pages/getPage.php';
+
+            if ($method === 'GET') {
+                require __DIR__ . '/../modules/pages/getPage.php';
+                return;
+            }
+
+            require __DIR__ . '/../modules/pages/deletePage.php';
             return;
         }
 
-        // ❌ fallback
         sendJsonResponse(404, [
             'success' => false,
             'message' => 'Route not found.',
         ]);
-
     } catch (Throwable $exception) {
         sendJsonResponse(500, [
             'success' => false,
