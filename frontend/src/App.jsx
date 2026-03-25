@@ -7,6 +7,9 @@ import ActivitiesPage from './pages/ActivitiesPage.jsx'
 import ResultsPage from './pages/ResultsPage.jsx'
 import GalleryPage from './pages/GalleryPage.jsx'
 import ContactPage from './pages/ContactPage.jsx'
+import KGPage from './pages/KGPage.jsx'
+import PrimaryPage from './pages/PrimaryPage.jsx'
+import HigherSecondaryPage from './pages/HigherSecondaryPage.jsx'
 
 export default function App() {
   return (
@@ -15,6 +18,9 @@ export default function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/academics" element={<AcademicsPage />} />
+        <Route path="/academics/kg" element={<KGPage />} />
+        <Route path="/academics/primary" element={<PrimaryPage />} />
+        <Route path="/academics/higher-secondary" element={<HigherSecondaryPage />} />
         <Route path="/activities" element={<ActivitiesPage />} />
         <Route path="/results" element={<ResultsPage />} />
         <Route path="/gallery" element={<GalleryPage />} />

@@ -59,7 +59,7 @@ const MENU_ITEMS = [
 const NavItem = ({ item, scrolled }) => {
   const [isHovered, setIsHovered] = useState(false);
   const location = useLocation();
-  const isActive = location.pathname === item.path || (item.dropdown && item.dropdown.some(d => location.pathname === d.path));
+  const isActive = item.path !== '#' && (location.pathname === item.path || (item.dropdown && !item.isMore && item.dropdown.some(d => location.pathname === d.path)));
 
   return (
     <div 
@@ -67,26 +67,34 @@ const NavItem = ({ item, scrolled }) => {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <Link
-        to={item.path}
-        className={`flex items-center space-x-1 text-[11px] font-black uppercase tracking-[0.2em] transition-all duration-300 py-4 ${
-          isActive ? 'text-gray-900' : 'text-gray-400 hover:text-gray-900'
-        }`}
-      >
-        <span>{item.name}</span>
-        {item.dropdown && (
-          <ChevronDown 
-            size={12} 
-            className={`transition-transform duration-300 ${isHovered ? 'rotate-180' : ''}`} 
-          />
-        )}
-      </Link>
+      {item.isMore ? (
+        <button
+          className={`flex items-center space-x-1 text-[11px] font-black uppercase tracking-[0.2em] transition-all duration-300 py-4 text-gray-400 hover:text-gray-900`}
+        >
+          <span className="text-xl tracking-normal leading-none -mt-2">{item.name}</span>
+        </button>
+      ) : (
+        <Link
+          to={item.path}
+          className={`flex items-center space-x-1 text-[11px] font-black uppercase tracking-[0.2em] transition-all duration-300 py-4 ${
+            isActive ? 'text-gray-900' : 'text-gray-400 hover:text-gray-900'
+          }`}
+        >
+          <span>{item.name}</span>
+          {item.dropdown && (
+            <ChevronDown 
+              size={12} 
+              className={`transition-transform duration-300 ${isHovered ? 'rotate-180' : ''}`} 
+            />
+          )}
+        </Link>
+      )}
 
       {/* Underline for active/hover - only for main items without dropdown or for active parent */}
       <motion.div
         className="absolute bottom-0 left-0 h-[2px] bg-gray-900"
         initial={{ width: 0 }}
-        animate={{ width: (isHovered || isActive) && !item.dropdown ? '100%' : '0' }}
+        animate={{ width: (isHovered || isActive) && (!item.dropdown || item.isMore) ? '100%' : '0' }}
         transition={{ duration: 0.3 }}
       />
 
@@ -97,17 +105,45 @@ const NavItem = ({ item, scrolled }) => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10 }}
-            className="absolute top-full left-0 w-64 bg-white shadow-2xl border border-gray-100 py-4 z-50 rounded-b-xl overflow-hidden"
+            className={`absolute top-full ${item.isMore ? 'right-0 w-72' : 'left-0 w-64'} bg-white shadow-2xl border border-gray-100 py-4 z-50 rounded-b-xl overflow-hidden`}
           >
-            {item.dropdown.map((sub, idx) => (
-              <Link
-                key={idx}
-                to={sub.path}
-                className="block px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-gray-500 hover:text-gray-900 hover:bg-gray-50 transition-colors"
-              >
-                {sub.name}
-              </Link>
-            ))}
+            {item.isMore ? (
+              <div className="flex flex-col max-h-[70vh] overflow-y-auto">
+                {item.dropdown.map((hiddenItem, idx) => (
+                  <div key={idx} className="border-b border-gray-50 last:border-0 pb-2 mb-2 last:mb-0 last:pb-0 px-6">
+                    <Link
+                      to={hiddenItem.path}
+                      className="block py-2 text-[11px] font-black uppercase tracking-widest text-gray-900 hover:text-orange-500 transition-colors"
+                    >
+                      {hiddenItem.name}
+                    </Link>
+                    {hiddenItem.dropdown && (
+                      <div className="pl-4 flex flex-col space-y-1">
+                        {hiddenItem.dropdown.map((sub, sIdx) => (
+                          <Link
+                            key={sIdx}
+                            to={sub.path}
+                            className="block py-1 text-[10px] font-bold uppercase tracking-widest text-gray-500 hover:text-gray-900 transition-colors"
+                          >
+                            {sub.name}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              item.dropdown.map((sub, idx) => (
+                <Link
+                  key={idx}
+                  to={sub.path}
+                  className="block px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-gray-500 hover:text-gray-900 hover:bg-gray-50 transition-colors"
+                >
+                  {sub.name}
+                </Link>
+              ))
+            )}
           </motion.div>
         )}
       </AnimatePresence>
@@ -119,6 +155,7 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeMobileDropdown, setActiveMobileDropdown] = useState(null);
+  const [visibleCount, setVisibleCount] = useState(MENU_ITEMS.length);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -127,6 +164,40 @@ const Navbar = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth;
+      if (width < 1024) {
+        setVisibleCount(MENU_ITEMS.length);
+      } else if (width < 1150) {
+        setVisibleCount(4);
+      } else if (width < 1250) {
+        setVisibleCount(6);
+      } else if (width < 1350) {
+        setVisibleCount(8);
+      } else {
+        setVisibleCount(MENU_ITEMS.length);
+      }
+    };
+
+    handleResize(); // Init based on current width
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const visibleItems = MENU_ITEMS.slice(0, visibleCount);
+  const hiddenItems = MENU_ITEMS.slice(visibleCount);
+  const desktopItems = [...visibleItems];
+  
+  if (hiddenItems.length > 0) {
+    desktopItems.push({
+      name: '...',
+      path: '#',
+      isMore: true,
+      dropdown: hiddenItems
+    });
+  }
 
   return (
     <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-700 ${
@@ -143,11 +214,11 @@ const Navbar = () => {
         </Link>
 
         {/* Desktop Nav */}
-        <div className="hidden lg:flex items-center space-x-8 h-full">
-          {MENU_ITEMS.map((item, idx) => (
+        <div className="hidden lg:flex items-center space-x-5 xl:space-x-8 h-full">
+          {desktopItems.map((item, idx) => (
             <NavItem key={idx} item={item} scrolled={scrolled} />
           ))}
-          <button className="btn-premium !py-3 !px-8 !text-[10px] uppercase tracking-[0.2em]">
+          <button className="btn-premium flex-shrink-0 !py-3 !px-8 !text-[10px] uppercase tracking-[0.2em]">
             Portal
           </button>
         </div>
