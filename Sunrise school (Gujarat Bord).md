@@ -81,45 +81,45 @@ https://uiverse.io/janisar-hyder/dull-lionfish-98
 ------------------------------------------------------------------------------------
 Home -DG
 
-About School-
+About School- DG
 
-Management team-
+Management team- DG
 
-Trustee mess-
+Trustee mess- DG
 
-Inquire-
+Inquire- DG
 
-Kg-
+Kg- Dev
 
-Sec-
+Sec- Dev
 
-High-
+High- Dev
 
-Cocurricular-
+Cocurricular- DG
 
-Compitive Exam-
+Compitive Exam-DG
 
-Sports-
+Sports- DG
 
-10 Em-
+10 Em- Dev
 
-10 Gm-
+10 Gm- Dev
 
-12 Comm-
+12 Comm- Dev
 
-Transportation-
+Transportation- DG
 
-Stationary-
+Stationary- DG
 
-Gallery-
+Gallery- Dev
 
-Alumni-
+Alumni- Dev
 
-Notice-
+Notice-DG
 
-Contact-
+Contact-DG
 
-Brochure btn-
+Brochure btn- Dev
 
 Header- DG
 
