@@ -68,9 +68,60 @@ Colour scheme - Orange , grey, white \& blue (According to Logo)
 15,000 rs paid - 9/3/2026
 
 
+
 7657.02 rs used in domain
 
 
 
 \-----------------------------------------------------------------------------------
+
+ui elements to fit in website:
+https://uiverse.io/janisar-hyder/dull-lionfish-98
+
+------------------------------------------------------------------------------------
+Home -DG
+
+About School-
+
+Management team-
+
+Trustee mess-
+
+Inquire-
+
+Kg-
+
+Sec-
+
+High-
+
+Cocurricular-
+
+Compitive Exam-
+
+Sports-
+
+10 Em-
+
+10 Gm-
+
+12 Comm-
+
+Transportation-
+
+Stationary-
+
+Gallery-
+
+Alumni-
+
+Notice-
+
+Contact-
+
+Brochure btn-
+
+Header- DG
+
+Footer- DG
 
