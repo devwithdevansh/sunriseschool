@@ -8,7 +8,7 @@ import HomePage from './pages/HomePage.jsx'
 import MediaPage from './pages/MediaPage.jsx'
 import NotFoundPage from './pages/NotFoundPage.jsx'
 import NoticesPage from './pages/NoticesPage.jsx'
-import PagesPage from './pages/PagesPage.jsx'
+import PagesManager from './pages/PagesManager.jsx'
 import ResultsPage from './pages/ResultsPage.jsx'
 import StaffPage from './pages/StaffPage.jsx'
 import './App.css'
@@ -18,7 +18,7 @@ export default function App() {
     <Routes>
       <Route element={<AdminLayout />}>
         <Route path="/" element={<HomePage />} />
-        <Route path="/pages" element={<PagesPage />} />
+        <Route path="/pages" element={<PagesManager />} />
         <Route path="/staff" element={<StaffPage />} />
         <Route path="/media" element={<MediaPage />} />
         <Route path="/activities" element={<ActivitiesPage />} />

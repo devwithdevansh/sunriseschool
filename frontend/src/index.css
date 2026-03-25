@@ -3,34 +3,24 @@
 @tailwind utilities;
 
 :root {
-  font-family: "Segoe UI", "Helvetica Neue", sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-  color: #10203a;
-  background: #f8fafc;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-html,
-body,
-#root {
-  margin: 0;
-  min-height: 100%;
+  --brand-primary: #111827; /* Near black */
+  --brand-secondary: #4b5563; /* Gray */
 }
 
 body {
-  min-width: 320px;
+  @apply bg-white text-gray-900;
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
 }
 
-button,
-input,
-textarea {
-  font: inherit;
+.btn-premium {
+  @apply bg-gray-900 text-white px-8 py-3 rounded-full font-bold transition-all duration-300 hover:bg-gray-700 hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl;
+}
+
+.btn-outline {
+  @apply border-2 border-gray-900 text-gray-900 px-8 py-3 rounded-full font-bold transition-all duration-300 hover:bg-gray-900 hover:text-white active:scale-95;
+}
+
+.nav-link-hover {
+  @apply relative py-2 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-gray-900 after:transition-all after:duration-300 hover:after:w-full;
 }

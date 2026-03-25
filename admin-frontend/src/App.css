@@ -238,6 +238,7 @@
 .form-actions {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 16px;
   margin-top: 18px;
 }
@@ -254,6 +255,31 @@
 }
 
 .primary-button:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.secondary-button,
+.danger-button {
+  border: 1px solid #d5e1ef;
+  border-radius: 999px;
+  background: #ffffff;
+  padding: 10px 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.secondary-button {
+  color: #24415f;
+}
+
+.danger-button {
+  color: #b42318;
+  border-color: #f2c7c2;
+}
+
+.secondary-button:disabled,
+.danger-button:disabled {
   opacity: 0.7;
   cursor: wait;
 }
@@ -280,6 +306,36 @@
 
 .inline-link:hover {
   text-decoration: underline;
+}
+
+.table-wrap {
+  overflow-x: auto;
+  margin-top: 16px;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.data-table th,
+.data-table td {
+  text-align: left;
+  padding: 14px 12px;
+  border-bottom: 1px solid #e6edf6;
+  vertical-align: top;
+}
+
+.data-table th {
+  color: #24415f;
+  font-size: 0.9rem;
+  letter-spacing: 0.03em;
+}
+
+.table-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 @media (max-width: 960px) {
