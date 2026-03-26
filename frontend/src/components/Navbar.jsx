@@ -128,14 +128,26 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Mobile Drawer Effect: Lock Body Scroll
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
+
   return (
-    <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-700 ${
+    <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
       scrolled 
-        ? 'bg-white/95 backdrop-blur-md shadow-lg py-2' 
+        ? 'bg-white/95 backdrop-blur-md shadow-md py-3' 
         : 'bg-white py-5'
     }`}>
-      <div className="w-full px-6 md:px-12 flex justify-between items-center h-full">
-        <Link to="/" className="flex items-center">
+      <div className="max-w-screen-xl mx-auto px-4 flex justify-between items-center h-full">
+        <Link to="/" className="flex items-center shrink-0" onClick={() => setIsOpen(false)}>
           <span className="text-2xl font-black tracking-tighter text-gray-900 leading-none">
             SUNRISE<br />
             <span className="text-[10px] tracking-[0.5em] text-gray-400 font-bold uppercase">School</span>
@@ -143,82 +155,115 @@ const Navbar = () => {
         </Link>
 
         {/* Desktop Nav */}
-        <div className="hidden lg:flex items-center space-x-8 h-full">
+        <div className="hidden lg:flex items-center space-x-1 xl:space-x-4 h-full">
           {MENU_ITEMS.map((item, idx) => (
             <NavItem key={idx} item={item} scrolled={scrolled} />
           ))}
-          <button className="btn-premium !py-3 !px-8 !text-[10px] uppercase tracking-[0.2em]">
-            Portal
-          </button>
+          <div className="pl-4">
+            <button className="btn-premium !py-2.5 !px-6 !text-[11px] uppercase tracking-widest">
+              Portal
+            </button>
+          </div>
         </div>
 
-        {/* Mobile Menu Button */}
-        <button className="lg:hidden text-gray-900 focus:outline-none" onClick={() => setIsOpen(!isOpen)}>
-          {isOpen ? <X size={28} /> : <Menu size={28} />}
+        {/* Mobile Menu Button - Hamburger */}
+        <button 
+          className="lg:hidden p-2 text-gray-900 focus:outline-none transition-transform active:scale-90" 
+          onClick={() => setIsOpen(true)}
+        >
+          <Menu size={24} />
         </button>
       </div>
 
-      {/* Mobile Nav Overlay */}
+      {/* Mobile Nav Side Drawer */}
       <AnimatePresence>
         {isOpen && (
-          <motion.div
-            initial={{ x: '100%' }}
-            animate={{ x: 0 }}
-            exit={{ x: '100%' }}
-            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="md:hidden fixed inset-0 bg-white z-40 overflow-y-auto pt-24 px-6 pb-20"
-          >
-            <div className="flex flex-col space-y-2">
-              {MENU_ITEMS.map((item, idx) => (
-                <div key={idx} className="border-b border-gray-50 pb-2">
-                  <div className="flex justify-between items-center py-4">
-                    <Link
-                      to={item.path}
-                      className="text-2xl font-black uppercase tracking-tighter text-gray-900"
-                      onClick={() => !item.dropdown && setIsOpen(false)}
-                    >
-                      {item.name}
-                    </Link>
-                    {item.dropdown && (
-                      <button 
-                        onClick={() => setActiveMobileDropdown(activeMobileDropdown === idx ? null : idx)}
-                        className="p-2 bg-gray-50 rounded-full"
+          <>
+            {/* Overlay */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsOpen(false)}
+              className="fixed inset-0 bg-black/40 z-[60] backdrop-blur-sm lg:hidden"
+            />
+            
+            {/* Drawer */}
+            <motion.div
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              className="fixed top-0 right-0 w-[80%] max-w-sm h-full bg-white z-[70] shadow-2xl overflow-y-auto lg:hidden flex flex-col"
+            >
+              {/* Drawer Header */}
+              <div className="flex justify-between items-center p-6 border-b border-gray-50">
+                <span className="text-xl font-black tracking-tighter text-gray-900 uppercase">Menu</span>
+                <button 
+                  onClick={() => setIsOpen(false)}
+                  className="p-2 text-gray-400 hover:text-gray-900 transition-colors"
+                >
+                  <X size={24} />
+                </button>
+              </div>
+
+              {/* Drawer Links */}
+              <div className="flex flex-col p-6 space-y-1">
+                {MENU_ITEMS.map((item, idx) => (
+                  <div key={idx} className="flex flex-col">
+                    <div className="flex justify-between items-center py-2">
+                      <Link
+                        to={item.path}
+                        className="flex-grow py-3 text-lg font-black uppercase tracking-tight text-gray-900"
+                        onClick={() => !item.dropdown && setIsOpen(false)}
                       >
-                        <ChevronDown 
-                          size={20} 
-                          className={`transition-transform duration-300 ${activeMobileDropdown === idx ? 'rotate-180' : ''}`} 
-                        />
-                      </button>
+                        {item.name}
+                      </Link>
+                      {item.dropdown && (
+                        <button 
+                          onClick={() => setActiveMobileDropdown(activeMobileDropdown === idx ? null : idx)}
+                          className="p-3 text-gray-400 hover:text-gray-900 transition-colors bg-gray-50 rounded-lg"
+                        >
+                          <ChevronDown 
+                            size={18} 
+                            className={`transition-transform duration-300 ${activeMobileDropdown === idx ? 'rotate-180' : ''}`} 
+                          />
+                        </button>
+                      )}
+                    </div>
+                    
+                    {item.dropdown && (activeMobileDropdown === idx) && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        className="overflow-hidden bg-gray-50/50 rounded-xl mb-2 ml-2"
+                      >
+                        <div className="py-2 flex flex-col border-l-2 border-gray-100 ml-2">
+                          {item.dropdown.map((sub, sIdx) => (
+                            <Link
+                              key={sIdx}
+                              to={sub.path}
+                              className="px-6 py-3 text-[11px] font-bold uppercase tracking-widest text-gray-500 hover:text-gray-900"
+                              onClick={() => setIsOpen(false)}
+                            >
+                              {sub.name}
+                            </Link>
+                          ))}
+                        </div>
+                      </motion.div>
                     )}
                   </div>
-                  
-                  {item.dropdown && (
-                    <motion.div
-                      initial={false}
-                      animate={{ height: activeMobileDropdown === idx ? 'auto' : 0, opacity: activeMobileDropdown === idx ? 1 : 0 }}
-                      className="overflow-hidden bg-gray-50 rounded-2xl"
-                    >
-                      <div className="py-2 px-6 flex flex-col space-y-4">
-                        {item.dropdown.map((sub, sIdx) => (
-                          <Link
-                            key={sIdx}
-                            to={sub.path}
-                            className="text-sm font-bold uppercase tracking-widest text-gray-500 py-2 border-b border-gray-100 last:border-0"
-                            onClick={() => setIsOpen(false)}
-                          >
-                            {sub.name}
-                          </Link>
-                        ))}
-                      </div>
-                    </motion.div>
-                  )}
+                ))}
+                
+                <div className="pt-10 pb-6">
+                  <button className="btn-premium w-full py-5 text-sm font-bold uppercase tracking-widest shadow-xl">
+                    Portal Login
+                  </button>
                 </div>
-              ))}
-              <div className="pt-10">
-                <button className="btn-premium w-full py-6 text-sm uppercase tracking-[0.3em]">Portal Login</button>
               </div>
-            </div>
-          </motion.div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
     </nav>
