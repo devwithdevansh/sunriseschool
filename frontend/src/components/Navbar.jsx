@@ -75,7 +75,7 @@ const NavItem = ({ item, scrolled }) => {
         </button>
       ) : (
         <Link
-          to={item.path}
+          to={item.dropdown && item.dropdown.length > 0 ? item.dropdown[0].path : item.path}
           className={`flex items-center space-x-1 text-[11px] font-black uppercase tracking-[0.2em] transition-all duration-300 py-4 ${isActive ? 'text-gray-900' : 'text-gray-400 hover:text-gray-900'
             }`}
         >
@@ -287,7 +287,7 @@ const Navbar = () => {
                   <div key={idx} className="flex flex-col">
                     <div className="flex justify-between items-center py-2">
                       <Link
-                        to={item.path}
+                        to={item.dropdown && item.dropdown.length > 0 ? item.dropdown[0].path : item.path}
                         className="flex-grow py-3 text-lg font-black uppercase tracking-tight text-gray-900"
                         onClick={() => !item.dropdown && setIsOpen(false)}
                       >

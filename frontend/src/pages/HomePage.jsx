@@ -1,6 +1,7 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { ChevronRight } from 'lucide-react';
+import heroRevealImg from '../assets/hero-reveal.png';
 import AcademicsSection from '../components/AcademicsSection.jsx';
 import TeachersSection from '../components/TeachersSection.jsx';
 import AboutVisionSection from '../components/AboutVisionSection.jsx';
@@ -10,10 +11,85 @@ import ExamsSection from '../components/ExamsSection.jsx';
 import AdmissionCTA from '../components/AdmissionCTA.jsx';
 
 const HomePage = () => {
+  const [isMobile, setIsMobile] = useState(false);
+  const containerRef = useRef(null);
+
+  // Mouse tracking
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  // Refined Spring - smoother but more responsive
+  const springX = useSpring(mouseX, { stiffness: 120, damping: 25 });
+  const springY = useSpring(mouseY, { stiffness: 120, damping: 25 });
+
+  // High-Fidelity Mask - 3-stage feathering per user request
+  const maskImage = useTransform(
+    [springX, springY],
+    ([x, y]) => `radial-gradient(circle at ${x}px ${y}px, black 200px, rgba(0,0,0,0.6) 260px, transparent 360px)`
+  );
+
+  // Subtle Ambient Glow - Adds premium lighting depth
+  const glowImage = useTransform(
+    [springX, springY],
+    ([x, y]) => `radial-gradient(circle at ${x}px ${y}px, rgba(255,255,255,0.1) 0%, transparent 400px)`
+  );
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  const handleMouseMove = (e) => {
+    if (!containerRef.current || isMobile) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    mouseX.set(e.clientX - rect.left);
+    mouseY.set(e.clientY - rect.top);
+  };
+
   return (
     <div className="w-full">
       {/* Hero Section */}
-      <section className="relative min-h-screen w-full flex items-center justify-center bg-white overflow-hidden pb-10">
+      <section 
+        ref={containerRef}
+        onMouseMove={handleMouseMove}
+        className="relative min-h-[90vh] md:min-h-screen w-full flex items-center justify-center bg-white overflow-hidden pb-10"
+      >
+        {/* Ambient Glow Layer (Behind) */}
+        {!isMobile && (
+          <motion.div
+            className="absolute inset-0 z-0 pointer-events-none"
+            style={{
+              background: glowImage,
+            }}
+          />
+        )}
+
+        {/* Enhanced Reveal Image Layer */}
+        {!isMobile && (
+          <motion.div
+            className="absolute inset-0 z-0 pointer-events-none opacity-65"
+            style={{
+              backgroundImage: `url(${heroRevealImg})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              WebkitMaskImage: maskImage,
+              maskImage: maskImage,
+            }}
+          />
+        )}
+        
+        {/* Static Background Image (Mobile Only) */}
+        {isMobile && (
+          <div 
+            className="absolute inset-0 z-0 opacity-10 bg-cover bg-center"
+            style={{ backgroundImage: `url(${heroRevealImg})` }}
+          />
+        )}
+
         {/* Subtle Background Pattern */}
         <div className="absolute inset-0 opacity-[0.02] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/clean-gray-paper.png')]"></div>
         
