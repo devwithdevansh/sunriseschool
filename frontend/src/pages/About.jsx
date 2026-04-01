@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Target, Lightbulb, BookOpen, Globe, ArrowRight, MessageCircle, Info } from 'lucide-react';
+import { Target, Lightbulb, BookOpen, Globe, ArrowRight, MessageCircle, Info, Users, GraduationCap, Languages, Shield, Zap, Trophy, Heart, Award, Sparkles, Binary, ShieldCheck, TrendingUp, MapPin, Phone, Mail, Camera } from 'lucide-react';
 
 const About = () => {
   const containerVariants = {
@@ -51,6 +51,22 @@ const About = () => {
         </div>
       </section>
 
+      {/* 1.1 FULL-WIDTH IMAGE SECTION */}
+      <motion.section 
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 1 }}
+        className="w-full h-[400px] md:h-[500px] relative overflow-hidden"
+      >
+        <img 
+          src="https://images.unsplash.com/photo-1541339907198-e08756ebafe3?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" 
+          alt="School Campus" 
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-black/20"></div>
+      </motion.section>
+
       {/* 2. INTRODUCTION */}
       <section className="py-20 md:py-32 bg-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -70,48 +86,221 @@ const About = () => {
         </div>
       </section>
 
-      {/* 3. HISTORY */}
-      <section className="py-20 md:py-32 bg-neutral-50">
+      {/* 2.1 WHY CHOOSE US */}
+      <section className="py-20 md:py-32 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <motion.h2 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-4xl md:text-5xl font-black mb-4 uppercase tracking-tighter"
+            >
+              Why Choose <span className="text-neutral-500">Sunrise School</span>
+            </motion.h2>
+            <motion.p 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="text-lg text-neutral-500 max-w-2xl mx-auto font-medium"
+            >
+              Building strong foundations for academic and personal growth
+            </motion.p>
+          </div>
+
+          <motion.div 
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          >
+            {[
+              { icon: Users, title: "Experienced Teachers", desc: "Our faculty brings years of expertise and dedication to student success." },
+              { icon: Languages, title: "English & Gujarati Medium", desc: "Offering dual medium choices to cater to diverse educational needs." },
+              { icon: Shield, title: "Discipline & Values", desc: "Instilling core ethical values and maintaining a disciplined environment." },
+              { icon: Trophy, title: "Competitive Exams", desc: "Special focus on preparing students for various competitive milestones." },
+              { icon: Zap, title: "Holistic Development", desc: "Focusing on physical, mental, and emotional growth of every child." },
+              { icon: Award, title: "Sports & Activities", desc: "Wide range of extracurricular activities for all-round excellence." }
+            ].map((item, index) => (
+              <motion.div
+                key={index}
+                variants={itemVariants}
+                whileHover={{ scale: 1.05 }}
+                className="p-8 rounded-xl bg-white border border-neutral-100 shadow-md hover:shadow-lg transition-all duration-300 group"
+              >
+                <div className="w-12 h-12 rounded-lg bg-neutral-900 text-white flex items-center justify-center mb-6 group-hover:bg-neutral-800 transition-colors">
+                  <item.icon className="w-6 h-6" />
+                </div>
+                <h3 className="text-xl font-bold mb-3 uppercase tracking-tight">{item.title}</h3>
+                <p className="text-neutral-500 leading-relaxed">{item.desc}</p>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* 2.2 OUR CORE VALUES */}
+      <section className="py-20 md:py-32 bg-neutral-50 px-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <motion.h2 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-4xl md:text-5xl font-black mb-4 uppercase tracking-tighter"
+            >
+              Our Core <span className="text-neutral-500">Values</span>
+            </motion.h2>
+          </div>
+
+          <motion.div 
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
+          >
+            {[
+              { icon: Shield, title: "Discipline", desc: "Foundation of every successful student's journey." },
+              { icon: ShieldCheck, title: "Integrity", desc: "Strong moral principles and honesty in all actions." },
+              { icon: Award, title: "Excellence", desc: "Striving for the highest standards in academics and beyond." },
+              { icon: TrendingUp, title: "Growth", desc: "Continuous improvement and holistic development." }
+            ].map((value, index) => (
+              <motion.div
+                key={index}
+                variants={itemVariants}
+                className="bg-white p-8 rounded-xl border border-neutral-100 shadow-sm hover:shadow-md transition-all duration-300 group text-center"
+              >
+                <div className="w-16 h-16 rounded-full bg-neutral-900 text-white flex items-center justify-center mb-6 mx-auto group-hover:scale-110 transition-transform">
+                  <value.icon className="w-8 h-8" />
+                </div>
+                <h3 className="text-xl font-bold mb-3 uppercase tracking-tight">{value.title}</h3>
+                <p className="text-neutral-500 text-sm leading-relaxed">{value.desc}</p>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* 2.3 STATS SECTION */}
+      <section className="py-20 bg-neutral-900 text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-xs font-bold tracking-[0.5em] uppercase text-neutral-500">Our Impact</h2>
+          </div>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-12 text-center">
+            {[
+              { number: "1000+", label: "Students" },
+              { number: "50+", label: "Teachers" },
+              { number: "10+", label: "Years Experience" },
+              { number: "100%", label: "Focus on Discipline" }
+            ].map((stat, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+              >
+                <div className="text-4xl md:text-6xl font-black mb-2 tracking-tighter">{stat.number}</div>
+                <div className="text-xs md:text-sm font-bold uppercase tracking-widest text-neutral-400">{stat.label}</div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 3. HISTORY - TIMELINE STYLE */}
+      <section className="py-20 md:py-32 bg-neutral-50 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-20">
+            <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-4">Our Journey</h2>
+            <p className="text-neutral-500 max-w-2xl mx-auto font-medium">A path defined by constant growth and commitment to excellence</p>
+          </div>
+
+          <div className="relative max-w-4xl mx-auto">
+            {/* Timeline Line */}
+            <div className="absolute left-1/2 top-0 bottom-0 w-px bg-neutral-200 -translate-x-1/2 hidden md:block"></div>
+
+            {/* Timeline Items */}
+            <div className="space-y-16 relative">
+              {[
+                { year: "2016", title: "Established", desc: "Sunrise School was founded with a clear vision to provide quality education and nurture future leaders." },
+                { year: "2016", title: "Inauguration", desc: "A sacred start to our journey, inaugurated by Morari Bapu, setting the foundation for our core values." },
+                { year: "Present", title: "Growing Institution", desc: "Continuing to excel with 1000+ students and expanded facilities for holistic development." }
+              ].map((item, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.2 }}
+                  className={`flex flex-col md:flex-row items-center gap-8 ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}
+                >
+                  <div className="flex-1 text-center md:text-right">
+                    <div className={`${index % 2 === 0 ? '' : 'md:text-left'}`}>
+                      <span className="text-sm font-bold tracking-widest text-neutral-400 uppercase italic mb-2 block">{item.year}</span>
+                      <h3 className="text-2xl font-black mb-4 uppercase tracking-tight">{item.title}</h3>
+                      <p className="text-neutral-500 leading-relaxed max-w-sm ml-auto mr-auto md:ml-0 md:mr-0">{item.desc}</p>
+                    </div>
+                  </div>
+                  
+                  {/* Timeline Node */}
+                  <div className="w-12 h-12 rounded-full bg-neutral-900 border-4 border-white shadow-lg flex items-center justify-center z-10 shrink-0">
+                    <div className="w-2 h-2 rounded-full bg-white"></div>
+                  </div>
+
+                  <div className="flex-1 hidden md:block"></div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 3.1 MORARI BAPU INAUGURATION */}
+      <section className="py-20 md:py-32 bg-white overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <motion.div
-              initial="hidden"
-              whileInView="visible"
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              variants={itemVariants}
+              transition={{ duration: 0.8 }}
+              className="relative aspect-video lg:aspect-square overflow-hidden rounded-xl shadow-2xl group"
             >
-              <h2 className="text-4xl md:text-5xl font-black mb-8 tracking-tight">Our Journey</h2>
-              <p className="text-lg text-neutral-600 mb-8 leading-relaxed">
-                Founded with a vision to nurture the leaders of tomorrow, Sunrise School has been a beacon of knowledge since its inception. Our journey is defined by a commitment to value-based learning.
-              </p>
-              <div className="flex items-center space-x-4 group">
-                <div className="w-12 h-12 rounded-full border border-neutral-300 flex items-center justify-center group-hover:bg-neutral-900 group-hover:border-neutral-900 transition-colors duration-300">
-                  <ArrowRight className="w-5 h-5 group-hover:text-white transition-colors duration-300" />
-                </div>
-                <span className="font-bold text-lg tracking-wide uppercase">Established in 2016</span>
-              </div>
+              <img 
+                src="https://chitrakutdhamtalgajarda.org/wp-content/uploads/2020/05/image-bapu-ram-katha-049.jpg" 
+                alt="Morari Bapu" 
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+              />
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
-              className="relative p-8 md:p-12 bg-white border border-neutral-200 shadow-2xl overflow-hidden group"
             >
-              <div className="absolute top-0 right-0 w-32 h-32 bg-neutral-900 transition-transform duration-500 group-hover:scale-110 -mr-16 -mt-16 rotate-45"></div>
-              <div className="relative z-10">
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-10 h-1bg-neutral-900"></div>
-                  <span className="text-xs font-bold uppercase tracking-widest text-neutral-400">Milestone</span>
-                </div>
-                <blockquote className="text-3xl md:text-4xl font-black mb-8 italic">
-                  "Inaugurated by Morari Bapu"
+              <span className="text-sm font-bold tracking-[0.3em] text-neutral-400 uppercase mb-4 block">
+                Blessed Beginning
+              </span>
+              <h2 className="text-4xl md:text-5xl font-black mb-8 tracking-tighter uppercase">
+                Inaugurated by <br /> <span className="text-neutral-500">Morari Bapu</span>
+              </h2>
+              
+              <div className="relative mb-8 pt-8">
+                <div className="absolute top-0 left-0 w-12 h-1 bg-neutral-900"></div>
+                <blockquote className="text-2xl md:text-3xl font-light italic text-neutral-800 leading-relaxed">
+                  "A foundation built on values, spirituality, and wisdom"
                 </blockquote>
-                <p className="text-neutral-500 font-medium">
-                  A sacred beginning that set the foundation for our values and spiritual growth.
-                </p>
               </div>
+
+              <p className="text-lg text-neutral-600 leading-relaxed mb-8">
+                Sunrise School Rajkot was inaugurated by Morari Bapu, a globally respected spiritual leader known for spreading truth, love, and compassion. This sacred beginning reflects the strong values and cultural roots of our institution.
+              </p>
             </motion.div>
           </div>
         </div>
@@ -213,7 +402,111 @@ const About = () => {
         </div>
       </section>
 
-      {/* 6. CTA SECTION */}
+      {/* 5. CAMPUS LIFE */}
+      <section className="py-20 md:py-32 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-4">Campus Life</h2>
+            <p className="text-neutral-500 max-w-2xl mx-auto font-medium">Capturing the vibrant spirit of our educational environment</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              { img: "https://images.unsplash.com/photo-1523050335392-9bef86f199ec?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", title: "Active Students" },
+              { img: "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", title: "Modern Classrooms" },
+              { img: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", title: "Sports Excellence" }
+            ].map((item, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+                className="group"
+              >
+                <div className="relative overflow-hidden rounded-xl aspect-[4/5] mb-4">
+                  <img src={item.img} alt={item.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
+                    <Camera className="w-6 h-6 text-white" />
+                  </div>
+                </div>
+                <h3 className="text-lg font-bold uppercase tracking-tight">{item.title}</h3>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 6. VISIT OUR CAMPUS (GOOGLE MAP) */}
+      <section className="py-20 md:py-32 bg-neutral-900 text-white overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="h-[400px] md:h-[500px] w-full bg-neutral-800 rounded-2xl overflow-hidden shadow-2xl relative"
+            >
+              <iframe
+                title="Sunrise School Rajkot Map"
+                src="https://www.google.com/maps?q=Sunrise+School+Rajkot&output=embed"
+                width="100%"
+                height="100%"
+                style={{ border: 0, filter: 'invert(90%) hue-rotate(180deg) brightness(95%) contrast(90%)' }}
+                allowFullScreen=""
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              ></iframe>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+            >
+              <h2 className="text-4xl md:text-6xl font-black mb-8 tracking-tighter uppercase leading-tight">
+                Visit Our <br /><span className="text-neutral-500">Campus</span>
+              </h2>
+              
+              <div className="space-y-8">
+                <div className="flex gap-6">
+                  <div className="w-12 h-12 rounded-full border border-neutral-700 flex items-center justify-center shrink-0">
+                    <MapPin className="w-5 h-5 text-neutral-400" />
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-bold uppercase tracking-widest text-neutral-500 mb-2">Location</h4>
+                    <p className="text-lg text-neutral-300">A-1, Sunrise Street, Rajkot, Gujarat - 360001</p>
+                  </div>
+                </div>
+
+                <div className="flex gap-6">
+                  <div className="w-12 h-12 rounded-full border border-neutral-700 flex items-center justify-center shrink-0">
+                    <Phone className="w-5 h-5 text-neutral-400" />
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-bold uppercase tracking-widest text-neutral-500 mb-2">Call Us</h4>
+                    <p className="text-lg text-neutral-300">+91 98765 43210</p>
+                  </div>
+                </div>
+
+                <div className="flex gap-6">
+                  <div className="w-12 h-12 rounded-full border border-neutral-700 flex items-center justify-center shrink-0">
+                    <Mail className="w-5 h-5 text-neutral-400" />
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-bold uppercase tracking-widest text-neutral-500 mb-2">Email</h4>
+                    <p className="text-lg text-neutral-300">info@sunriseschool.edu.in</p>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* 7. CTA SECTION */}
       <section className="py-24 md:py-40 bg-neutral-900 text-white overflow-hidden relative">
         <div className="absolute top-0 left-0 w-full h-full opacity-10">
            <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">

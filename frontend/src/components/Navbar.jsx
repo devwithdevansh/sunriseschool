@@ -12,7 +12,7 @@ const MENU_ITEMS = [
       { name: 'About School', path: '/about' },
       { name: 'Management Team', path: '/about/management' },
       { name: 'Trustees Message', path: '/about/message' },
-      { name: 'Inquiry', path: '/contact' },
+      { name: 'Inquiry', path: '/inquiry' },
     ]
   },
   {
@@ -28,9 +28,9 @@ const MENU_ITEMS = [
     name: 'Activities',
     path: '/activities',
     dropdown: [
-      { name: 'Co-Curricular', path: '/activities/co-curricular' },
-      { name: 'Competitive Exams', path: '/activities/exams' },
-      { name: 'Sports', path: '/activities/sports' },
+      { name: 'Co-Curricular', path: '/co-curricular' },
+      { name: 'Competitive Exams', path: '/competitive-exams' },
+      { name: 'Sports', path: '/sports' },
     ]
   },
   {
@@ -46,8 +46,8 @@ const MENU_ITEMS = [
     name: 'Facilities',
     path: '/facilities',
     dropdown: [
-      { name: 'Transportation', path: '/facilities/transport' },
-      { name: 'Stationary', path: '/facilities/stationary' },
+      { name: 'Transportation', path: '/transportation' },
+      { name: 'Stationary', path: '/stationary' },
     ]
   },
   { name: 'Gallery', path: '/gallery' },
