@@ -1,7 +1,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Trophy, Medal, Target, Users, LayoutGrid, Zap, Heart, Award, ArrowRight, MessageCircle } from 'lucide-react';
+import { Trophy, Medal, Target, Users, LayoutGrid, Zap, Heart, Award, ArrowRight, MessageCircle, Quote, ShieldCheck, Dumbbell, Timer } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import Card from '../components/Card.jsx';
+import Section from '../components/Section.jsx';
 
 const Sports = () => {
   const containerVariants = {
@@ -9,7 +11,8 @@ const Sports = () => {
     visible: { 
       opacity: 1,
       transition: { 
-        staggerChildren: 0.2 
+        staggerChildren: 0.15,
+        delayChildren: 0.2
       }
     }
   };
@@ -19,101 +22,57 @@ const Sports = () => {
     visible: { 
       y: 0, 
       opacity: 1,
-      transition: { duration: 0.6, ease: "easeOut" }
+      transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] }
     }
   };
 
   return (
     <div className="min-h-screen bg-white text-neutral-900 font-sans selection:bg-neutral-900 selection:text-white">
-      {/* 1. HERO SECTION */}
-      <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)]"></div>
+      {/* 1. HERO SECTION [REDESIGNED] */}
+      <section className="relative pt-32 pb-24 md:pt-48 md:pb-40 overflow-hidden bg-white">
+        <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-30"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8 }}
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
           >
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter mb-6 uppercase leading-tight">
-              Sports & <br /><span className="text-neutral-500">Athletics</span>
+            <span className="text-[10px] font-black tracking-[0.5em] uppercase text-neutral-400 mb-8 block italic">The Athletic Spirit</span>
+            <h1 className="text-7xl md:text-[10rem] lg:text-[12rem] font-black tracking-tighter uppercase leading-[0.7] md:leading-[0.7] mb-12">
+              Sports & <br /> <span className="text-neutral-200 italic">Athletics</span>
             </h1>
-            <p className="max-w-2xl mx-auto text-lg md:text-xl text-neutral-600 font-medium leading-relaxed italic">
-              Building strength, discipline, and team spirit.
+            <p className="max-w-2xl mx-auto text-lg md:text-xl text-neutral-400 font-medium leading-relaxed italic border-t border-neutral-100 pt-10">
+              "Building strength, discipline, and champions through elite training and competitive rigor."
             </p>
           </motion.div>
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5, duration: 1 }}
-            className="mt-12 flex justify-center"
-          >
-            <div className="w-1 h-20 bg-gradient-to-b from-neutral-900 to-transparent"></div>
-          </motion.div>
         </div>
       </section>
 
-      {/* 2. INTRODUCTION */}
-      <section className="py-20 md:py-32 bg-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={containerVariants}
-          >
-            <motion.h2 variants={itemVariants} className="text-sm font-bold tracking-[0.3em] uppercase mb-8 text-neutral-400">
-              Importance of Sports
-            </motion.h2>
-            <motion.p variants={itemVariants} className="text-2xl md:text-4xl font-light leading-snug text-neutral-800">
-              Sports play a vital role in the <span className="font-bold border-b-2 border-neutral-900">overall development</span> of students by improving fitness, teamwork, and <span className="font-bold border-b-2 border-neutral-900">leadership</span> skills.
-            </motion.p>
-          </motion.div>
-        </div>
+      {/* 2. BIG STATEMENT SECTION [NEW] */}
+      <section className="py-24 md:py-40 bg-neutral-900 text-white overflow-hidden relative">
+         <div className="absolute inset-0 opacity-[0.03] bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:20px_20px]"></div>
+         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+            <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+            >
+                <span className="text-[10px] font-black tracking-[0.6em] uppercase mb-12 block text-neutral-700 italic">Core Athletic Mantra</span>
+                <h2 className="text-5xl md:text-8xl lg:text-9xl font-black italic tracking-tighter leading-[0.85] uppercase">
+                    "Champions are <br /> not born. <br />
+                    <span className="text-neutral-700">They are trained."</span>
+                </h2>
+            </motion.div>
+         </div>
       </section>
 
-      {/* 3. ACHIEVEMENT LEVELS SECTION */}
-      <section className="py-20 md:py-32 bg-neutral-900 text-white px-4">
-        <div className="max-w-7xl mx-auto text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-4 text-white">Our <span className="text-neutral-500">Achievement Levels</span></h2>
-          <p className="text-neutral-400 max-w-2xl mx-auto font-medium">From campus grounds to national arenas, we strive for glory at every stage.</p>
-        </div>
-
+      {/* 3. ACHIEVEMENT FLOW [RESTRUCTURED] */}
+      <section className="py-20 md:py-40 bg-white px-4">
         <div className="max-w-7xl mx-auto">
-          <motion.div 
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
-          >
-            {[
-              { icon: LayoutGrid, title: "School Level", desc: "Inter-class competitions fostering basic skills and introductory competitive spirit." },
-              { icon: Medal, title: "District Level", desc: "Competing against top schools across the district to showcase local excellence." },
-              { icon: Award, title: "State Level", desc: "Representing the school in state-wide championships with focus on high performance." },
-              { icon: Trophy, title: "National Level", desc: "Our ultimate benchmark, producing athletes who compete at the highest national forums." }
-            ].map((level, index) => (
-              <motion.div
-                key={index}
-                variants={itemVariants}
-                className="bg-neutral-800 p-10 rounded-2xl border border-neutral-700 shadow-xl hover:shadow-2xl transition-all duration-300 group text-center"
-              >
-                <div className="w-16 h-16 rounded-full bg-white text-neutral-900 flex items-center justify-center mb-8 mx-auto group-hover:scale-110 group-hover:rotate-6 transition-transform">
-                  <level.icon className="w-8 h-8" />
-                </div>
-                <h3 className="text-2xl font-black mb-4 uppercase tracking-tight">{level.title}</h3>
-                <p className="text-neutral-400 leading-relaxed text-sm">{level.desc}</p>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* 4. SPORTS ACTIVITIES GRID */}
-      <section className="py-20 md:py-32 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-20">
-            <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-4">Sports <span className="text-neutral-500">Activities</span></h2>
-            <p className="text-neutral-500 max-w-2xl mx-auto font-medium">A diverse range of athletic avenues for physical excellence</p>
+          <div className="text-center mb-32">
+             <span className="text-[10px] font-black tracking-[0.4em] uppercase mb-4 block text-neutral-300 italic">Progression Path</span>
+            <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-6 italic">Achievement <span className="text-neutral-200 font-normal italic">Levels</span></h2>
           </div>
 
           <motion.div 
@@ -121,59 +80,138 @@ const Sports = () => {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6"
+            className="flex flex-col md:flex-row items-center justify-between gap-12 relative"
           >
+             {/* Progress Line */}
+             <div className="hidden md:block absolute top-[4rem] left-[10%] right-[10%] h-[2px] bg-neutral-100 z-0"></div>
+
             {[
-              { icon: Zap, title: "Cricket", img: "https://images.unsplash.com/photo-1531415074968-036ba1b575da?auto=format&fit=crop&q=80&w=400" },
-              { icon: Zap, title: "Football", img: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80&w=400" },
-              { icon: Zap, title: "Athletics", img: "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?auto=format&fit=crop&q=80&w=400" },
-              { icon: Zap, title: "Indoor Games", img: "https://images.unsplash.com/photo-1629904853716-f0bc54ea4813?auto=format&fit=crop&q=80&w=400" },
-              { icon: Zap, title: "Yoga", img: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80&w=400" }
-            ].map((sport, index) => (
+              { icon: LayoutGrid, title: "School", desc: "First stage of skill mastery." },
+              { icon: Medal, title: "District", desc: "Showcasing regional excellence." },
+              { icon: Award, title: "State", desc: "Elite state-wide performance." },
+              { icon: Trophy, title: "National", desc: "Ultimate institutional glory." }
+            ].map((level, index) => (
               <motion.div
                 key={index}
                 variants={itemVariants}
-                whileHover={{ y: -10 }}
-                className="bg-white p-4 rounded-xl border border-neutral-100 shadow-md hover:shadow-2xl transition-all duration-300 group text-center"
+                className="flex flex-col items-center text-center space-y-6 relative z-10 group"
               >
-                <div className="relative overflow-hidden rounded-lg aspect-square mb-4">
-                  <img src={sport.img} alt={sport.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                  <div className="absolute inset-0 bg-neutral-900/10 group-hover:bg-neutral-900/0 transition-colors"></div>
-                </div>
-                <h3 className="text-lg font-bold uppercase tracking-tight">{sport.title}</h3>
+                 <div className="w-24 h-24 rounded-full bg-neutral-900 text-white flex items-center justify-center group-hover:scale-125 group-hover:rotate-12 transition-all duration-700 shadow-xl">
+                    <level.icon className="w-10 h-10" />
+                 </div>
+                 <div className="space-y-2">
+                    <h3 className="text-2xl font-black uppercase tracking-tighter italic">{level.title}</h3>
+                    <p className="text-neutral-400 text-[10px] font-black uppercase tracking-widest">{level.desc}</p>
+                 </div>
               </motion.div>
             ))}
           </motion.div>
         </div>
       </section>
 
-      {/* 5. BENEFITS SECTION */}
-      <section className="py-20 md:py-32 bg-neutral-50 px-4">
+      {/* 4. SPORTS SHOWCASE [REDESIGNED] */}
+      <section className="py-20 md:py-32 bg-neutral-50 border-y border-neutral-100 px-4">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+          <div className="text-center mb-24">
+             <span className="text-[10px] font-black tracking-[0.4em] uppercase mb-4 block text-neutral-300 italic">Disciplines</span>
+            <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-6 italic text-neutral-900 leading-none">Athletic <span className="text-neutral-400 font-normal italic">Showcase</span></h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[
+              { title: "Cricket", img: "https://images.unsplash.com/photo-1531415074968-036ba1b575da?auto=format&fit=crop&q=80&w=800", size: "lg:col-span-2" },
+              { title: "Football", img: "https://images.unsplash.com/photo-1517466787929-bc90951d0974?auto=format&fit=crop&q=80&w=800" },
+              { title: "Athletics", img: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&q=80&w=800" },
+              { title: "Indoor Games", img: "https://images.unsplash.com/photo-1544698310-74ea9d1c8258?auto=format&fit=crop&q=80&w=800", size: "lg:col-span-2" }
+            ].map((sport, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1, duration: 1, ease: [0.16, 1, 0.3, 1] }}
+                className={`relative overflow-hidden group rounded-[2.5rem] bg-neutral-900 aspect-video lg:aspect-auto h-[400px] ${sport.size || ""}`}
+              >
+                <img src={sport.img} alt={sport.title} className="w-full h-full object-cover grayscale brightness-75 group-hover:grayscale-0 group-hover:brightness-100 group-hover:scale-110 transition-all duration-[2000ms]" />
+                <div className="absolute inset-0 bg-neutral-900/10 group-hover:bg-transparent transition-colors duration-1000"></div>
+                <div className="absolute bottom-10 left-10 text-white">
+                    <h3 className="text-4xl md:text-6xl font-black uppercase tracking-tighter italic">{sport.title}</h3>
+                    <div className="w-0 group-hover:w-full h-[2px] bg-white transition-all duration-700 mt-2"></div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 5. TRAINING SYSTEM [NEW] */}
+      <section className="py-20 md:py-32 bg-white border-b border-neutral-100 px-4">
+        <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-24">
+                <span className="text-[10px] font-black tracking-[0.4em] uppercase mb-4 block text-neutral-300 italic">The Methodology</span>
+                <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter italic leading-none">Training <span className="text-neutral-500 font-normal italic">System</span></h2>
+            </div>
+
+            <motion.div 
+               variants={containerVariants}
+               initial="hidden"
+               whileInView="visible"
+               viewport={{ once: true }}
+               className="grid grid-cols-1 md:grid-cols-3 gap-16"
+            >
+                {[
+                    { icon: Users, title: "Coaching", desc: "Expert guidance from professional athletic mentors." },
+                    { icon: Timer, title: "Practice", desc: "Rigorous daily drills focusing on stamina and skill." },
+                    { icon: Zap, title: "Competition", desc: "Periodic tournaments to build elite psychological endurance." }
+                ].map((step, index) => (
+                    <motion.div
+                        key={index}
+                        variants={itemVariants}
+                        className="flex flex-col items-center text-center space-y-8 group"
+                    >
+                        <div className="w-20 h-20 rounded-[1.5rem] bg-neutral-50 text-neutral-900 flex items-center justify-center group-hover:bg-neutral-900 group-hover:text-white transition-all duration-500 shadow-sm ring-1 ring-neutral-100">
+                            <step.icon className="w-8 h-8" />
+                        </div>
+                        <div className="space-y-4">
+                            <h3 className="text-2xl font-black uppercase tracking-tighter italic group-hover:translate-x-2 transition-all duration-500">{step.title}</h3>
+                            <p className="text-neutral-400 text-[10px] font-black uppercase tracking-widest leading-loose italic max-w-[200px] mx-auto opacity-70 group-hover:opacity-100 transition-opacity">{step.desc}</p>
+                        </div>
+                    </motion.div>
+                ))}
+            </motion.div>
+        </div>
+      </section>
+
+      {/* 6. BENEFITS SECTION [REFINED] */}
+      <section className="py-32 bg-neutral-900 text-white relative overflow-hidden">
+        <div className="absolute inset-0 opacity-[0.05] bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:20px_20px]"></div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
+              transition={{ duration: 1 }}
             >
-              <h2 className="text-4xl md:text-5xl font-black mb-8 tracking-tighter uppercase leading-tight italic">
-                Benefits of <br /> <span className="text-neutral-500">Sports</span>
+               <span className="text-[10px] font-black tracking-[0.4em] text-neutral-600 uppercase mb-8 block italic">Athlete Transformation</span>
+              <h2 className="text-4xl md:text-7xl font-black mb-12 tracking-tighter uppercase leading-[0.8] italic">
+                Athletic <br /> <span className="text-neutral-500 font-normal">Advantages</span>
               </h2>
-              <div className="space-y-6">
+              
+              <div className="space-y-12">
                 {[
-                  { title: "Physical Fitness", desc: "Improves posture, coordination, and overall long-term health." },
-                  { title: "Teamwork", desc: "Fosters cooperation and shared goal-oriented thinking." },
-                  { title: "Discipline", desc: "Develops mental toughness and adherence to structured growth." },
-                  { title: "Leadership Skills", desc: "Taking initiative on the field prepares for life's challenges." }
+                  { icon: Heart, title: "Fitness", desc: "Long-term health and peak physical condition." },
+                  { icon: ShieldCheck, title: "Teamwork", desc: "Unified goals and collaborative achievement." },
+                  { icon: Dumbbell, title: "Discipline", desc: "Mental toughness and adherence to growth." },
+                  { icon: Zap, title: "Leadership", desc: "Taking initiative on the local and global field." }
                 ].map((benefit, index) => (
-                  <div key={index} className="flex gap-4 items-center group">
-                    <div className="w-12 h-12 rounded-full bg-neutral-900 text-white flex items-center justify-center shrink-0 group-hover:bg-neutral-700 transition-colors">
-                      <Heart className="w-5 h-5" />
+                  <div key={index} className="flex gap-10 group">
+                    <div className="w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center shrink-0 group-hover:bg-white group-hover:text-neutral-900 transition-all duration-500 shadow-inner">
+                        <benefit.icon className="w-6 h-6" />
                     </div>
-                    <div>
-                      <h4 className="text-xl font-bold uppercase tracking-tight">{benefit.title}</h4>
-                      <p className="text-neutral-500 text-sm">{benefit.desc}</p>
+                    <div className="flex flex-col justify-center">
+                      <h4 className="text-2xl font-black uppercase tracking-tight text-white group-hover:translate-x-4 transition-all duration-700">{benefit.title}</h4>
+                      <p className="text-sm text-neutral-500 uppercase tracking-widest font-black mt-2 italic">{benefit.desc}</p>
                     </div>
                   </div>
                 ))}
@@ -181,41 +219,41 @@ const Sports = () => {
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
+              initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-              className="bg-neutral-900 p-12 rounded-3xl text-white text-center relative overflow-hidden"
+              transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
+              className="relative aspect-square md:aspect-[4/5] rounded-[3rem] overflow-hidden shadow-3xl bg-neutral-900 p-4 border-4 border-white/5"
             >
-              <div className="absolute top-0 right-0 w-32 h-32 bg-neutral-800 rounded-full -mr-16 -mt-16 opacity-50"></div>
-              <Target className="w-16 h-16 text-neutral-500 mx-auto mb-10 group-hover:scale-125 transition-transform" />
-              <h3 className="text-3xl font-black mb-6 uppercase tracking-tighter italic leading-none">Victory Favors <br />The Disciplined</h3>
-              <p className="text-neutral-400 font-medium leading-relaxed italic max-w-sm mx-auto">
-                "Our athletes are trained not just to win games, but to win at life through persistence and integrity."
-              </p>
+              <img 
+                src="https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&q=80&w=1470" 
+                alt="Sprinter at Sunrise" 
+                className="w-full h-full object-cover rounded-[2.5rem] grayscale group-hover:grayscale-0 transition-all duration-[2000ms] brightness-75 group-hover:brightness-100"
+              />
+              <div className="absolute inset-0 bg-neutral-900/10 group-hover:bg-transparent transition-all duration-1000"></div>
             </motion.div>
           </div>
         </div>
       </section>
 
-      {/* 6. CTA SECTION */}
-      <section className="py-24 md:py-40 bg-white overflow-hidden relative">
+      {/* 7. CTA SECTION [UPGRADED] */}
+      <section className="py-40 bg-white overflow-hidden relative border-t border-neutral-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 100 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
+            className="space-y-20"
           >
-            <h2 className="text-5xl md:text-7xl lg:text-8xl font-black mb-12 tracking-tighter uppercase leading-[0.9]">
-              Join Our <br /> <span className="text-neutral-500">Sports</span> Programs
+             <span className="text-[10px] font-black tracking-[0.6em] uppercase text-neutral-200 mb-20 block italic italic">Athlete Recruitment Open</span>
+            <h2 className="text-6xl md:text-[10rem] font-black tracking-tighter uppercase leading-[0.8] md:leading-[0.8] text-neutral-900 italic">
+              Join Our <br /> <span className="text-neutral-100 font-normal italic italic">Programs</span>
             </h2>
-            <div className="flex justify-center mt-16 group">
-              <Link to="/inquiry" className="relative">
-                <button className="px-10 py-5 bg-neutral-900 text-white font-black text-lg uppercase tracking-widest hover:bg-neutral-800 transition-all duration-300 flex items-center gap-3 shadow-2xl">
-                  Inquiry / Contact
-                  <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
-                </button>
+            <div className="flex justify-center mt-24">
+              <Link to="/inquiry" className="px-20 py-10 bg-neutral-900 text-white font-black text-sm uppercase tracking-[0.5em] hover:bg-neutral-800 transition-all duration-700 flex items-center justify-center gap-8 group rounded-full shadow-3xl">
+                Ready to Join
+                <ArrowRight className="w-8 h-8 group-hover:translate-x-4 transition-all duration-500" />
               </Link>
             </div>
           </motion.div>
@@ -223,9 +261,9 @@ const Sports = () => {
       </section>
 
       {/* FOOTER STRIP */}
-      <div className="bg-white py-8 border-t border-neutral-100 text-center">
-        <p className="text-xs font-bold uppercase tracking-[0.5em] text-neutral-300">
-          © {new Date().getFullYear()} Sunrise School Rajkot • Athletic Excellence
+      <div className="bg-neutral-900 py-16 text-center border-t border-white/5">
+        <p className="text-[10px] font-black uppercase tracking-[0.8em] text-neutral-700">
+          © {new Date().getFullYear()} Sunrise Athletic Excellence Group • Elite Athlete Care
         </p>
       </div>
     </div>

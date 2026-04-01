@@ -2,31 +2,68 @@ import React from 'react';
 import { motion } from 'framer-motion';
 
 const Card = ({ title, description, icon: Icon, image, className = "", children }) => {
+  const cardVariants = {
+    hidden: { opacity: 0, y: 30, scale: 0.95 },
+    visible: { 
+      opacity: 1, 
+      y: 0, 
+      scale: 1,
+      transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] }
+    }
+  };
+
+  const iconVariants = {
+    hover: { 
+      scale: 1.2, 
+      rotate: 12,
+      transition: { type: "spring", stiffness: 300, damping: 10 }
+    }
+  };
+
   return (
     <motion.div
-      whileHover={{ y: -5 }}
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      variants={cardVariants}
+      whileHover="hover"
+      initial="hidden"
+      whileInView="visible"
       viewport={{ once: true }}
-      className={`bg-white rounded-2xl overflow-hidden shadow-md border border-slate-100 card-hover ${className}`}
+      className={`bg-white rounded-2xl overflow-hidden shadow-md border border-neutral-100 transition-all duration-400 hover:shadow-2xl group ${className}`}
+      style={{ transformStyle: "preserve-3d" }}
     >
-      {image && (
-        <div className="h-48 overflow-hidden">
-          <img src={image} alt={title} className="w-full h-full object-cover transition-transform duration-500 hover:scale-110" />
-        </div>
-      )}
-      <div className="p-6">
-        {Icon && (
-          <div className="w-12 h-12 bg-orange-100 text-brand-orange rounded-xl flex items-center justify-center mb-4">
-            <Icon size={24} />
+      <motion.div
+        variants={{
+          hover: { y: -8, scale: 1.02 }
+        }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
+        className="h-full w-full"
+      >
+        {image && (
+          <div className="h-48 overflow-hidden relative">
+            <img 
+              src={image} 
+              alt={title} 
+              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
+            />
+            <div className="absolute inset-0 bg-neutral-900/0 group-hover:bg-neutral-900/5 transition-colors duration-500"></div>
           </div>
         )}
-        {title && <h3 className="text-xl font-bold text-slate-900 mb-2">{title}</h3>}
-        {description && <p className="text-slate-600 text-sm mb-4 leading-relaxed">{description}</p>}
-        {children}
-      </div>
+        <div className="p-8">
+          {Icon && (
+            <motion.div 
+              variants={iconVariants}
+              className="w-14 h-14 bg-neutral-50 text-neutral-900 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-neutral-900 group-hover:text-white transition-all duration-500 shadow-sm"
+            >
+              <Icon size={28} />
+            </motion.div>
+          )}
+          {title && <h3 className="text-xl font-black text-neutral-900 mb-3 uppercase tracking-tight">{title}</h3>}
+          {description && <p className="text-neutral-500 text-sm mb-6 leading-relaxed font-medium">{description}</p>}
+          {children}
+        </div>
+      </motion.div>
     </motion.div>
   );
 };
 
 export default Card;
+

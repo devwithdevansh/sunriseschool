@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Target, Lightbulb, BookOpen, Globe, ArrowRight, MessageCircle, Info, Users, GraduationCap, Languages, Shield, Zap, Trophy, Heart, Award, Sparkles, Binary, ShieldCheck, TrendingUp, MapPin, Phone, Mail, Camera } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Target, Lightbulb, BookOpen, Globe, ArrowRight, MessageCircle, Info, Users, Languages, Shield, Zap, Trophy, Award, ShieldCheck, TrendingUp, MapPin, Phone, Mail, Camera, Quote } from 'lucide-react';
 
 const About = () => {
   const containerVariants = {
@@ -18,57 +19,58 @@ const About = () => {
     visible: { 
       y: 0, 
       opacity: 1,
-      transition: { duration: 0.6, ease: "easeOut" }
+      transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] }
     }
   };
 
   return (
     <div className="min-h-screen bg-white text-neutral-900 font-sans selection:bg-neutral-900 selection:text-white">
-      {/* 1. HERO SECTION */}
-      <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden">
+      {/* 1. HERO SECTION (py-32 rhythm) */}
+      <section className="relative pt-32 pb-32 md:pt-48 md:pb-40 overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)]"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
           >
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter mb-6 uppercase">
-              About <span className="text-neutral-500">Sunrise</span> School
+            <span className="text-[10px] font-black tracking-[0.5em] uppercase text-neutral-400 mb-6 block">Established 2016</span>
+            <h1 className="text-5xl md:text-7xl lg:text-9xl font-black tracking-tighter mb-8 uppercase leading-[0.8] md:leading-[0.8]">
+              About <br /><span className="text-neutral-500">Sunrise</span> School
             </h1>
-            <p className="max-w-2xl mx-auto text-lg md:text-xl text-neutral-600 font-medium leading-relaxed">
-              Excellence in education, discipline, and holistic development.
+            <p className="max-w-xl mx-auto text-lg text-neutral-500 font-medium leading-relaxed italic">
+              "Excellence in education, discipline, and holistic development."
             </p>
           </motion.div>
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.5, duration: 1 }}
-            className="mt-12 flex justify-center"
+            transition={{ delay: 0.8, duration: 1.5 }}
+            className="mt-16 flex justify-center"
           >
-            <div className="w-1 h-20 bg-gradient-to-b from-neutral-900 to-transparent"></div>
+            <div className="w-px h-24 bg-gradient-to-b from-neutral-900 to-transparent"></div>
           </motion.div>
         </div>
       </section>
 
-      {/* 1.1 FULL-WIDTH IMAGE SECTION */}
+      {/* 1.1 FULL-WIDTH IMAGE SECTION (Divider Transition) */}
       <motion.section 
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
+        initial={{ opacity: 0, scale: 1.05 }}
+        whileInView={{ opacity: 1, scale: 1 }}
         viewport={{ once: true }}
-        transition={{ duration: 1 }}
-        className="w-full h-[400px] md:h-[500px] relative overflow-hidden"
+        transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
+        className="w-full h-[500px] md:h-[700px] relative overflow-hidden group border-y border-neutral-100"
       >
         <img 
-          src="https://images.unsplash.com/photo-1541339907198-e08756ebafe3?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" 
-          alt="School Campus" 
-          className="w-full h-full object-cover"
+          src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" 
+          alt="School Spirit" 
+          className="w-full h-full object-cover grayscale brightness-75 transition-transform duration-[2000ms] group-hover:scale-110 group-hover:grayscale-0 group-hover:brightness-100"
         />
-        <div className="absolute inset-0 bg-black/20"></div>
+        <div className="absolute inset-0 bg-neutral-900/10 group-hover:bg-transparent transition-colors duration-1000"></div>
       </motion.section>
 
-      {/* 2. INTRODUCTION */}
-      <section className="py-20 md:py-32 bg-white">
+      {/* 2. INTRODUCTION (py-32 rhythm) */}
+      <section className="py-32 bg-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div
             initial="hidden"
@@ -76,36 +78,62 @@ const About = () => {
             viewport={{ once: true }}
             variants={containerVariants}
           >
-            <motion.h2 variants={itemVariants} className="text-sm font-bold tracking-[0.3em] uppercase mb-8 text-neutral-400">
+            <motion.span variants={itemVariants} className="text-[10px] font-black tracking-[0.4em] uppercase mb-8 block text-neutral-300">Overview</motion.span>
+            <motion.h2 variants={itemVariants} className="text-sm font-bold tracking-[0.3em] uppercase mb-12 text-neutral-400">
               Who We Are
             </motion.h2>
-            <motion.p variants={itemVariants} className="text-2xl md:text-4xl font-light leading-snug text-neutral-800">
+            <motion.p variants={itemVariants} className="text-3xl md:text-5xl font-light leading-snug text-neutral-800">
               Sunrise School Rajkot provides quality education from kindergarten to higher secondary level. We focus on <span className="font-bold border-b-2 border-neutral-900">discipline</span>, academic excellence, and overall student development.
             </motion.p>
           </motion.div>
         </div>
       </section>
 
-      {/* 2.1 WHY CHOOSE US */}
-      <section className="py-20 md:py-32 bg-white">
+      {/* 2.1 SIGNATURE STATEMENT [NEW] (py-20 rhythm) */}
+      <section className="py-20 bg-neutral-50 px-4 flex items-center justify-center border-y border-neutral-100">
+        <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+            className="text-center"
+        >
+             <span className="text-[10px] font-black tracking-[0.4em] uppercase mb-8 block text-neutral-300 italic">Signature Statement</span>
+             <h2 className="text-5xl md:text-8xl font-black italic tracking-tighter text-neutral-900 leading-[0.9]">
+                "Not just a school, <br />
+                <span className="text-neutral-200">but a foundation for life"</span>
+             </h2>
+        </motion.div>
+      </section>
+
+      {/* 2.2 WHY CHOOSE US (py-32 rhythm) */}
+      <section className="py-32 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
+          <div className="text-center mb-24">
+            <motion.span 
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              className="text-[10px] font-black tracking-[0.4em] uppercase mb-4 block text-neutral-300"
+            >
+              Academic Excellence
+            </motion.span>
             <motion.h2 
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="text-4xl md:text-5xl font-black mb-4 uppercase tracking-tighter"
+              className="text-4xl md:text-6xl font-black mb-6 uppercase tracking-tighter italic"
             >
-              Why Choose <span className="text-neutral-500">Sunrise School</span>
+              Why <span className="text-neutral-300">Choose Us</span>
             </motion.h2>
             <motion.p 
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              className="text-lg text-neutral-500 max-w-2xl mx-auto font-medium"
+              className="text-lg text-neutral-400 max-w-2xl mx-auto font-medium"
             >
-              Building strong foundations for academic and personal growth
+              Providing a unique blend of modern learning and traditional discipline.
             </motion.p>
           </div>
 
@@ -114,7 +142,7 @@ const About = () => {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10"
           >
             {[
               { icon: Users, title: "Experienced Teachers", desc: "Our faculty brings years of expertise and dedication to student success." },
@@ -127,29 +155,37 @@ const About = () => {
               <motion.div
                 key={index}
                 variants={itemVariants}
-                whileHover={{ scale: 1.05 }}
-                className="p-8 rounded-xl bg-white border border-neutral-100 shadow-md hover:shadow-lg transition-all duration-300 group"
+                whileHover={{ scale: 1.02, y: -8 }}
+                className="p-12 rounded-3xl bg-white border border-neutral-100 shadow-sm hover:shadow-2xl transition-all duration-500 group"
               >
-                <div className="w-12 h-12 rounded-lg bg-neutral-900 text-white flex items-center justify-center mb-6 group-hover:bg-neutral-800 transition-colors">
-                  <item.icon className="w-6 h-6" />
+                <div className="w-14 h-14 rounded-2xl bg-neutral-900 text-white flex items-center justify-center mb-8 group-hover:bg-neutral-800 transition-all duration-500">
+                  <item.icon className="w-7 h-7" />
                 </div>
-                <h3 className="text-xl font-bold mb-3 uppercase tracking-tight">{item.title}</h3>
-                <p className="text-neutral-500 leading-relaxed">{item.desc}</p>
+                <h3 className="text-xl font-bold mb-4 uppercase tracking-tight">{item.title}</h3>
+                <p className="text-neutral-500 leading-relaxed text-sm">{item.desc}</p>
               </motion.div>
             ))}
           </motion.div>
         </div>
       </section>
 
-      {/* 2.2 OUR CORE VALUES */}
-      <section className="py-20 md:py-32 bg-neutral-50 px-4">
+      {/* 2.3 OUR CORE VALUES (py-20 rhythm) */}
+      <section className="py-20 bg-neutral-50 px-4">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
+          <div className="text-center mb-20">
+            <motion.span 
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              className="text-[10px] font-black tracking-[0.4em] uppercase mb-4 block text-neutral-300"
+            >
+              Guiding Principles
+            </motion.span>
             <motion.h2 
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="text-4xl md:text-5xl font-black mb-4 uppercase tracking-tighter"
+              className="text-4xl md:text-5xl font-black mb-4 uppercase tracking-tighter italic"
             >
               Our Core <span className="text-neutral-500">Values</span>
             </motion.h2>
@@ -163,92 +199,95 @@ const About = () => {
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
           >
             {[
-              { icon: Shield, title: "Discipline", desc: "Foundation of every successful student's journey." },
-              { icon: ShieldCheck, title: "Integrity", desc: "Strong moral principles and honesty in all actions." },
-              { icon: Award, title: "Excellence", desc: "Striving for the highest standards in academics and beyond." },
-              { icon: TrendingUp, title: "Growth", desc: "Continuous improvement and holistic development." }
+              { icon: Shield, title: "Discipline", desc: "The foundation of academic success." },
+              { icon: ShieldCheck, title: "Integrity", desc: "Honesty in every single action." },
+              { icon: Award, title: "Excellence", desc: "Striving for brilliant educational results." },
+              { icon: TrendingUp, title: "Growth", desc: "Continuous improvement for students." }
             ].map((value, index) => (
               <motion.div
                 key={index}
                 variants={itemVariants}
-                className="bg-white p-8 rounded-xl border border-neutral-100 shadow-sm hover:shadow-md transition-all duration-300 group text-center"
+                whileHover={{ scale: 1.05 }}
+                className="bg-white p-10 rounded-2xl border border-neutral-100 shadow-md hover:shadow-2xl transition-all duration-500 group text-center"
               >
-                <div className="w-16 h-16 rounded-full bg-neutral-900 text-white flex items-center justify-center mb-6 mx-auto group-hover:scale-110 transition-transform">
-                  <value.icon className="w-8 h-8" />
+                <div className="w-20 h-20 rounded-full bg-neutral-900 text-white flex items-center justify-center mb-8 mx-auto group-hover:scale-110 transition-all duration-500 group-hover:shadow-[0_0_30px_rgba(0,0,0,0.1)]">
+                  <value.icon className="w-10 h-10" />
                 </div>
-                <h3 className="text-xl font-bold mb-3 uppercase tracking-tight">{value.title}</h3>
-                <p className="text-neutral-500 text-sm leading-relaxed">{value.desc}</p>
+                <h3 className="text-xl font-bold mb-4 uppercase tracking-tight">{value.title}</h3>
+                <p className="text-neutral-400 text-xs leading-relaxed font-black uppercase tracking-widest">{value.desc}</p>
               </motion.div>
             ))}
           </motion.div>
         </div>
       </section>
 
-      {/* 2.3 STATS SECTION */}
-      <section className="py-20 bg-neutral-900 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-xs font-bold tracking-[0.5em] uppercase text-neutral-500">Our Impact</h2>
+      {/* 2.4 STATS SECTION (py-32 rhythm) */}
+      <section className="py-32 bg-neutral-900 text-white relative overflow-hidden">
+        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:32px_32px]"></div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center mb-20">
+            <h2 className="text-[10px] font-black tracking-[0.5em] uppercase text-neutral-600 italic">Institutional Impact</h2>
           </div>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-12 text-center">
             {[
               { number: "1000+", label: "Students" },
-              { number: "50+", label: "Teachers" },
-              { number: "10+", label: "Years Experience" },
-              { number: "100%", label: "Focus on Discipline" }
+              { number: "50+", label: "Instructors" },
+              { number: "10+", label: "Academic Years" },
+              { number: "100%", label: "Safe Campus" }
             ].map((stat, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
+                transition={{ delay: index * 0.1, duration: 1 }}
               >
-                <div className="text-4xl md:text-6xl font-black mb-2 tracking-tighter">{stat.number}</div>
-                <div className="text-xs md:text-sm font-bold uppercase tracking-widest text-neutral-400">{stat.label}</div>
+                <div className="text-5xl md:text-7xl font-black mb-4 tracking-tighter tabular-nums">{stat.number}</div>
+                <div className="text-[10px] font-bold uppercase tracking-[0.3em] text-neutral-500">{stat.label}</div>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* 3. HISTORY - TIMELINE STYLE */}
-      <section className="py-20 md:py-32 bg-neutral-50 overflow-hidden">
+      {/* 3. HISTORY (py-32 rhythm) */}
+      <section className="py-32 bg-white overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-20">
-            <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-4">Our Journey</h2>
-            <p className="text-neutral-500 max-w-2xl mx-auto font-medium">A path defined by constant growth and commitment to excellence</p>
+          <div className="text-center mb-24">
+             <span className="text-[10px] font-black tracking-[0.4em] uppercase mb-4 block text-neutral-300 italic">Chronicle</span>
+            <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-6 italic">Our <span className="text-neutral-300 font-normal">Journey</span></h2>
+            <p className="text-neutral-500 max-w-2xl mx-auto font-medium italic">"Tracing our path from vision to institutional excellence."</p>
           </div>
 
           <div className="relative max-w-4xl mx-auto">
             {/* Timeline Line */}
-            <div className="absolute left-1/2 top-0 bottom-0 w-px bg-neutral-200 -translate-x-1/2 hidden md:block"></div>
+            <div className="absolute left-1/2 top-0 bottom-0 w-px bg-neutral-100 -translate-x-1/2 hidden md:block"></div>
 
             {/* Timeline Items */}
-            <div className="space-y-16 relative">
+            <div className="space-y-32 relative">
               {[
-                { year: "2016", title: "Established", desc: "Sunrise School was founded with a clear vision to provide quality education and nurture future leaders." },
-                { year: "2016", title: "Inauguration", desc: "A sacred start to our journey, inaugurated by Morari Bapu, setting the foundation for our core values." },
-                { year: "Present", title: "Growing Institution", desc: "Continuing to excel with 1000+ students and expanded facilities for holistic development." }
+                { year: "2016", title: "Inception", desc: "Sunrise School was founded with a singular purpose: to deliver high-quality, value-based education to the families of Rajkot." },
+                { year: "2016", title: "Divine Start", desc: "Our journey officially began with an inauguration by Morari Bapu, setting an eternal standard for our values." },
+                { year: "Today", title: "Growing Legacy", desc: "We are now a thriving educational hub with modern facilities and a community of 1000+ happy learners." }
               ].map((item, index) => (
                 <motion.div
                   key={index}
-                  initial={{ opacity: 0, y: 30 }}
+                  initial={{ opacity: 0, y: 50 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: index * 0.2 }}
-                  className={`flex flex-col md:flex-row items-center gap-8 ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}
+                  transition={{ delay: index * 0.2, duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+                  className={`flex flex-col md:flex-row items-center gap-16 ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}
                 >
                   <div className="flex-1 text-center md:text-right">
                     <div className={`${index % 2 === 0 ? '' : 'md:text-left'}`}>
-                      <span className="text-sm font-bold tracking-widest text-neutral-400 uppercase italic mb-2 block">{item.year}</span>
-                      <h3 className="text-2xl font-black mb-4 uppercase tracking-tight">{item.title}</h3>
-                      <p className="text-neutral-500 leading-relaxed max-w-sm ml-auto mr-auto md:ml-0 md:mr-0">{item.desc}</p>
+                      <span className="text-xl font-black tracking-widest text-neutral-900 uppercase italic mb-4 block">{item.year}</span>
+                      <h3 className="text-3xl font-black mb-6 uppercase tracking-tight leading-none">{item.title}</h3>
+                      <p className="text-neutral-500 leading-relaxed max-w-sm ml-auto mr-auto md:ml-0 md:mr-0 text-sm">{item.desc}</p>
                     </div>
                   </div>
                   
                   {/* Timeline Node */}
-                  <div className="w-12 h-12 rounded-full bg-neutral-900 border-4 border-white shadow-lg flex items-center justify-center z-10 shrink-0">
+                  <div className="w-16 h-16 rounded-full bg-neutral-900 border-8 border-white shadow-2xl flex items-center justify-center z-10 shrink-0">
                     <div className="w-2 h-2 rounded-full bg-white"></div>
                   </div>
 
@@ -260,69 +299,27 @@ const About = () => {
         </div>
       </section>
 
-      {/* 3.1 MORARI BAPU INAUGURATION */}
-      <section className="py-20 md:py-32 bg-white overflow-hidden">
+      {/* 4. VISION & MISSION (py-20 rhythm) */}
+      <section className="py-20 bg-neutral-50 border-y border-neutral-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-              className="relative aspect-video lg:aspect-square overflow-hidden rounded-xl shadow-2xl group"
-            >
-              <img 
-                src="https://chitrakutdhamtalgajarda.org/wp-content/uploads/2020/05/image-bapu-ram-katha-049.jpg" 
-                alt="Morari Bapu" 
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-              />
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-            >
-              <span className="text-sm font-bold tracking-[0.3em] text-neutral-400 uppercase mb-4 block">
-                Blessed Beginning
-              </span>
-              <h2 className="text-4xl md:text-5xl font-black mb-8 tracking-tighter uppercase">
-                Inaugurated by <br /> <span className="text-neutral-500">Morari Bapu</span>
-              </h2>
-              
-              <div className="relative mb-8 pt-8">
-                <div className="absolute top-0 left-0 w-12 h-1 bg-neutral-900"></div>
-                <blockquote className="text-2xl md:text-3xl font-light italic text-neutral-800 leading-relaxed">
-                  "A foundation built on values, spirituality, and wisdom"
-                </blockquote>
-              </div>
-
-              <p className="text-lg text-neutral-600 leading-relaxed mb-8">
-                Sunrise School Rajkot was inaugurated by Morari Bapu, a globally respected spiritual leader known for spreading truth, love, and compassion. This sacred beginning reflects the strong values and cultural roots of our institution.
-              </p>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* 4. VISION & MISSION */}
-      <section className="py-20 md:py-32 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+            <div className="text-center mb-24">
+                <span className="text-[10px] font-black tracking-[0.4em] uppercase mb-4 block text-neutral-300">Strategic Vision</span>
+            </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
             {/* Vision */}
             <motion.div
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-              className="p-10 md:p-16 bg-neutral-900 text-white flex flex-col justify-between group hover:shadow-2xl transition-all duration-500"
+              transition={{ duration: 1 }}
+              whileHover={{ scale: 1.01 }}
+              className="p-16 md:p-24 bg-neutral-900 text-white flex flex-col justify-between group shadow-2xl transition-all duration-500 rounded-[2.5rem]"
             >
               <div>
-                <Target className="w-12 h-12 mb-10 text-neutral-400 group-hover:text-white transition-colors duration-500" />
-                <h3 className="text-4xl font-black mb-6 uppercase tracking-tighter italic">Vision</h3>
-                <p className="text-xl text-neutral-300 font-light leading-relaxed">
-                  "To create future-ready students with strong values and knowledge"
+                <Target className="w-16 h-16 mb-16 text-neutral-700 group-hover:text-white transition-all duration-500 group-hover:rotate-12" />
+                <h3 className="text-5xl font-black mb-10 uppercase tracking-tighter italic">Vision</h3>
+                <p className="text-2xl text-neutral-500 font-light leading-relaxed group-hover:text-white transition-colors duration-500">
+                  "To cultivate a generation of forward-thinking students anchored in absolute integrity."
                 </p>
               </div>
             </motion.div>
@@ -332,14 +329,15 @@ const About = () => {
               initial={{ opacity: 0, x: 30 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-              className="p-10 md:p-16 border-2 border-neutral-900 flex flex-col justify-between group hover:bg-neutral-50 transition-all duration-500"
+              transition={{ duration: 1 }}
+              whileHover={{ scale: 1.01 }}
+              className="p-16 md:p-24 border-2 border-neutral-900 flex flex-col justify-between group hover:bg-white transition-all duration-500 rounded-[2.5rem]"
             >
               <div>
-                <Lightbulb className="w-12 h-12 mb-10 text-neutral-400 group-hover:text-neutral-900 transition-colors duration-500" />
-                <h3 className="text-4xl font-black mb-6 uppercase tracking-tighter italic">Mission</h3>
-                <p className="text-xl text-neutral-600 font-light leading-relaxed">
-                  "To provide quality education with discipline and growth"
+                <Lightbulb className="w-16 h-16 mb-16 text-neutral-200 group-hover:text-neutral-900 transition-all duration-500 group-hover:scale-110" />
+                <h3 className="text-5xl font-black mb-10 uppercase tracking-tighter italic">Mission</h3>
+                <p className="text-2xl text-neutral-600 font-light leading-relaxed group-hover:text-neutral-900 transition-colors duration-500">
+                  "To deliver an educational ecosystem where discipline and creativity flourish together."
                 </p>
               </div>
             </motion.div>
@@ -347,113 +345,149 @@ const About = () => {
         </div>
       </section>
 
-      {/* 5. MEDIUM */}
-      <section className="py-20 md:py-32 bg-neutral-50 overflow-hidden">
+      {/* 5. MEDIUM (py-32 rhythm) */}
+      <section className="py-32 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.h2 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-4xl md:text-5xl font-black mb-16 text-center uppercase tracking-tighter"
-          >
-            Medium of <span className="text-neutral-400">Instruction</span>
-          </motion.h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="text-center mb-20 space-y-4">
+              <span className="text-[10px] font-black tracking-[0.4em] uppercase block text-neutral-300 italic">Curriculum Focus</span>
+              <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter italic leading-none">Dual <span className="text-neutral-400 font-normal">Mediums</span></h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
             <motion.div
-              whileHover={{ y: -10 }}
+              whileHover={{ y: -12, scale: 1.02 }}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
-              className="bg-white p-10 md:p-12 border border-neutral-200 flex items-center justify-between group cursor-default"
+              transition={{ delay: 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              className="bg-neutral-50 p-12 md:p-16 border border-neutral-100 flex items-center justify-between group cursor-default rounded-3xl shadow-sm hover:shadow-2xl transition-all duration-500"
             >
               <div>
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="w-10 h-10 rounded-full bg-neutral-100 flex items-center justify-center group-hover:bg-neutral-900 transition-colors duration-300 text-neutral-600 group-hover:text-white">
-                    <Globe className="w-5 h-5" />
+                <div className="flex items-center gap-6 mb-8">
+                  <div className="w-14 h-14 rounded-full bg-white flex items-center justify-center group-hover:bg-neutral-900 transition-all duration-500 text-neutral-400 group-hover:text-white shadow-sm">
+                    <Globe className="w-7 h-7" />
                   </div>
-                  <h4 className="text-2xl font-bold uppercase tracking-tight">English Medium</h4>
+                  <h4 className="text-3xl font-black uppercase tracking-tight">English</h4>
                 </div>
-                <p className="text-neutral-500 max-w-xs">Global standard curriculum focusing on international integration.</p>
+                <p className="text-neutral-500 max-w-xs font-bold text-xs uppercase tracking-widest leading-loose">Global standard instruction for international fluency.</p>
               </div>
-              <ArrowRight className="w-8 h-8 text-neutral-200 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-4 group-hover:translate-x-0" />
+              <ArrowRight className="w-12 h-12 text-neutral-200 group-hover:text-neutral-900 transition-all duration-500 transform translate-x-4 group-hover:translate-x-0" />
             </motion.div>
 
             <motion.div
-              whileHover={{ y: -10 }}
+              whileHover={{ y: -12, scale: 1.02 }}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-              className="bg-white p-10 md:p-12 border border-neutral-200 flex items-center justify-between group cursor-default"
+              transition={{ delay: 0.2, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              className="bg-neutral-50 p-12 md:p-16 border border-neutral-100 flex items-center justify-between group cursor-default rounded-3xl shadow-sm hover:shadow-2xl transition-all duration-500"
             >
               <div>
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="w-10 h-10 rounded-full bg-neutral-100 flex items-center justify-center group-hover:bg-neutral-900 transition-colors duration-300 text-neutral-600 group-hover:text-white">
-                    <BookOpen className="w-5 h-5" />
+                <div className="flex items-center gap-6 mb-8">
+                  <div className="w-14 h-14 rounded-full bg-white flex items-center justify-center group-hover:bg-neutral-900 transition-all duration-500 text-neutral-400 group-hover:text-white shadow-sm">
+                    <BookOpen className="w-7 h-7" />
                   </div>
-                  <h4 className="text-2xl font-bold uppercase tracking-tight">Gujarati Medium</h4>
+                  <h4 className="text-3xl font-black uppercase tracking-tight">Gujarati</h4>
                 </div>
-                <p className="text-neutral-500 max-w-xs">Deeply rooted in native culture providing strong academic foundation.</p>
+                <p className="text-neutral-500 max-w-xs font-bold text-xs uppercase tracking-widest leading-loose">Deep cultural roots and state-aligned academic excellence.</p>
               </div>
-              <ArrowRight className="w-8 h-8 text-neutral-200 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-4 group-hover:translate-x-0" />
+              <ArrowRight className="w-12 h-12 text-neutral-200 group-hover:text-neutral-900 transition-all duration-500 transform translate-x-4 group-hover:translate-x-0" />
             </motion.div>
           </div>
         </div>
       </section>
 
-      {/* 5. CAMPUS LIFE */}
-      <section className="py-20 md:py-32 bg-white">
+      {/* 5. CAMPUS LIFE (py-20 rhythm) */}
+      <section className="py-20 bg-neutral-50 border-y border-neutral-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-4">Campus Life</h2>
-            <p className="text-neutral-500 max-w-2xl mx-auto font-medium">Capturing the vibrant spirit of our educational environment</p>
+          <div className="text-center mb-24 space-y-4">
+            <span className="text-[10px] font-black tracking-[0.4em] uppercase block text-neutral-300">Environment</span>
+            <h2 className="text-4xl md:text-7xl font-black uppercase tracking-tighter italic">Campus <span className="text-neutral-400 font-light">Life</span></h2>
+            <p className="text-neutral-500 max-w-2xl mx-auto font-medium italic">"Captured moments from our vibrant, disciplined, and nurturing campus."</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
             {[
-              { img: "https://images.unsplash.com/photo-1523050335392-9bef86f199ec?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", title: "Active Students" },
-              { img: "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", title: "Modern Classrooms" },
-              { img: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", title: "Sports Excellence" }
+              { img: "https://images.unsplash.com/photo-1523050335392-9bef86f199ec?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", title: "Collaborative Learning" },
+              { img: "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", title: "Digital Library" },
+              { img: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", title: "Sports Culture" }
             ].map((item, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="group"
+                transition={{ delay: index * 0.1, duration: 1 }}
+                className="group p-2 bg-white rounded-[2.5rem] shadow-sm hover:shadow-2xl transition-all duration-500"
               >
-                <div className="relative overflow-hidden rounded-xl aspect-[4/5] mb-4">
-                  <img src={item.img} alt={item.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
-                    <Camera className="w-6 h-6 text-white" />
-                  </div>
+                <div className="relative overflow-hidden rounded-[2rem] aspect-[4/5] mb-8">
+                  <img src={item.img} alt={item.title} className="w-full h-full object-cover grayscale transition-all duration-[2000ms] group-hover:scale-125 group-hover:grayscale-0" />
+                  <div className="absolute inset-0 bg-neutral-900/10 group-hover:bg-transparent transition-colors duration-1000"></div>
                 </div>
-                <h3 className="text-lg font-bold uppercase tracking-tight">{item.title}</h3>
+                <h3 className="text-sm font-black uppercase tracking-widest text-neutral-900 text-center pb-6 italic">{item.title}</h3>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* 6. VISIT OUR CAMPUS (GOOGLE MAP) */}
-      <section className="py-20 md:py-32 bg-neutral-900 text-white overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+      {/* TESTIMONIALS [NEW] (py-32 rhythm) */}
+      <section className="py-32 bg-white px-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-24 space-y-4">
+             <span className="text-[10px] font-black tracking-[0.4em] uppercase block text-neutral-300">What Parents Say</span>
+             <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter italic leading-none text-neutral-900">Voices of <span className="text-neutral-200">Trust</span></h2>
+          </div>
+
+          <motion.div 
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="grid grid-cols-1 md:grid-cols-3 gap-10"
+          >
+            {[
+              { name: "Rajesh Patel", role: "Parent (Class 8)", quote: "The focus on discipline at Sunrise transformed my child's outlook on learning entirely." },
+              { name: "Anita Shah", role: "Parent (Class 12)", quote: "Incredible preparation for board exams. The teaching staff is truly unparalleled in Rajkot." },
+              { name: "Manoj Kumar", role: "Parent (KG)", quote: "A secure and loving environment. Our daughter loves coming to school every single day." }
+            ].map((testimonial, index) => (
+              <motion.div
+                key={index}
+                variants={itemVariants}
+                whileHover={{ y: -10 }}
+                className="bg-neutral-50 p-12 rounded-[2.5rem] border border-neutral-100 shadow-sm hover:shadow-2xl transition-all duration-500 group relative"
+              >
+                <Quote className="w-12 h-12 text-neutral-100 mb-10 group-hover:text-neutral-900 transition-colors duration-500" />
+                <p className="text-xl text-neutral-600 font-light mb-12 leading-relaxed italic">
+                  "{testimonial.quote}"
+                </p>
+                <div className="border-t border-neutral-100 pt-8">
+                  <h4 className="text-lg font-black text-neutral-900 uppercase tracking-tight">{testimonial.name}</h4>
+                  <p className="text-[10px] text-neutral-400 uppercase tracking-widest font-black mt-1 italic">{testimonial.role}</p>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* 6. VISIT OUR CAMPUS (py-20 rhythm) */}
+      <section className="py-20 bg-neutral-900 text-white overflow-hidden relative">
+        <div className="absolute inset-0 opacity-5 bg-[radial-gradient(#ffffff_1.5px,transparent_1.5px)] [background-size:24px_24px]"></div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
             <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, scale: 0.98 }}
+              whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-              className="h-[400px] md:h-[500px] w-full bg-neutral-800 rounded-2xl overflow-hidden shadow-2xl relative"
+              transition={{ duration: 1.2 }}
+              className="h-[500px] md:h-[650px] w-full bg-neutral-800 rounded-[3rem] overflow-hidden shadow-3xl relative border-4 border-white/5"
             >
               <iframe
-                title="Sunrise School Rajkot Map"
+                title="Sunrise School Campus Map"
                 src="https://www.google.com/maps?q=Sunrise+School+Rajkot&output=embed"
                 width="100%"
                 height="100%"
-                style={{ border: 0, filter: 'invert(90%) hue-rotate(180deg) brightness(95%) contrast(90%)' }}
+                className="grayscale contrast-[1.1] hover:grayscale-0 transition-all duration-[1500ms]"
                 allowFullScreen=""
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
@@ -464,89 +498,66 @@ const About = () => {
               initial={{ opacity: 0, x: 50 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
+              transition={{ duration: 1 }}
             >
-              <h2 className="text-4xl md:text-6xl font-black mb-8 tracking-tighter uppercase leading-tight">
-                Visit Our <br /><span className="text-neutral-500">Campus</span>
+               <span className="text-[10px] font-black tracking-[0.4em] text-neutral-600 uppercase mb-8 block font-mono">Accessibility</span>
+              <h2 className="text-4xl md:text-8xl font-black mb-12 tracking-tighter uppercase leading-[0.8]">
+                Tour Our <br /><span className="text-neutral-500 font-light italic">Campus</span>
               </h2>
               
-              <div className="space-y-8">
-                <div className="flex gap-6">
-                  <div className="w-12 h-12 rounded-full border border-neutral-700 flex items-center justify-center shrink-0">
-                    <MapPin className="w-5 h-5 text-neutral-400" />
+              <div className="space-y-12">
+                {[
+                  { icon: MapPin, title: "Location", val: "A-1, Sunrise Street, Rajkot" },
+                  { icon: Phone, title: "Inquiry", val: "+91 98765 43210" },
+                  { icon: Mail, title: "Admissions", val: "join@sunriseschool.edu" }
+                ].map((contact, index) => (
+                  <div key={index} className="flex gap-10 group">
+                    <div className="w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center shrink-0 group-hover:bg-white group-hover:text-neutral-900 transition-all duration-500">
+                      <contact.icon className="w-7 h-7" />
+                    </div>
+                    <div className="flex flex-col justify-center">
+                      <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-neutral-700 mb-2">{contact.title}</h4>
+                      <p className="text-2xl text-white font-bold uppercase tracking-tight leading-none group-hover:translate-x-4 transition-all duration-700">{contact.val}</p>
+                    </div>
                   </div>
-                  <div>
-                    <h4 className="text-sm font-bold uppercase tracking-widest text-neutral-500 mb-2">Location</h4>
-                    <p className="text-lg text-neutral-300">A-1, Sunrise Street, Rajkot, Gujarat - 360001</p>
-                  </div>
-                </div>
-
-                <div className="flex gap-6">
-                  <div className="w-12 h-12 rounded-full border border-neutral-700 flex items-center justify-center shrink-0">
-                    <Phone className="w-5 h-5 text-neutral-400" />
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-bold uppercase tracking-widest text-neutral-500 mb-2">Call Us</h4>
-                    <p className="text-lg text-neutral-300">+91 98765 43210</p>
-                  </div>
-                </div>
-
-                <div className="flex gap-6">
-                  <div className="w-12 h-12 rounded-full border border-neutral-700 flex items-center justify-center shrink-0">
-                    <Mail className="w-5 h-5 text-neutral-400" />
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-bold uppercase tracking-widest text-neutral-500 mb-2">Email</h4>
-                    <p className="text-lg text-neutral-300">info@sunriseschool.edu.in</p>
-                  </div>
-                </div>
+                ))}
               </div>
             </motion.div>
           </div>
         </div>
       </section>
 
-      {/* 7. CTA SECTION */}
-      <section className="py-24 md:py-40 bg-neutral-900 text-white overflow-hidden relative">
-        <div className="absolute top-0 left-0 w-full h-full opacity-10">
-           <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" strokeWidth="0.5"/>
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#grid)" />
-          </svg>
-        </div>
-        
+      {/* 7. CTA SECTION (py-40 rhythm) */}
+      <section className="py-40 bg-white overflow-hidden relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0, y: 100 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
           >
-            <h2 className="text-5xl md:text-7xl lg:text-8xl font-black mb-12 tracking-tighter uppercase leading-[0.9]">
-              Join <span className="text-neutral-500">Sunrise</span> <br /> School Rajkot
+             <span className="text-[10px] font-black tracking-[0.6em] uppercase mb-12 block text-neutral-200">Join Our Legacy Today</span>
+            <h2 className="text-6xl md:text-9xl font-black mb-20 tracking-tighter uppercase leading-[0.8] md:leading-[0.8] text-neutral-900 italic">
+              Enroll at <br /> <span className="text-neutral-200 font-normal">Sunrise</span>
             </h2>
-            <div className="flex flex-col sm:flex-row gap-6 justify-center mt-16">
-              <button className="px-10 py-5 bg-white text-neutral-900 font-black text-lg uppercase tracking-widest hover:bg-neutral-200 transition-all duration-300 flex items-center justify-center gap-3 group">
-                Contact Us
-                <MessageCircle className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </button>
-              <button className="px-10 py-5 border-2 border-white text-white font-black text-lg uppercase tracking-widest hover:bg-white hover:text-neutral-900 transition-all duration-300 flex items-center justify-center gap-3 group">
-                Inquiry
-                <Info className="w-5 h-5 group-hover:scale-110 transition-transform" />
-              </button>
+            <div className="flex flex-col sm:flex-row gap-8 justify-center mt-24">
+              <Link to="/contact" className="px-16 py-8 bg-neutral-900 text-white font-black text-sm uppercase tracking-[0.4em] hover:bg-neutral-800 transition-all duration-700 flex items-center justify-center gap-6 group rounded-full shadow-2xl">
+                Contact Office
+                <MessageCircle className="w-6 h-6 group-hover:rotate-12 transition-all duration-500" />
+              </Link>
+              <Link to="/inquiry" className="px-16 py-8 border-2 border-neutral-900 text-neutral-900 font-black text-sm uppercase tracking-[0.4em] hover:bg-neutral-900 hover:text-white transition-all duration-700 flex items-center justify-center gap-6 group rounded-full">
+                Admission Inquiry
+                <ArrowRight className="w-6 h-6 group-hover:translate-x-4 transition-all duration-500" />
+              </Link>
             </div>
           </motion.div>
         </div>
       </section>
 
       {/* FOOTER STRIP */}
-      <div className="bg-white py-8 border-t border-neutral-100 text-center">
-        <p className="text-xs font-bold uppercase tracking-[0.5em] text-neutral-300">
-          © {new Date().getFullYear()} Sunrise School Rajkot • Academic Excellence
+      <div className="bg-neutral-900 py-16 text-center border-t border-white/5">
+        <p className="text-[10px] font-black uppercase tracking-[0.8em] text-neutral-700">
+          © {new Date().getFullYear()} Sunrise Institution • Premium Education Rajkot
         </p>
       </div>
     </div>
