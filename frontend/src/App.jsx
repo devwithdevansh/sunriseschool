@@ -1,7 +1,7 @@
 import { Route, Routes } from 'react-router-dom'
 import MainLayout from './layouts/MainLayout.jsx'
 import HomePage from './pages/HomePage.jsx'
-import AboutPage from './pages/AboutPage.jsx'
+import About from './pages/About.jsx'
 import AcademicsPage from './pages/AcademicsPage.jsx'
 import ActivitiesPage from './pages/ActivitiesPage.jsx'
 import ResultsPage from './pages/ResultsPage.jsx'
@@ -19,7 +19,7 @@ export default function App() {
     <Routes>
       <Route element={<MainLayout />}>
         <Route path="/" element={<HomePage />} />
-        <Route path="/about" element={<AboutPage />} />
+        <Route path="/about" element={<About />} />
         <Route path="/academics" element={<AcademicsPage />} />
         <Route path="/academics/kg" element={<KGPage />} />
         <Route path="/academics/primary" element={<PrimaryPage />} />

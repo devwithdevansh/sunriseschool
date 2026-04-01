@@ -62,7 +62,7 @@ const NavItem = ({ item, scrolled }) => {
   const isActive = item.path !== '#' && (location.pathname === item.path || (item.dropdown && !item.isMore && item.dropdown.some(d => location.pathname === d.path)));
 
   return (
-    <div 
+    <div
       className="relative group h-full flex items-center"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -76,15 +76,14 @@ const NavItem = ({ item, scrolled }) => {
       ) : (
         <Link
           to={item.path}
-          className={`flex items-center space-x-1 text-[11px] font-black uppercase tracking-[0.2em] transition-all duration-300 py-4 ${
-            isActive ? 'text-gray-900' : 'text-gray-400 hover:text-gray-900'
-          }`}
+          className={`flex items-center space-x-1 text-[11px] font-black uppercase tracking-[0.2em] transition-all duration-300 py-4 ${isActive ? 'text-gray-900' : 'text-gray-400 hover:text-gray-900'
+            }`}
         >
           <span>{item.name}</span>
           {item.dropdown && (
-            <ChevronDown 
-              size={12} 
-              className={`transition-transform duration-300 ${isHovered ? 'rotate-180' : ''}`} 
+            <ChevronDown
+              size={12}
+              className={`transition-transform duration-300 ${isHovered ? 'rotate-180' : ''}`}
             />
           )}
         </Link>
@@ -180,16 +179,16 @@ const Navbar = () => {
   useEffect(() => {
     const handleResize = () => {
       const width = window.innerWidth;
+
+      // Dynamic item count based on screen width
       if (width < 1024) {
         setVisibleCount(MENU_ITEMS.length);
-      } else if (width < 1150) {
+      } else if (width < 1280) {
         setVisibleCount(4);
-      } else if (width < 1250) {
+      } else if (width < 1440) {
         setVisibleCount(6);
-      } else if (width < 1350) {
-        setVisibleCount(8);
       } else {
-        setVisibleCount(MENU_ITEMS.length);
+        setVisibleCount(8);
       }
     };
 
@@ -201,7 +200,7 @@ const Navbar = () => {
   const visibleItems = MENU_ITEMS.slice(0, visibleCount);
   const hiddenItems = MENU_ITEMS.slice(visibleCount);
   const desktopItems = [...visibleItems];
-  
+
   if (hiddenItems.length > 0) {
     desktopItems.push({
       name: '...',
@@ -212,36 +211,42 @@ const Navbar = () => {
   }
 
   return (
-    <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
-      scrolled 
-        ? 'bg-white/95 backdrop-blur-md shadow-md py-3' 
-        : 'bg-white py-5'
-    }`}>
-      <div className="max-w-screen-xl mx-auto px-4 flex justify-between items-center h-full">
-        <Link to="/" className="flex items-center shrink-0" onClick={() => setIsOpen(false)}>
-          <span className="text-2xl font-black tracking-tighter text-gray-900 leading-none">
-            SUNRISE<br />
-            <span className="text-[10px] tracking-[0.5em] text-gray-400 font-bold uppercase">School</span>
-          </span>
-        </Link>
+    <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${scrolled
+      ? 'bg-white/95 backdrop-blur-md shadow-md py-3'
+      : 'bg-white py-5'
+      }`}>
+      <div className="w-full flex items-center h-full relative pl-6 pr-4 sm:pr-6 lg:pr-8">
+        {/* Left Side: Logo */}
+        <div className="flex-shrink-0">
+          <Link to="/" className="flex items-center group py-4" onClick={() => setIsOpen(false)}>
+            <span className="text-2xl font-black tracking-tighter text-gray-900 leading-none group-hover:scale-105 transition-transform duration-300">
+              SUNRISE<br />
+              <span className="text-[10px] tracking-[0.5em] text-gray-400 font-bold uppercase group-hover:text-gray-900 transition-colors tracking-[0.5em]">School</span>
+            </span>
+          </Link>
+        </div>
 
-        {/* Desktop Nav */}
-        <div className="hidden lg:flex items-center space-x-5 xl:space-x-8 h-full">
-          {desktopItems.map((item, idx) => (
-            <NavItem key={idx} item={item} scrolled={scrolled} />
-          ))}
-          <button className="btn-premium flex-shrink-0 !py-3 !px-8 !text-[10px] uppercase tracking-[0.2em]">
+        {/* Right Side Group: Links + Portal */}
+        <div className="hidden lg:flex items-center ml-auto h-full space-x-8 xl:space-x-12">
+          <div className="flex items-center space-x-6 xl:space-x-8 h-full">
+            {desktopItems.map((item, idx) => (
+              <NavItem key={idx} item={item} scrolled={scrolled} />
+            ))}
+          </div>
+          <button className="btn-premium flex-shrink-0 !py-2.5 !px-8 !text-[10px] uppercase tracking-[0.2em] shadow-md hover:shadow-xl">
             Portal
           </button>
         </div>
 
         {/* Mobile Menu Button - Hamburger */}
-        <button 
-          className="lg:hidden p-2 text-gray-900 focus:outline-none transition-transform active:scale-90" 
-          onClick={() => setIsOpen(true)}
-        >
-          <Menu size={24} />
-        </button>
+        <div className="lg:hidden flex-1 flex justify-end">
+          <button
+            className="p-2 text-gray-900 focus:outline-none transition-transform active:scale-90"
+            onClick={() => setIsOpen(true)}
+          >
+            <Menu size={24} />
+          </button>
+        </div>
       </div>
 
       {/* Mobile Nav Side Drawer */}
@@ -256,7 +261,7 @@ const Navbar = () => {
               onClick={() => setIsOpen(false)}
               className="fixed inset-0 bg-black/40 z-[60] backdrop-blur-sm lg:hidden"
             />
-            
+
             {/* Drawer */}
             <motion.div
               initial={{ x: '100%' }}
@@ -268,7 +273,7 @@ const Navbar = () => {
               {/* Drawer Header */}
               <div className="flex justify-between items-center p-6 border-b border-gray-50">
                 <span className="text-xl font-black tracking-tighter text-gray-900 uppercase">Menu</span>
-                <button 
+                <button
                   onClick={() => setIsOpen(false)}
                   className="p-2 text-gray-400 hover:text-gray-900 transition-colors"
                 >
@@ -289,18 +294,18 @@ const Navbar = () => {
                         {item.name}
                       </Link>
                       {item.dropdown && (
-                        <button 
+                        <button
                           onClick={() => setActiveMobileDropdown(activeMobileDropdown === idx ? null : idx)}
                           className="p-3 text-gray-400 hover:text-gray-900 transition-colors bg-gray-50 rounded-lg"
                         >
-                          <ChevronDown 
-                            size={18} 
-                            className={`transition-transform duration-300 ${activeMobileDropdown === idx ? 'rotate-180' : ''}`} 
+                          <ChevronDown
+                            size={18}
+                            className={`transition-transform duration-300 ${activeMobileDropdown === idx ? 'rotate-180' : ''}`}
                           />
                         </button>
                       )}
                     </div>
-                    
+
                     {item.dropdown && (activeMobileDropdown === idx) && (
                       <motion.div
                         initial={{ height: 0, opacity: 0 }}
@@ -324,7 +329,7 @@ const Navbar = () => {
                     )}
                   </div>
                 ))}
-                
+
                 <div className="pt-10 pb-6">
                   <button className="btn-premium w-full py-5 text-sm font-bold uppercase tracking-widest shadow-xl">
                     Portal Login
