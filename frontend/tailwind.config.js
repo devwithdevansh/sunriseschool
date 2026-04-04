@@ -8,9 +8,9 @@ export default {
     extend: {
       colors: {
         brand: {
-          orange: "#F97316",
-          blue: "#0EA5E9",
-          dark: "#0F172A",
+          orange: "#ea580c", // orange-600 for primary
+          blue: "#2563eb",   // blue-600 for primary
+          dark: "#0f172a",   // slate-900 (dark mode / heavy text)
         }
       },
       fontFamily: {

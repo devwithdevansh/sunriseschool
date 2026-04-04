@@ -3,18 +3,18 @@ import { motion } from 'framer-motion';
 
 const AboutVisionSection = () => {
   return (
-    <section className="py-20 bg-white w-full overflow-hidden">
+    <section className="py-24 bg-white w-full overflow-hidden -mt-12 rounded-t-[4rem] z-40 shadow-[0_-10px_30px_rgba(0,0,0,0.05)] relative">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-24 items-start">
           <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
+            initial={{ opacity: 0, x: -40, filter: "blur(15px)" }}
+            whileInView={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
           >
             <h2 className="text-4xl font-black text-gray-900 mb-8 tracking-tighter uppercase relative">
               About Sunrise School
-              <span className="absolute -bottom-2 left-0 w-20 h-1 bg-gray-900 rounded-full"></span>
+              <span className="absolute -bottom-2 left-0 w-20 h-1 bg-brand-orange rounded-full"></span>
             </h2>
             <div className="space-y-6">
               <p className="text-xl text-gray-600 leading-relaxed font-medium">
@@ -27,14 +27,14 @@ const AboutVisionSection = () => {
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="bg-gray-900 p-12 md:p-16 rounded-[3rem] text-white shadow-2xl relative overflow-hidden group"
+            initial={{ opacity: 0, x: 40, filter: "blur(15px)" }}
+            whileInView={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            className="bg-gradient-to-br from-brand-blue to-[#1e3a8a] p-12 md:p-16 rounded-[3rem] text-white shadow-2xl relative overflow-hidden group"
           >
             {/* Subtle background element */}
-            <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-32 -mt-32 blur-3xl group-hover:bg-white/10 transition-colors duration-700"></div>
+            <div className="absolute top-0 right-0 w-64 h-64 bg-brand-orange/10 rounded-full -mr-32 -mt-32 blur-3xl group-hover:bg-brand-orange/20 transition-colors duration-700"></div>
             
             <h2 className="text-4xl font-black mb-8 tracking-tighter uppercase relative z-10">
               Our Vision

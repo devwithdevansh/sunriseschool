@@ -76,7 +76,7 @@ const NavItem = ({ item, scrolled }) => {
       ) : (
         <Link
           to={item.dropdown && item.dropdown.length > 0 ? item.dropdown[0].path : item.path}
-          className={`flex items-center space-x-1 text-[11px] font-black uppercase tracking-[0.2em] transition-all duration-300 py-4 ${isActive ? 'text-gray-900' : 'text-gray-400 hover:text-gray-900'
+          className={`flex items-center space-x-1 text-[11px] font-black uppercase tracking-[0.2em] transition-all duration-300 py-4 ${isActive ? 'text-brand-blue' : 'text-gray-500 hover:text-brand-orange'
             }`}
         >
           <span>{item.name}</span>
@@ -91,7 +91,7 @@ const NavItem = ({ item, scrolled }) => {
 
       {/* Underline for active/hover - only for main items without dropdown or for active parent */}
       <motion.div
-        className="absolute bottom-0 left-0 h-[2px] bg-gray-900"
+        className="absolute bottom-0 left-0 h-[2px] bg-brand-orange"
         initial={{ width: 0 }}
         animate={{ width: (isHovered || isActive) && (!item.dropdown || item.isMore) ? '100%' : '0' }}
         transition={{ duration: 0.3 }}
@@ -112,7 +112,7 @@ const NavItem = ({ item, scrolled }) => {
                   <div key={idx} className="border-b border-gray-50 last:border-0 pb-2 mb-2 last:mb-0 last:pb-0 px-6">
                     <Link
                       to={hiddenItem.path}
-                      className="block py-2 text-[11px] font-black uppercase tracking-widest text-gray-900 hover:text-orange-500 transition-colors"
+                      className="block py-2 text-[11px] font-black uppercase tracking-widest text-gray-600 hover:text-brand-orange transition-colors"
                     >
                       {hiddenItem.name}
                     </Link>
@@ -122,7 +122,7 @@ const NavItem = ({ item, scrolled }) => {
                           <Link
                             key={sIdx}
                             to={sub.path}
-                            className="block py-1 text-[10px] font-bold uppercase tracking-widest text-gray-500 hover:text-gray-900 transition-colors"
+                            className="block py-1 text-[10px] font-bold uppercase tracking-widest text-gray-500 hover:text-brand-orange transition-colors"
                           >
                             {sub.name}
                           </Link>
@@ -137,7 +137,7 @@ const NavItem = ({ item, scrolled }) => {
                 <Link
                   key={idx}
                   to={sub.path}
-                  className="block px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-gray-500 hover:text-gray-900 hover:bg-gray-50 transition-colors"
+                  className="block px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-gray-500 hover:text-brand-orange hover:bg-gray-50 transition-colors"
                 >
                   {sub.name}
                 </Link>
@@ -219,9 +219,9 @@ const Navbar = () => {
         {/* Left Side: Logo */}
         <div className="flex-shrink-0">
           <Link to="/" className="flex items-center group py-4" onClick={() => setIsOpen(false)}>
-            <span className="text-2xl font-black tracking-tighter text-gray-900 leading-none group-hover:scale-105 transition-transform duration-300">
+            <span className="text-2xl font-black tracking-tighter text-brand-blue leading-none group-hover:scale-105 transition-transform duration-300">
               SUNRISE<br />
-              <span className="text-[10px] tracking-[0.5em] text-gray-400 font-bold uppercase group-hover:text-gray-900 transition-colors tracking-[0.5em]">School</span>
+              <span className="text-[10px] tracking-[0.5em] text-brand-orange font-bold uppercase transition-colors">School</span>
             </span>
           </Link>
         </div>
@@ -259,7 +259,7 @@ const Navbar = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsOpen(false)}
-              className="fixed inset-0 bg-black/40 z-[60] backdrop-blur-sm lg:hidden"
+              className="fixed inset-0 bg-white/40 z-[60] backdrop-blur-sm lg:hidden"
             />
 
             {/* Drawer */}

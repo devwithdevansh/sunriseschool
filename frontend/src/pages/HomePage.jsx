@@ -25,7 +25,7 @@ const HomePage = () => {
   // High-Fidelity Mask - 3-stage feathering per user request
   const maskImage = useTransform(
     [springX, springY],
-    ([x, y]) => `radial-gradient(circle at ${x}px ${y}px, black 200px, rgba(0,0,0,0.6) 260px, transparent 360px)`
+    ([x, y]) => `radial-gradient(circle at ${x}px ${y}px, rgba(15, 23, 42, 0.9) 200px, rgba(15, 23, 42, 0.4) 260px, transparent 360px)`
   );
 
   // Subtle Ambient Glow - Adds premium lighting depth
@@ -53,10 +53,10 @@ const HomePage = () => {
   return (
     <div className="w-full">
       {/* Hero Section */}
-      <section 
+      <section
         ref={containerRef}
         onMouseMove={handleMouseMove}
-        className="relative min-h-[90vh] md:min-h-screen w-full flex items-center justify-center bg-white overflow-hidden pb-10"
+        className="relative min-h-[90vh] md:min-h-screen w-full flex items-center justify-center bg-mesh-light overflow-hidden pb-10"
       >
         {/* Ambient Glow Layer (Behind) */}
         {!isMobile && (
@@ -81,10 +81,10 @@ const HomePage = () => {
             }}
           />
         )}
-        
+
         {/* Static Background Image (Mobile Only) */}
         {isMobile && (
-          <div 
+          <div
             className="absolute inset-0 z-0 opacity-10 bg-cover bg-center"
             style={{ backgroundImage: `url(${heroRevealImg})` }}
           />
@@ -92,40 +92,40 @@ const HomePage = () => {
 
         {/* Subtle Background Pattern */}
         <div className="absolute inset-0 opacity-[0.02] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/clean-gray-paper.png')]"></div>
-        
+
         <div className="w-full px-6 md:px-12 relative z-10">
           <div className="max-w-5xl mx-auto text-center">
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
+              initial={{ opacity: 0, scale: 0.95, filter: "blur(12px)", y: 30 }}
+              animate={{ opacity: 1, scale: 1, filter: "blur(0px)", y: 0 }}
+              transition={{ duration: 1.6, ease: [0.16, 1, 0.3, 1] }}
             >
-              <h1 className="text-7xl md:text-9xl font-black text-gray-900 tracking-tighter leading-none mb-8">
+              <h1 className="text-7xl md:text-9xl font-black text-brand-dark tracking-tighter leading-none mb-8 drop-shadow-sm">
                 SUNRISE<br />
-                <span className="text-gray-300">SCHOOL</span><br />
+                <span className="text-brand-blue bg-clip-text text-transparent bg-gradient-to-r from-brand-blue to-brand-orange animate-gradient-xy">SCHOOL</span><br />
                 RAJKOT
               </h1>
             </motion.div>
 
-            <motion.p 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
+            <motion.p
+              initial={{ opacity: 0, filter: "blur(8px)", y: 20 }}
+              animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
+              transition={{ duration: 1.2, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
               className="text-xl md:text-2xl text-gray-500 mb-12 max-w-2xl mx-auto font-medium leading-relaxed"
             >
               Empowering students with knowledge, discipline, and excellence for a future of unlimited possibilities.
             </motion.p>
-            
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
+
+            <motion.div
+              initial={{ opacity: 0, filter: "blur(8px)", y: 20 }}
+              animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
+              transition={{ duration: 1.2, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
               className="flex flex-col sm:flex-row justify-center items-center gap-6"
             >
               <button className="btn-premium group flex items-center">
                 Explore Our Campus <ChevronRight className="ml-2 group-hover:translate-x-1 transition-transform" size={20} />
               </button>
-              
+
               <button className="btn-outline">
                 Contact Admissions
               </button>
@@ -134,7 +134,7 @@ const HomePage = () => {
         </div>
 
         {/* Minimal Scroll Indicator */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.2, duration: 1 }}

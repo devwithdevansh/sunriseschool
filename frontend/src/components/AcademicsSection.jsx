@@ -30,23 +30,25 @@ const AcademicsSection = () => {
   ];
 
   return (
-    <section className="py-12 bg-white w-full border-y border-gray-50">
-      <div className="max-w-7xl mx-auto px-6 md:px-12">
+    <section className="py-24 relative bg-gray-50 w-full overflow-hidden -mt-12 rounded-t-[4rem] z-20 shadow-[0_-10px_30px_rgba(0,0,0,0.02)]">
+      {/* Decorative ambient background blob */}
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-brand-orange/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none"></div>
+      <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
         <div className="text-center mb-20">
           <motion.h2 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-4xl md:text-5xl font-black text-gray-900 mb-4 tracking-tighter uppercase"
+            initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
+            whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            className="text-4xl md:text-5xl font-black text-brand-dark mb-4 tracking-tighter uppercase"
           >
             Our Academics
           </motion.h2>
           <motion.p 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.1 }}
+            initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
+            whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
             className="text-xl text-gray-500 max-w-2xl mx-auto font-medium"
           >
             Comprehensive education from kindergarten to higher secondary
@@ -57,18 +59,18 @@ const AcademicsSection = () => {
           {academicLevels.map((level, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: level.delay }}
-              whileHover={{ y: -10, scale: 1.02 }}
-              className="bg-white p-10 rounded-[2rem] border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] transition-all duration-500 flex flex-col items-center text-center group"
+              initial={{ opacity: 0, y: 50, filter: "blur(15px)" }}
+              whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 1, delay: level.delay, ease: [0.16, 1, 0.3, 1] }}
+              whileHover={{ y: -15, scale: 1.03 }}
+              className="bg-white p-10 rounded-[2.5rem] border border-gray-50 shadow-lg hover:shadow-[0_30px_60px_rgba(37,99,235,0.12)] hover:border-brand-blue/20 transition-all duration-500 flex flex-col items-center text-center group"
             >
-              <div className="p-4 bg-gray-50 rounded-2xl group-hover:bg-gray-900 group-hover:text-white transition-colors duration-500">
-                {React.cloneElement(level.icon, { className: 'w-10 h-10 group-hover:text-white transition-colors duration-500' })}
+              <div className="p-5 bg-brand-blue/5 rounded-2xl group-hover:bg-brand-blue group-hover:shadow-[0_10px_25px_rgba(37,99,235,0.4)] group-hover:-translate-y-2 transition-all duration-500">
+                {React.cloneElement(level.icon, { className: 'w-10 h-10 text-brand-blue group-hover:text-white transition-colors duration-500' })}
               </div>
               
-              <h3 className="text-2xl font-bold text-gray-900 mt-8 mb-2 tracking-tight">
+              <h3 className="text-2xl font-bold text-gray-900 mt-8 mb-2 tracking-tight group-hover:text-brand-blue transition-colors duration-500">
                 {level.title}
               </h3>
               
@@ -82,7 +84,7 @@ const AcademicsSection = () => {
                 </p>
               )}
               
-              <div className="w-10 h-1 bg-gray-100 rounded-full my-6 group-hover:w-20 group-hover:bg-gray-900 transition-all duration-500"></div>
+              <div className="w-10 h-1 bg-gray-100 rounded-full my-6 group-hover:w-24 group-hover:bg-brand-orange transition-all duration-500"></div>
               
               <p className="text-gray-500 leading-relaxed font-medium text-sm">
                 {level.details}
