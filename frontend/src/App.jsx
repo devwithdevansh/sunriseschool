@@ -21,11 +21,7 @@ import CompetitiveExams from './pages/CompetitiveExams.jsx'
 import Sports from './pages/Sports.jsx'
 import Transportation from './pages/Transportation.jsx'
 import Stationary from './pages/Stationary.jsx'
-
-
-
-
-
+import AlumniPage from './pages/AlumniPage.jsx'
 
 
 
@@ -36,7 +32,6 @@ export default function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<About />} />
         <Route path="/about/management" element={<Management />} />
-
         <Route path="/academics" element={<AcademicsPage />} />
         <Route path="/academics/kg" element={<KGPage />} />
         <Route path="/academics/primary" element={<PrimaryPage />} />
@@ -54,13 +49,7 @@ export default function App() {
         <Route path="/transportation" element={<Transportation />} />
         <Route path="/stationary" element={<Stationary />} />
         <Route path="/contact" element={<Contact />} />
-
-
-
-
-
-
-
+        <Route path="/alumni" element={<AlumniPage />} />
         <Route path="*" element={<div>404 - Page Not Found</div>} />
       </Route>
     </Routes>
