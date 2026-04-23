@@ -69,14 +69,14 @@ const NavItem = ({ item, scrolled }) => {
     >
       {item.isMore ? (
         <button
-          className={`flex items-center space-x-1 text-[11px] font-black uppercase tracking-[0.2em] transition-all duration-300 py-4 text-gray-400 hover:text-gray-900`}
+          className={`flex items-center space-x-1 text-[11px] font-black uppercase tracking-[0.2em] transition-all duration-300 py-2 text-gray-400 hover:text-gray-900`}
         >
           <span className="text-xl tracking-normal leading-none -mt-2">{item.name}</span>
         </button>
       ) : (
         <Link
           to={item.dropdown && item.dropdown.length > 0 ? item.dropdown[0].path : item.path}
-          className={`flex items-center space-x-1 text-[11px] font-black uppercase tracking-[0.2em] transition-all duration-300 py-4 ${isActive ? 'text-brand-blue' : 'text-gray-500 hover:text-brand-orange'
+          className={`flex items-center space-x-1 text-[11px] font-black uppercase tracking-[0.2em] transition-all duration-300 py-2 ${isActive ? 'text-brand-blue' : 'text-gray-500 hover:text-brand-orange'
             }`}
         >
           <span>{item.name}</span>
@@ -111,7 +111,7 @@ const NavItem = ({ item, scrolled }) => {
                 {item.dropdown.map((hiddenItem, idx) => (
                   <div key={idx} className="border-b border-gray-50 last:border-0 pb-2 mb-2 last:mb-0 last:pb-0 px-6">
                     <Link
-                      to={hiddenItem.path}
+                      to={hiddenItem.dropdown && hiddenItem.dropdown.length > 0 ? hiddenItem.dropdown[0].path : hiddenItem.path}
                       className="block py-2 text-[11px] font-black uppercase tracking-widest text-gray-600 hover:text-brand-orange transition-colors"
                     >
                       {hiddenItem.name}
@@ -122,7 +122,8 @@ const NavItem = ({ item, scrolled }) => {
                           <Link
                             key={sIdx}
                             to={sub.path}
-                            className="block py-1 text-[10px] font-bold uppercase tracking-widest text-gray-500 hover:text-brand-orange transition-colors"
+                            className={`block py-1 text-[10px] font-bold uppercase tracking-widest transition-colors ${location.pathname === sub.path ? 'text-brand-blue' : 'text-gray-500 hover:text-brand-orange'
+                              }`}
                           >
                             {sub.name}
                           </Link>
@@ -133,15 +134,19 @@ const NavItem = ({ item, scrolled }) => {
                 ))}
               </div>
             ) : (
-              item.dropdown.map((sub, idx) => (
-                <Link
-                  key={idx}
-                  to={sub.path}
-                  className="block px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-gray-500 hover:text-brand-orange hover:bg-gray-50 transition-colors"
-                >
-                  {sub.name}
-                </Link>
-              ))
+              item.dropdown.map((sub, idx) => {
+                const isSubActive = location.pathname === sub.path;
+                return (
+                  <Link
+                    key={idx}
+                    to={sub.path}
+                    className={`block px-6 py-3 text-[10px] font-bold uppercase tracking-widest transition-colors ${isSubActive ? 'text-brand-blue bg-gray-50' : 'text-gray-500 hover:text-brand-orange hover:bg-gray-50'
+                      }`}
+                  >
+                    {sub.name}
+                  </Link>
+                );
+              })
             )}
           </motion.div>
         )}
@@ -155,6 +160,7 @@ const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [activeMobileDropdown, setActiveMobileDropdown] = useState(null);
   const [visibleCount, setVisibleCount] = useState(MENU_ITEMS.length);
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -212,13 +218,13 @@ const Navbar = () => {
 
   return (
     <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${scrolled
-      ? 'bg-white/95 backdrop-blur-md shadow-md py-3'
-      : 'bg-white py-5'
+      ? 'bg-white/95 backdrop-blur-md shadow-md py-2'
+      : 'bg-white py-4'
       }`}>
       <div className="w-full flex items-center h-full relative pl-6 pr-4 sm:pr-6 lg:pr-8">
         {/* Left Side: Logo */}
         <div className="flex-shrink-0">
-          <Link to="/" className="flex items-center group py-4" onClick={() => setIsOpen(false)}>
+          <Link to="/" className="flex items-center group py-2" onClick={() => setIsOpen(false)}>
             <span className="text-2xl font-black tracking-tighter text-brand-blue leading-none group-hover:scale-105 transition-transform duration-300">
               SUNRISE<br />
               <span className="text-[10px] tracking-[0.5em] text-brand-orange font-bold uppercase transition-colors">School</span>
@@ -294,52 +300,64 @@ const Navbar = () => {
 
               {/* Drawer Links */}
               <div className="flex flex-col p-6 space-y-1">
-                {MENU_ITEMS.map((item, idx) => (
-                  <div key={idx} className="flex flex-col">
-                    <div className="flex justify-between items-center py-2">
-                      <Link
-                        to={item.dropdown && item.dropdown.length > 0 ? item.dropdown[0].path : item.path}
-                        className="flex-grow py-3 text-lg font-black uppercase tracking-tight text-gray-900"
-                        onClick={() => !item.dropdown && setIsOpen(false)}
-                      >
-                        {item.name}
-                      </Link>
-                      {item.dropdown && (
-                        <button
-                          onClick={() => setActiveMobileDropdown(activeMobileDropdown === idx ? null : idx)}
-                          className="p-3 text-gray-400 hover:text-gray-900 transition-colors bg-gray-50 rounded-lg"
+                {MENU_ITEMS.map((item, idx) => {
+                  const isActive = item.path !== '#' && (
+                    location.pathname === item.path ||
+                    (item.dropdown && item.dropdown.some(d => location.pathname === d.path))
+                  );
+
+                  return (
+                    <div key={idx} className="flex flex-col">
+                      <div className="flex justify-between items-center py-2">
+                        <Link
+                          to={item.dropdown && item.dropdown.length > 0 ? item.dropdown[0].path : item.path}
+                          className={`flex-grow py-3 text-lg font-black uppercase tracking-tight transition-colors ${isActive ? 'text-brand-blue' : 'text-gray-900'
+                            }`}
+                          onClick={() => setIsOpen(false)}
                         >
-                          <ChevronDown
-                            size={18}
-                            className={`transition-transform duration-300 ${activeMobileDropdown === idx ? 'rotate-180' : ''}`}
-                          />
-                        </button>
+                          {item.name}
+                        </Link>
+                        {item.dropdown && (
+                          <button
+                            onClick={() => setActiveMobileDropdown(activeMobileDropdown === idx ? null : idx)}
+                            className="p-3 text-gray-400 hover:text-gray-900 transition-colors bg-gray-50 rounded-lg"
+                          >
+                            <ChevronDown
+                              size={18}
+                              className={`transition-transform duration-300 ${activeMobileDropdown === idx ? 'rotate-180' : ''}`}
+                            />
+                          </button>
+                        )}
+                      </div>
+
+                      {item.dropdown && (activeMobileDropdown === idx) && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          className="overflow-hidden bg-gray-50/50 rounded-xl mb-2 ml-2"
+                        >
+                          <div className="py-2 flex flex-col border-l-2 border-gray-100 ml-2">
+                            {item.dropdown.map((sub, sIdx) => {
+                              const isSubActive = location.pathname === sub.path;
+                              return (
+                                <Link
+                                  key={sIdx}
+                                  to={sub.path}
+                                  className={`px-6 py-3 text-[11px] font-bold uppercase tracking-widest transition-colors ${isSubActive ? 'text-brand-blue' : 'text-gray-500 hover:text-gray-900'
+                                    }`}
+                                  onClick={() => setIsOpen(false)}
+                                >
+                                  {sub.name}
+                                </Link>
+                              );
+                            })}
+                          </div>
+                        </motion.div>
                       )}
                     </div>
-
-                    {item.dropdown && (activeMobileDropdown === idx) && (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: 'auto', opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        className="overflow-hidden bg-gray-50/50 rounded-xl mb-2 ml-2"
-                      >
-                        <div className="py-2 flex flex-col border-l-2 border-gray-100 ml-2">
-                          {item.dropdown.map((sub, sIdx) => (
-                            <Link
-                              key={sIdx}
-                              to={sub.path}
-                              className="px-6 py-3 text-[11px] font-bold uppercase tracking-widest text-gray-500 hover:text-gray-900"
-                              onClick={() => setIsOpen(false)}
-                            >
-                              {sub.name}
-                            </Link>
-                          ))}
-                        </div>
-                      </motion.div>
-                    )}
-                  </div>
-                ))}
+                  );
+                })}
 
                 <div className="pt-8 pb-6 flex flex-col space-y-3 px-2">
                   <span className="text-[10px] font-black uppercase text-gray-400 tracking-[0.3em] mb-1">Download Brochure</span>
