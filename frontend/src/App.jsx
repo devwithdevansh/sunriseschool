@@ -22,6 +22,7 @@ import Sports from './pages/Sports.jsx'
 import Transportation from './pages/Transportation.jsx'
 import Stationary from './pages/Stationary.jsx'
 import AlumniPage from './pages/AlumniPage.jsx'
+import TrusteeMessage from './pages/TrusteeMessage.jsx'
 
 
 
@@ -32,6 +33,7 @@ export default function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<About />} />
         <Route path="/about/management" element={<Management />} />
+        <Route path="/about/message" element={<TrusteeMessage />} />
         <Route path="/academics" element={<AcademicsPage />} />
         <Route path="/academics/kg" element={<KGPage />} />
         <Route path="/academics/primary" element={<PrimaryPage />} />
