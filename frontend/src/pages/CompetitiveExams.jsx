@@ -1,6 +1,6 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Trophy, Book, Star, Target, GraduationCap, Award, ArrowRight, ShieldCheck, TrendingUp, Laptop, ClipboardList, Medal } from 'lucide-react';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Trophy, Book, Star, Target, GraduationCap, Award, ArrowRight, ShieldCheck, TrendingUp, Laptop, ClipboardList, Medal, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const containerVariants = {
@@ -14,6 +14,49 @@ const itemVariants = {
 };
 
 const CompetitiveExams = () => {
+  const [activeExam, setActiveExam] = useState(0);
+
+  const examsList = [
+    { 
+      icon: Trophy, 
+      title: 'Olympiads', 
+      desc: 'Scientific and mathematical challenges at a global level.', 
+      rank: 'National Tier',
+      image: '/images/exams/olympiads.png'
+    },
+    { 
+      icon: Book, 
+      title: 'Hindi Prachar Samiti', 
+      desc: 'Linguistic excellence and cultural depth in the national language.', 
+      rank: 'Institutional Tier',
+      image: '/images/exams/hindi_prachar.png'
+    },
+    { 
+      icon: GraduationCap, 
+      title: 'Sanskrit Bharti', 
+      desc: 'Connecting students with spiritual wisdom and heritage foundations.', 
+      rank: 'Legacy Tier',
+      image: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=800'
+    },
+    { 
+      icon: Star, 
+      title: 'Humming Bird', 
+      desc: 'Logical reasoning and technical brilliance for junior scholars.', 
+      rank: 'Academic Tier',
+      image: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&q=80&w=800'
+    },
+    { 
+      icon: Target, 
+      title: 'Spell Bee', 
+      desc: 'Building vocabulary and linguistic precision through competitive spelling.', 
+      rank: 'Skill Tier',
+      image: 'https://images.unsplash.com/photo-1503676382389-4809596d5290?auto=format&fit=crop&q=80&w=800'
+    },
+  ];
+
+  const nextExam = () => setActiveExam((prev) => (prev + 1) % examsList.length);
+  const prevExam = () => setActiveExam((prev) => (prev - 1 + examsList.length) % examsList.length);
+
   return (
     <div className="min-h-screen bg-white text-gray-900 font-sans overflow-x-hidden selection:bg-brand-blue selection:text-white">
 
@@ -55,36 +98,82 @@ const CompetitiveExams = () => {
         </div>
       </section>
 
-      {/* ── 3. EXAMS LIST (White) ─────────────────────────────────── */}
-      <section className="py-24 md:py-36 bg-white px-4">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-24">
-            <span className="text-[10px] font-black tracking-[0.4em] uppercase mb-4 block text-brand-orange italic">Academic Recognition</span>
-            <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-6 italic">The Exams <span className="text-brand-blue font-light">We Master</span></h2>
+      {/* ── 3. EXAMS CAROUSEL (White) ─────────────────────────────────── */}
+      <section className="py-24 md:py-36 bg-white px-4 overflow-hidden">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col md:flex-row justify-between items-end mb-16 md:mb-24 gap-8">
+            <div className="text-left">
+              <span className="text-[10px] font-black tracking-[0.4em] uppercase mb-4 block text-brand-orange italic">Academic Recognition</span>
+              <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter italic leading-none">The Exams <br className="hidden md:block"/><span className="text-brand-blue font-light">We Master</span></h2>
+            </div>
+            <div className="flex gap-4">
+              <button onClick={prevExam} className="w-14 h-14 rounded-full border border-gray-200 flex items-center justify-center text-gray-500 hover:bg-brand-blue hover:text-white hover:border-brand-blue transition-all duration-300">
+                <ChevronLeft className="w-6 h-6" />
+              </button>
+              <button onClick={nextExam} className="w-14 h-14 rounded-full border border-gray-200 flex items-center justify-center text-gray-500 hover:bg-brand-blue hover:text-white hover:border-brand-blue transition-all duration-300">
+                <ChevronRight className="w-6 h-6" />
+              </button>
+            </div>
           </div>
-          <motion.div variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true }} className="space-y-6">
-            {[
-              { icon: Trophy, title: 'Olympiads', desc: 'Scientific and mathematical challenges at a global level.', rank: 'National Tier' },
-              { icon: Book, title: 'Hindi Prachar Samiti', desc: 'Linguistic excellence and cultural depth in the national language.', rank: 'Institutional Tier' },
-              { icon: GraduationCap, title: 'Sanskrit Bharti', desc: 'Connecting students with spiritual wisdom and heritage foundations.', rank: 'Legacy Tier' },
-              { icon: Star, title: 'Humming Bird', desc: 'Logical reasoning and technical brilliance for junior scholars.', rank: 'Academic Tier' },
-              { icon: Target, title: 'Spell Bee', desc: 'Building vocabulary and linguistic precision through competitive spelling.', rank: 'Skill Tier' },
-            ].map((exam, index) => (
-              <motion.div key={index} variants={itemVariants} whileHover={{ x: 12 }}
-                className="flex flex-col md:flex-row items-center gap-8 p-8 md:p-12 border border-gray-100 rounded-3xl bg-gray-50 hover:bg-brand-blue hover:border-brand-blue group transition-all duration-500 cursor-default"
+
+          <div className="relative min-h-[500px] md:min-h-[600px] rounded-3xl overflow-hidden bg-gray-50 border border-gray-100 flex flex-col md:flex-row shadow-xl">
+            <AnimatePresence mode="wait">
+              <motion.div 
+                key={activeExam}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                className="w-full md:w-1/2 relative min-h-[300px] md:min-h-full bg-gray-200 overflow-hidden"
               >
-                <div className="w-20 h-20 md:w-24 md:h-24 rounded-3xl bg-white text-gray-900 flex items-center justify-center shrink-0 shadow-sm group-hover:rotate-12 group-hover:scale-110 transition-all duration-500">
-                  <exam.icon className="w-9 h-9 md:w-11 md:h-11" />
+                <img src={examsList[activeExam].image} alt={examsList[activeExam].title} className="absolute inset-0 w-full h-full object-cover" />
+                <div className="absolute inset-0 bg-gradient-to-t from-gray-900/60 to-transparent" />
+                <div className="absolute bottom-6 left-6 right-6">
+                  <span className="inline-flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-md rounded-full text-white text-xs font-bold uppercase tracking-widest">
+                    {examsList[activeExam].rank}
+                  </span>
                 </div>
-                <div className="flex-1 text-center md:text-left space-y-2">
-                  <span className="text-[10px] font-black uppercase tracking-[0.4em] text-brand-orange group-hover:text-blue-200 transition-colors">{exam.rank}</span>
-                  <h3 className="text-3xl md:text-5xl font-black uppercase tracking-tighter group-hover:text-white transition-colors">{exam.title}</h3>
-                  <p className="text-gray-500 group-hover:text-blue-100 transition-colors text-lg md:text-xl font-light italic leading-relaxed max-w-2xl">"{exam.desc}"</p>
-                </div>
-                <ArrowRight className="hidden md:block w-8 h-8 text-gray-300 group-hover:text-white group-hover:translate-x-3 transition-all duration-500" />
               </motion.div>
-            ))}
-          </motion.div>
+            </AnimatePresence>
+
+            <div className="w-full md:w-1/2 p-8 md:p-16 flex flex-col justify-center relative bg-white">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeExam}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.5, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+                  className="space-y-6 md:space-y-8"
+                >
+                  <div className="w-16 h-16 md:w-20 md:h-20 rounded-3xl bg-brand-blue/10 text-brand-blue flex items-center justify-center mb-4">
+                    {React.createElement(examsList[activeExam].icon, { className: "w-8 h-8 md:w-10 md:h-10" })}
+                  </div>
+                  <h3 className="text-4xl md:text-5xl lg:text-6xl font-black uppercase tracking-tighter leading-none">{examsList[activeExam].title}</h3>
+                  <p className="text-gray-500 text-xl md:text-2xl font-light italic leading-relaxed max-w-xl">"{examsList[activeExam].desc}"</p>
+                  
+                  <div className="pt-8 border-t border-gray-100 mt-8">
+                    <Link to="/inquiry" className="inline-flex items-center gap-4 text-brand-orange font-bold uppercase tracking-widest text-sm hover:text-orange-600 transition-colors group">
+                      Explore Details
+                      <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
+                    </Link>
+                  </div>
+                </motion.div>
+              </AnimatePresence>
+
+              {/* Progress Indicators */}
+              <div className="absolute bottom-8 right-8 flex gap-2">
+                {examsList.map((_, i) => (
+                  <button 
+                    key={i} 
+                    onClick={() => setActiveExam(i)}
+                    className={`h-2 rounded-full transition-all duration-500 ${i === activeExam ? 'w-8 bg-brand-blue' : 'w-2 bg-gray-200 hover:bg-gray-300'}`}
+                    aria-label={`Go to slide ${i + 1}`}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
