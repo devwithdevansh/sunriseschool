@@ -1,232 +1,384 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Music, Mic, Palette, Theater, Trophy, Award, Sparkles, ArrowRight, PaletteIcon, MicIcon } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence, useInView } from 'framer-motion';
+import { Music, Mic, Palette, Theater, Trophy, Sparkles, ArrowRight, Users, Globe, Zap } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.12 } }
-};
-
-const itemVariants = {
-  hidden: { y: 40, opacity: 0, filter: 'blur(10px)' },
-  visible: { y: 0, opacity: 1, filter: 'blur(0px)', transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] } }
-};
-
-const CoCurricular = () => {
+/* ── Animated counter ──────────────────────────────────────────── */
+const Counter = ({ to, suffix = '', label }) => {
+  const [val, setVal] = useState(0);
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true });
+  useEffect(() => {
+    if (!inView) return;
+    const duration = 1200;
+    const steps = 60;
+    const increment = to / steps;
+    let current = 0;
+    const timer = setInterval(() => {
+      current = Math.min(current + increment, to);
+      setVal(Math.floor(current));
+      if (current >= to) clearInterval(timer);
+    }, duration / steps);
+    return () => clearInterval(timer);
+  }, [inView, to]);
   return (
-    <div className="min-h-screen bg-white text-gray-900 font-sans overflow-x-hidden selection:bg-brand-blue selection:text-white">
+    <div ref={ref} className="text-center">
+      <div className="text-5xl md:text-7xl font-black tracking-tighter text-white tabular-nums">
+        {val}<span className="text-brand-orange">{suffix}</span>
+      </div>
+      <div className="text-[10px] font-black uppercase tracking-[0.3em] text-white/40 mt-3">{label}</div>
+    </div>
+  );
+};
 
-      {/* ── 1. HERO (Light + dot grid) ────────────────────────────────── */}
-      <section className="relative pt-36 pb-28 md:pt-52 md:pb-40 overflow-hidden bg-white">
-        <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:20px_20px] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_40%,#000_60%,transparent_100%)] opacity-60" />
-        <div className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-orange-50/40 to-transparent pointer-events-none" />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 60, filter: 'blur(20px)' }}
-            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-            transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
+/* ── Data ──────────────────────────────────────────────────────── */
+const CATEGORIES = ['All', 'Arts', 'Sports', 'Performance'];
+
+const ACTIVITIES = [
+  { id: 1, cat: 'Arts',        icon: Palette,  title: 'Visual Arts',     tag: 'Creative',      desc: 'Colors, shapes, and textures — students define their unique visual language.',       img: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?q=80&w=800&auto=format&fit=crop' },
+  { id: 2, cat: 'Performance', icon: Music,    title: 'Music Academy',   tag: 'Melodic',       desc: 'Vocal and instrumental mastery spanning classical and contemporary genres.',           img: 'https://images.unsplash.com/photo-1511379938547-c1f69419868d?q=80&w=800&auto=format&fit=crop' },
+  { id: 3, cat: 'Sports',      icon: Trophy,   title: 'Athletic Club',   tag: 'Physical',      desc: 'Strength, strategy, and teamwork across multiple sporting disciplines.',               img: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?q=80&w=800&auto=format&fit=crop' },
+  { id: 4, cat: 'Performance', icon: Theater,  title: 'Theater Group',   tag: 'Drama',         desc: 'Confidence, speech, and storytelling through the power of the stage.',                 img: 'https://images.unsplash.com/photo-1524712245354-2c4e5e7121c0?q=80&w=800&auto=format&fit=crop' },
+  { id: 5, cat: 'Performance', icon: Mic,      title: 'Public Speaking', tag: 'Rhetoric',      desc: 'Equipping students with the tools to articulate ideas with precision and poise.',      img: 'https://images.unsplash.com/photo-1475721027785-f74eccf877e2?q=80&w=800&auto=format&fit=crop' },
+  { id: 6, cat: 'Arts',        icon: Sparkles, title: 'Dance & Motion',  tag: 'Expressive',    desc: 'Traditional and modern movement forms that build grace, rhythm, and discipline.',      img: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?q=80&w=800&auto=format&fit=crop' },
+];
+
+const PILLS = ['Music', 'Dance', 'Visual Arts', 'Theater', 'Public Speaking', 'Athletics', 'Debate', 'Craft'];
+
+/* ═══════════════════════════════════════════════════════════════ */
+const CoCurricular = () => {
+  const [active, setActive] = useState('All');
+  const filtered = active === 'All' ? ACTIVITIES : ACTIVITIES.filter(a => a.cat === active);
+
+  return (
+    <div className="min-h-screen bg-white text-gray-900 font-sans overflow-x-hidden">
+
+      {/* ── 1. HERO (Dark, immersive) ──────────────────────────────── */}
+      <section className="relative min-h-screen flex flex-col justify-center overflow-hidden bg-gray-950">
+
+        {/* Animated glowing orb */}
+        <motion.div
+          className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full pointer-events-none"
+          style={{ background: 'radial-gradient(ellipse, rgba(234,88,12,0.25) 0%, rgba(234,88,12,0.05) 50%, transparent 70%)' }}
+          animate={{ scale: [1, 1.15, 1], opacity: [0.7, 1, 0.7] }}
+          transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+        />
+        {/* Second orb (blue) */}
+        <motion.div
+          className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full pointer-events-none"
+          style={{ background: 'radial-gradient(ellipse, rgba(37,99,235,0.2) 0%, transparent 70%)' }}
+          animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0.8, 0.5] }}
+          transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+        />
+        {/* Dot texture */}
+        <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.04)_1px,transparent_1px)] [background-size:28px_28px] pointer-events-none" />
+
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32">
+          {/* Eyebrow */}
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="text-[10px] font-black tracking-[0.6em] uppercase text-brand-orange mb-8"
           >
-            <span className="text-[10px] font-black tracking-[0.5em] uppercase text-brand-orange mb-6 block italic">Beyond the Classroom</span>
-            <h1 className="text-5xl md:text-8xl lg:text-[9rem] font-black tracking-tighter mb-8 uppercase leading-[0.82]">
-              Where Talent <br /><span className="text-gray-400 font-light">Meets</span> <br />Opportunity
-            </h1>
-            <p className="max-w-3xl mx-auto text-lg md:text-xl text-gray-500 font-medium leading-relaxed italic">
-              "Nurturing the creative, athletic, and rhetorical potential of every student through structured discovery."
+            Sunrise School · Beyond the Classroom
+          </motion.p>
+
+          {/* Hero heading */}
+          <div className="overflow-hidden mb-6">
+            <motion.h1
+              initial={{ y: '100%' }}
+              animate={{ y: 0 }}
+              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
+              className="text-[clamp(3rem,10vw,8rem)] font-black uppercase tracking-tighter leading-[0.85] text-white"
+            >
+              Co-Curricular
+            </motion.h1>
+          </div>
+          <div className="overflow-hidden mb-12">
+            <motion.h1
+              initial={{ y: '100%' }}
+              animate={{ y: 0 }}
+              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.45 }}
+              className="text-[clamp(3rem,10vw,8rem)] font-black uppercase tracking-tighter leading-[0.85] text-transparent"
+              style={{ WebkitTextStroke: '1px rgba(255,255,255,0.25)' }}
+            >
+              Excellence
+            </motion.h1>
+          </div>
+
+          {/* Subtext + CTA */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.9, delay: 0.7 }}
+            className="flex flex-col sm:flex-row items-start sm:items-center gap-8"
+          >
+            <p className="text-gray-400 text-lg font-light leading-relaxed max-w-sm">
+              Nurturing every student's hidden genius — from the stage to the field.
             </p>
+            <Link to="/inquiry"
+              className="shrink-0 flex items-center gap-3 px-8 py-4 bg-brand-orange text-white font-black text-[11px] uppercase tracking-widest rounded-full shadow-[0_0_30px_rgba(234,88,12,0.4)] hover:shadow-[0_0_50px_rgba(234,88,12,0.6)] hover:bg-orange-500 transition-all duration-300 group"
+            >
+              Join Now
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </Link>
           </motion.div>
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1, duration: 1.5 }} className="mt-16 flex justify-center">
-            <div className="w-px h-24 bg-gradient-to-b from-brand-orange to-transparent" />
+
+          {/* Floating activity pills */}
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={{ visible: { transition: { staggerChildren: 0.07, delayChildren: 1 } } }}
+            className="flex flex-wrap gap-3 mt-16"
+          >
+            {PILLS.map((pill, i) => (
+              <motion.span key={i}
+                variants={{ hidden: { opacity: 0, scale: 0.7 }, visible: { opacity: 1, scale: 1 } }}
+                className="px-4 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm text-[11px] font-bold uppercase tracking-widest text-white/50"
+              >
+                {pill}
+              </motion.span>
+            ))}
           </motion.div>
         </div>
-      </section>
 
-      {/* ── 2. SIGNATURE STATEMENT (Light gray) ────────────────────── */}
-      <section className="py-24 bg-gray-50 px-4 flex items-center justify-center border-y border-gray-100">
+        {/* Scroll indicator */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
-          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }} className="text-center"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 2 }}
+          className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
         >
-          <span className="text-[10px] font-black tracking-[0.4em] uppercase mb-8 block text-brand-orange italic">Talent Discovery</span>
-          <h2 className="text-4xl md:text-7xl font-black italic tracking-tighter text-gray-900 leading-[0.9]">
-            "Every child has a talent — <br /><span className="text-brand-blue">we help them discover it"</span>
-          </h2>
+          <motion.div
+            animate={{ y: [0, 8, 0] }}
+            transition={{ duration: 1.5, repeat: Infinity }}
+            className="w-px h-10 bg-gradient-to-b from-brand-orange to-transparent"
+          />
+          <span className="text-[9px] font-black uppercase tracking-[0.4em] text-white/30">Scroll</span>
         </motion.div>
       </section>
 
-      {/* ── 3. LIFE STAGE CATEGORIES (White) ─────────────────────── */}
-      <section className="py-24 md:py-36 bg-white">
+      {/* ── 2. STATS BAND (Dark) ──────────────────────────────────── */}
+      <section className="py-16 bg-gray-900 border-y border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-24">
-            <span className="text-[10px] font-black tracking-[0.4em] uppercase mb-4 block text-brand-orange italic">Structural Growth</span>
-            <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-6 italic">Life Stage <span className="text-brand-blue font-light">Activities</span></h2>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+            <Counter to={6}    suffix="+"  label="Activities" />
+            <Counter to={1000} suffix="+"  label="Students" />
+            <Counter to={12}   suffix=""   label="Events / Year" />
+            <Counter to={100}  suffix="%"  label="Participation" />
           </div>
-          <motion.div variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true }}
-            className="grid grid-cols-1 md:grid-cols-3 gap-10"
-          >
-            {[
-              { icon: Trophy, title: 'Primary Section', desc: 'Foundational activities focused on curiosity, imagination, and basic skills development.' },
-              { icon: Award, title: 'Secondary Section', desc: 'Structured programs to develop critical thinking, artistic expression, and athletic skills.' },
-              { icon: Sparkles, title: 'Higher Secondary', desc: 'Advanced workshops and competitive platforms for professional and creative pursuits.' },
-            ].map((card, index) => (
-              <motion.div key={index} variants={itemVariants} whileHover={{ y: -10, scale: 1.02 }}
-                className="bg-gray-50 p-10 rounded-3xl border border-gray-100 shadow-sm hover:shadow-2xl hover:border-brand-orange/20 transition-all duration-500 group text-center"
+        </div>
+      </section>
+
+      {/* ── 3. FILTER + GRID ──────────────────────────────────────── */}
+      <section className="py-28 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+          {/* Header */}
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8">
+            <div>
+              <motion.span
+                initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
+                className="text-[10px] font-black tracking-[0.4em] uppercase text-brand-orange block mb-3"
+              >All Activities</motion.span>
+              <motion.h2
+                initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+                className="text-4xl md:text-6xl font-black uppercase tracking-tighter leading-none"
               >
-                <div className="w-16 h-16 rounded-2xl bg-brand-blue text-white flex items-center justify-center mb-8 mx-auto group-hover:bg-brand-orange group-hover:rotate-12 transition-all duration-500">
-                  <card.icon className="w-8 h-8" />
-                </div>
-                <h3 className="text-2xl font-black mb-4 uppercase tracking-tight">{card.title}</h3>
-                <p className="text-gray-500 text-xs font-bold uppercase tracking-widest leading-loose">{card.desc}</p>
-              </motion.div>
-            ))}
+                The <span className="text-gray-200">Spectrum</span>
+              </motion.h2>
+            </div>
+
+            {/* Filter tabs */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+              className="flex flex-wrap gap-2"
+            >
+              {CATEGORIES.map(cat => (
+                <button key={cat}
+                  onClick={() => setActive(cat)}
+                  className={`px-5 py-2 rounded-full text-[11px] font-black uppercase tracking-widest border transition-all duration-300 ${
+                    active === cat
+                      ? 'bg-brand-orange text-white border-brand-orange shadow-[0_0_20px_rgba(234,88,12,0.3)]'
+                      : 'bg-white text-gray-500 border-gray-200 hover:border-brand-orange/40 hover:text-brand-orange'
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </motion.div>
+          </div>
+
+          {/* Animated card grid */}
+          <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <AnimatePresence mode="popLayout">
+              {filtered.map(item => (
+                <motion.div
+                  key={item.id}
+                  layout
+                  initial={{ opacity: 0, scale: 0.85, filter: 'blur(8px)' }}
+                  animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+                  exit={{ opacity: 0, scale: 0.85, filter: 'blur(8px)' }}
+                  transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                  whileHover={{ y: -8 }}
+                  className="relative overflow-hidden rounded-[2rem] h-80 group cursor-pointer shadow-sm hover:shadow-2xl transition-shadow duration-500"
+                >
+                  {/* Background image */}
+                  <img src={item.img} alt={item.title}
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                  {/* Default overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-900/50 to-transparent" />
+                  {/* Hover reveal overlay */}
+                  <div className="absolute inset-0 bg-brand-blue/80 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+                  {/* Content */}
+                  <div className="absolute inset-0 p-8 flex flex-col justify-end z-10">
+                    {/* Tag */}
+                    <span className="text-[9px] font-black uppercase tracking-[0.35em] text-brand-orange mb-3 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0">
+                      {item.tag}
+                    </span>
+                    {/* Icon */}
+                    <div className="w-11 h-11 rounded-xl bg-white/15 backdrop-blur-md flex items-center justify-center mb-4 transition-all duration-300 group-hover:bg-white group-hover:text-brand-blue text-white">
+                      <item.icon className="w-5 h-5" />
+                    </div>
+                    {/* Title */}
+                    <h3 className="text-xl font-black uppercase tracking-tight text-white mb-2">{item.title}</h3>
+                    {/* Desc — reveals on hover */}
+                    <p className="text-sm text-white/70 font-light leading-relaxed max-h-0 overflow-hidden group-hover:max-h-20 transition-all duration-500">
+                      {item.desc}
+                    </p>
+                  </div>
+                </motion.div>
+              ))}
+            </AnimatePresence>
           </motion.div>
         </div>
       </section>
 
-      {/* ── 4. FEATURED ACTIVITIES (Light gray) ─────────────────── */}
-      <section className="py-24 md:py-36 bg-gray-50 border-y border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-24">
-            <span className="text-[10px] font-black tracking-[0.4em] uppercase mb-4 block text-brand-orange italic">Signature Highlights</span>
-            <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter italic">Featured <span className="text-gray-400 font-light">Experience</span></h2>
-          </div>
-          <div className="space-y-28">
-            {[
-              {
-                title: 'The Creative Arts',
-                desc: 'A sanctuary for visual storytellers and creative minds. Our arts program spans traditional craft to modern digital aesthetics, encouraging students to define their unique visual language.',
-                img: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&q=80&w=1471',
-                icon: PaletteIcon
-              },
-              {
-                title: 'Rhetorical Excellence',
-                desc: 'Building the voices of tomorrow. Our debating and public speaking workshops empower students with the rhetorical tools needed to articulate complex ideas with confidence and precision.',
-                img: 'https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&q=80&w=1470',
-                icon: MicIcon
-              }
-            ].map((feature, index) => (
-              <motion.div key={index}
-                initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-                transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-                className={`flex flex-col ${index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-16 items-center`}
-              >
-                <div className="flex-1 w-full group">
-                  <div className="aspect-video overflow-hidden rounded-3xl shadow-2xl relative">
-                    <img src={feature.img} alt={feature.title}
-                      className="w-full h-full object-cover brightness-90 transition-all duration-[2500ms] group-hover:scale-110 group-hover:brightness-100"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-r from-brand-blue/20 to-brand-orange/10 group-hover:opacity-0 transition-opacity duration-1000" />
-                  </div>
-                </div>
-                <div className="flex-1 space-y-10">
-                  <div className="space-y-6">
-                    <div className="w-14 h-14 bg-brand-orange rounded-2xl flex items-center justify-center text-white shadow-sm">
-                      <feature.icon className="w-7 h-7" />
-                    </div>
-                    <h3 className="text-4xl md:text-6xl font-black uppercase tracking-tighter italic leading-none">{feature.title}</h3>
-                  </div>
-                  <p className="text-xl text-gray-500 leading-relaxed font-light italic">"{feature.desc}"</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
+      {/* ── 4. HORIZONTAL SCROLL STRIP ────────────────────────────── */}
+      <section className="py-20 bg-gray-50 border-y border-gray-100 overflow-hidden">
+        <div className="mb-12 px-4 sm:px-8 max-w-7xl mx-auto">
+          <span className="text-[10px] font-black tracking-[0.4em] uppercase text-brand-orange block mb-3">Signature Programs</span>
+          <h2 className="text-4xl font-black uppercase tracking-tighter">Featured <span className="text-gray-300">Experiences</span></h2>
         </div>
-      </section>
 
-      {/* ── 5. ACTIVITIES GRID (White) ─────────────────────────────── */}
-      <section className="py-24 md:py-36 bg-white px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-24">
-            <span className="text-[10px] font-black tracking-[0.4em] uppercase mb-4 block text-brand-orange italic">Academic Synergy</span>
-            <h2 className="text-4xl md:text-5xl font-black mb-6 uppercase tracking-tighter italic leading-none">The Activities <span className="text-gray-400 font-light">Spectrum</span></h2>
-          </div>
-          <motion.div variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
-          >
-            {[
-              { icon: Music, title: 'Music Academy', desc: 'Vocal and instrumental training covering classical and contemporary genres.' },
-              { icon: Sparkles, title: 'Dance & Motion', desc: 'Expressive movement through various traditional and modern dance forms.' },
-              { icon: Palette, title: 'Visual Arts', desc: 'Exploring colors, shapes, and textures to inspire visual storytelling.' },
-              { icon: Theater, title: 'Theater Group', desc: 'Workshops for building confidence, speech, and performance skills.' },
-              { icon: Trophy, title: 'Athletic Club', desc: 'Strength and teamwork training across multiple sporting disciplines.' },
-              { icon: Mic, title: 'Public Speaking', desc: 'Sharpening rhetorical skills and encouraging eloquent expression.' },
-            ].map((activity, index) => (
-              <motion.div key={index} variants={itemVariants} whileHover={{ y: -10, scale: 1.02 }}
-                className="bg-gray-50 p-10 rounded-3xl border border-gray-100 shadow-sm hover:shadow-2xl hover:border-brand-orange/20 transition-all duration-500 group"
-              >
-                <div className="w-14 h-14 rounded-2xl bg-brand-blue text-white flex items-center justify-center mb-8 group-hover:bg-brand-orange group-hover:rotate-12 transition-all duration-500">
-                  <activity.icon className="w-7 h-7" />
+        <div className="flex gap-6 px-4 sm:px-8 overflow-x-auto pb-6 scrollbar-hide snap-x snap-mandatory">
+          {ACTIVITIES.map((item, i) => (
+            <motion.div
+              key={item.id}
+              initial={{ opacity: 0, x: 60 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: '-50px' }}
+              transition={{ duration: 0.7, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
+              className="relative shrink-0 w-[300px] h-[420px] rounded-[2rem] overflow-hidden shadow-lg group snap-start cursor-pointer"
+            >
+              <img src={item.img} alt={item.title}
+                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-900/40 to-transparent" />
+              <div className="absolute inset-0 p-7 flex flex-col justify-between z-10">
+                <div className="self-end px-3 py-1 bg-white/10 backdrop-blur-md rounded-full text-[9px] font-black uppercase tracking-widest text-white border border-white/15">
+                  {item.cat}
                 </div>
-                <h3 className="text-xl font-bold mb-4 uppercase tracking-tight">{activity.title}</h3>
-                <p className="text-gray-500 leading-relaxed text-sm">{activity.desc}</p>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ── 6. WHY ACTIVITIES MATTER (Orange gradient) ────────────── */}
-      <section className="py-32 bg-gradient-to-br from-brand-orange via-orange-600 to-orange-700 text-white relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#ffffff_2px,transparent_2px)] [background-size:40px_40px]" />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-24 items-center">
-            <motion.div initial={{ opacity: 0, x: -50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 1 }}>
-              <span className="text-[10px] font-black tracking-[0.4em] text-orange-200 uppercase mb-8 block italic">Strategic Impact</span>
-              <h2 className="text-4xl md:text-7xl font-black mb-12 tracking-tighter uppercase leading-[0.85] italic">
-                Why Activities <br /><span className="text-orange-200 font-light">Matter</span>
-              </h2>
-              <div className="space-y-10">
-                {[
-                  { title: 'Confidence', desc: 'Empowering students to find their voice and own the stage.' },
-                  { title: 'Teamwork', desc: 'Building collaboration through collective creative pursuits.' },
-                  { title: 'Creativity', desc: 'Unlocking lateral thinking and unique problem-solving skills.' },
-                  { title: 'Leadership', desc: 'Fostering initiative and ownership of talent development.' },
-                ].map((benefit, index) => (
-                  <div key={index} className="flex gap-8 group">
-                    <div className="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center shrink-0 group-hover:bg-white group-hover:text-brand-orange transition-all duration-500">
-                      <Sparkles className="w-6 h-6" />
-                    </div>
-                    <div className="flex flex-col justify-center">
-                      <h4 className="text-xl font-black uppercase tracking-tight text-white group-hover:translate-x-3 transition-all duration-500">{benefit.title}</h4>
-                      <p className="text-sm text-orange-100 uppercase tracking-widest font-bold mt-1 italic">{benefit.desc}</p>
-                    </div>
+                <div>
+                  <div className="w-10 h-10 rounded-xl bg-brand-orange flex items-center justify-center mb-4">
+                    <item.icon className="w-5 h-5 text-white" />
                   </div>
-                ))}
+                  <h3 className="text-2xl font-black uppercase tracking-tight text-white mb-2">{item.title}</h3>
+                  <p className="text-gray-300 text-xs font-light leading-relaxed line-clamp-2">{item.desc}</p>
+                </div>
               </div>
             </motion.div>
-            <motion.div initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
-              transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
-              className="relative aspect-square md:aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl border-4 border-white/10 p-3"
-            >
-              <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&q=80&w=1470"
-                alt="Student Collaboration" className="w-full h-full object-cover rounded-[1.5rem] brightness-90"
-              />
-              <div className="absolute inset-0 bg-brand-orange/10" />
-            </motion.div>
-          </div>
+          ))}
         </div>
       </section>
 
-      {/* ── 7. CTA (Dark) ─────────────────────────────────────────────── */}
-      <section className="py-36 bg-gray-900 text-white relative overflow-hidden">
-        <div className="absolute inset-0 opacity-5 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:24px_24px]" />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 60 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <span className="text-[10px] font-black tracking-[0.6em] uppercase mb-8 block text-brand-orange">Admissions 2024-25 Open</span>
-            <h2 className="text-6xl md:text-9xl font-black mb-16 tracking-tighter uppercase leading-[0.82] italic">
-              Enroll at <br /><span className="text-gray-500 font-light">Sunrise</span>
+      {/* ── 5. SPLIT CINEMATIC FEATURE ────────────────────────────── */}
+      <section className="grid grid-cols-1 lg:grid-cols-5 min-h-[80vh]">
+        {/* Left 60% — image */}
+        <motion.div
+          initial={{ opacity: 0, x: -40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
+          transition={{ duration: 1.1 }}
+          className="lg:col-span-3 relative overflow-hidden min-h-[50vh] lg:min-h-0 group"
+        >
+          <img
+            src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=1400&auto=format&fit=crop"
+            alt="Collaboration"
+            className="absolute inset-0 w-full h-full object-cover transition-transform duration-[2000ms] group-hover:scale-105"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-gray-950/80 via-gray-950/30 to-transparent" />
+          {/* Floating number */}
+          <div className="absolute top-10 left-10 text-[120px] font-black text-white/5 leading-none select-none">01</div>
+        </motion.div>
+
+        {/* Right 40% — text */}
+        <motion.div
+          initial={{ opacity: 0, x: 40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
+          transition={{ duration: 1.1, delay: 0.2 }}
+          className="lg:col-span-2 bg-gray-950 flex items-center p-12 md:p-16"
+        >
+          <div>
+            <span className="text-[10px] font-black tracking-[0.4em] uppercase text-brand-orange block mb-6">Our Philosophy</span>
+            <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter text-white leading-[0.9] mb-8">
+              Every Child<br />Has a<br /><span className="text-transparent" style={{ WebkitTextStroke: '1px rgba(255,255,255,0.3)' }}>Talent</span>
             </h2>
-            <div className="flex flex-col sm:flex-row gap-6 justify-center mt-12">
-              <Link to="/inquiry" className="px-12 py-5 bg-brand-orange text-white font-black text-sm uppercase tracking-[0.3em] hover:bg-orange-600 transition-all duration-300 flex items-center justify-center gap-4 group rounded-full shadow-2xl hover:-translate-y-1">
-                Ready to Join
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
+            <p className="text-gray-400 text-base font-light leading-relaxed mb-10">
+              Co-curricular activities at Sunrise School are not a supplement — they are central to our mission of developing complete, confident individuals ready for the real world.
+            </p>
+            <div className="space-y-5">
+              {[
+                { icon: Sparkles, label: 'Confidence & Self-expression' },
+                { icon: Users,    label: 'Teamwork & Collaboration' },
+                { icon: Globe,    label: 'Cultural & Global Awareness' },
+                { icon: Zap,      label: 'Leadership & Initiative' },
+              ].map((b, i) => (
+                <motion.div key={i}
+                  initial={{ opacity: 0, x: 20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.3 + i * 0.1 }}
+                  className="flex items-center gap-4 group"
+                >
+                  <div className="w-9 h-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-brand-orange group-hover:border-brand-orange transition-all duration-300">
+                    <b.icon className="w-4 h-4 text-white/50 group-hover:text-white transition-colors" />
+                  </div>
+                  <span className="text-sm font-bold uppercase tracking-widest text-white/50 group-hover:text-white transition-colors duration-300">{b.label}</span>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </motion.div>
+      </section>
+
+      {/* ── 6. CTA ─────────────────────────────────────────────────── */}
+      <section className="py-32 bg-white text-center relative overflow-hidden">
+        {/* Subtle background text */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden">
+          <span className="text-[18vw] font-black uppercase text-gray-50 leading-none tracking-tighter whitespace-nowrap">Sunrise</span>
+        </div>
+
+        <div className="relative z-10 max-w-3xl mx-auto px-4">
+          <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            <span className="text-[10px] font-black tracking-[0.5em] uppercase text-brand-orange block mb-6">Admissions 2026-27</span>
+            <h2 className="text-5xl md:text-7xl font-black tracking-tighter uppercase leading-[0.85] mb-8 text-gray-900">
+              Unlock Your<br /><span className="text-gray-200">Potential</span>
+            </h2>
+            <p className="text-gray-500 text-lg font-light mb-12 max-w-md mx-auto">
+              Give your child the platform to discover, grow, and lead.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link to="/inquiry"
+                className="px-10 py-4 bg-gray-900 text-white font-black text-[11px] uppercase tracking-widest rounded-full hover:bg-brand-orange transition-colors duration-300 flex items-center justify-center gap-3 group"
+              >
+                Admission Inquiry
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Link>
-              <Link to="/contact" className="px-12 py-5 border-2 border-white/30 text-white font-black text-sm uppercase tracking-[0.3em] hover:border-brand-orange hover:text-brand-orange transition-all duration-300 flex items-center justify-center gap-4 group rounded-full hover:-translate-y-1">
+              <Link to="/contact"
+                className="px-10 py-4 bg-white border border-gray-200 text-gray-900 font-black text-[11px] uppercase tracking-widest rounded-full hover:border-gray-400 transition-colors"
+              >
                 Contact Office
-                <ArrowRight className="w-5 h-5" />
               </Link>
             </div>
           </motion.div>

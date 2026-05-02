@@ -1,218 +1,348 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Trophy, Medal, Target, Users, LayoutGrid, Zap, Heart, Award, ArrowRight, ShieldCheck, Dumbbell, Timer } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import { motion, useInView } from 'framer-motion';
+import { Trophy, Medal, Target, Users, Zap, Heart, Award, ArrowRight, ShieldCheck, Dumbbell, Timer, LayoutGrid } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.12 } }
+/* ── Counter ─────────────────────────────────────────────────── */
+const Counter = ({ to, suffix = '+', label }) => {
+  const [val, setVal] = useState(0);
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true });
+  useEffect(() => {
+    if (!inView) return;
+    let cur = 0;
+    const step = to / 60;
+    const t = setInterval(() => {
+      cur = Math.min(cur + step, to);
+      setVal(Math.floor(cur));
+      if (cur >= to) clearInterval(t);
+    }, 1200 / 60);
+    return () => clearInterval(t);
+  }, [inView, to]);
+  return (
+    <div ref={ref} className="text-center">
+      <div className="text-5xl md:text-7xl font-black tracking-tighter tabular-nums text-white">
+        {val}<span className="text-brand-orange">{suffix}</span>
+      </div>
+      <div className="text-[10px] font-black uppercase tracking-[0.3em] text-white/40 mt-2">{label}</div>
+    </div>
+  );
 };
 
-const itemVariants = {
-  hidden: { y: 40, opacity: 0, filter: 'blur(10px)' },
-  visible: { y: 0, opacity: 1, filter: 'blur(0px)', transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] } }
-};
+/* ── Sports data ─────────────────────────────────────────────── */
+const SPORTS = [
+  { title: 'Cricket',      tag: 'Team',     img: 'https://images.unsplash.com/photo-1531415074968-036ba1b575da?q=80&w=900&auto=format&fit=crop', span: 'lg:col-span-2 h-80' },
+  { title: 'Football',     tag: 'Team',     img: 'https://images.unsplash.com/photo-1517466787929-bc90951d0974?q=80&w=600&auto=format&fit=crop', span: 'h-64' },
+  { title: 'Athletics',    tag: 'Track',    img: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?q=80&w=600&auto=format&fit=crop', span: 'h-64' },
+  { title: 'Indoor Games', tag: 'Skill',    img: 'https://images.unsplash.com/photo-1544698310-74ea9d1c8258?q=80&w=900&auto=format&fit=crop', span: 'lg:col-span-2 h-80' },
+  { title: 'Yoga',         tag: 'Wellness', img: 'https://images.unsplash.com/photo-1599901860904-17e6ed7083a0?q=80&w=600&auto=format&fit=crop', span: 'h-64' },
+];
 
+const BENEFITS = [
+  { icon: Heart,      title: 'Fitness',     desc: 'Long-term health and peak physical conditioning.' },
+  { icon: ShieldCheck,title: 'Teamwork',    desc: 'Unified goals and collaborative achievement.' },
+  { icon: Dumbbell,   title: 'Discipline',  desc: 'Mental toughness and adherence to growth routines.' },
+  { icon: Zap,        title: 'Leadership',  desc: 'Initiative on and off the field.' },
+];
+
+const LEVELS = [
+  { icon: LayoutGrid, label: 'School',   color: 'bg-gray-200 text-gray-500' },
+  { icon: Medal,      label: 'District', color: 'bg-brand-blue/20 text-brand-blue' },
+  { icon: Award,      label: 'State',    color: 'bg-brand-orange/20 text-brand-orange' },
+  { icon: Trophy,     label: 'National', color: 'bg-yellow-100 text-yellow-600' },
+];
+
+/* ═══════════════════════════════════════════════════════════════ */
 const Sports = () => {
   return (
-    <div className="min-h-screen bg-white text-gray-900 font-sans overflow-x-hidden selection:bg-brand-blue selection:text-white">
+    <div className="min-h-screen bg-white text-gray-900 font-sans overflow-x-hidden">
 
-      {/* ── 1. HERO (Light) ─────────────────────────────────────────── */}
-      <section className="relative pt-36 pb-28 md:pt-52 md:pb-44 overflow-hidden bg-white">
-        <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:20px_20px] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_40%,#000_60%,transparent_100%)] opacity-50" />
-        <div className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-orange-50/30 to-transparent pointer-events-none" />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-          <motion.div
-            initial={{ opacity: 0, x: -60, filter: 'blur(20px)' }}
-            animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
-            transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <span className="text-[10px] font-black tracking-[0.5em] uppercase text-brand-orange mb-8 block italic">The Athletic Spirit</span>
-            <h1 className="text-7xl md:text-[9rem] lg:text-[11rem] font-black tracking-tighter uppercase leading-[0.75] mb-12">
-              Sports & <br /><span className="text-gray-300 font-light italic">Athletics</span>
-            </h1>
-            <p className="max-w-2xl mx-auto text-lg md:text-xl text-gray-500 font-medium leading-relaxed italic border-t border-gray-100 pt-10">
-              "Building strength, discipline, and champions through elite training and competitive rigor."
-            </p>
-          </motion.div>
+      {/* ── 1. HERO — Full-bleed image background ─────────────────── */}
+      <section className="relative min-h-screen flex items-end overflow-hidden">
+        {/* Background image */}
+        <img
+          src="https://images.unsplash.com/photo-1461896836934-ffe607ba8211?q=80&w=1800&auto=format&fit=crop"
+          alt="Athletics Hero"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        {/* Gradient overlays */}
+        <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-950/60 to-gray-950/20" />
+        <div className="absolute inset-0 bg-gradient-to-r from-gray-950/80 to-transparent" />
+
+        {/* Animated energy lines */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {[15, 35, 55, 75].map((pos, i) => (
+            <motion.div key={i}
+              className="absolute top-0 bottom-0 w-px bg-white/5"
+              style={{ left: `${pos}%` }}
+              initial={{ scaleY: 0, opacity: 0 }}
+              animate={{ scaleY: 1, opacity: 1 }}
+              transition={{ duration: 1.5, delay: i * 0.2, ease: [0.16, 1, 0.3, 1] }}
+            />
+          ))}
         </div>
-      </section>
 
-      {/* ── 2. MANTRA (Blue gradient) ────────────────────────────── */}
-      <section className="py-28 md:py-44 bg-gradient-to-br from-brand-blue via-blue-700 to-blue-900 text-white relative overflow-hidden">
-        <div className="absolute inset-0 opacity-[0.04] bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:20px_20px]" />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
-            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 md:pb-28 pt-40">
+          <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.8 }}
+            className="text-[10px] font-black tracking-[0.6em] uppercase text-brand-orange mb-8"
           >
-            <span className="text-[10px] font-black tracking-[0.6em] uppercase mb-12 block text-blue-200 italic">Core Athletic Mantra</span>
-            <h2 className="text-5xl md:text-8xl lg:text-9xl font-black italic tracking-tighter leading-[0.85] uppercase">
-              "Champions are <br />not born. <br />
-              <span className="text-blue-200 font-light">They are trained."</span>
-            </h2>
-          </motion.div>
-        </div>
-      </section>
+            Sunrise School · The Athletic Spirit
+          </motion.p>
 
-      {/* ── 3. ACHIEVEMENT LEVELS (White) ─────────────────────────── */}
-      <section className="py-28 md:py-40 bg-white px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-28">
-            <span className="text-[10px] font-black tracking-[0.4em] uppercase mb-4 block text-brand-orange italic">Progression Path</span>
-            <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-6 italic">Achievement <span className="text-brand-blue font-light">Levels</span></h2>
+          <div className="overflow-hidden mb-3">
+            <motion.h1 initial={{ y: '100%' }} animate={{ y: 0 }} transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.35 }}
+              className="text-[clamp(4rem,10vw,9rem)] font-black uppercase tracking-tighter leading-[0.85] text-white"
+            >
+              Sports &
+            </motion.h1>
           </div>
-          <motion.div variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true }}
-            className="flex flex-col md:flex-row items-center justify-between gap-12 relative"
+          <div className="overflow-hidden mb-12">
+            <motion.h1 initial={{ y: '100%' }} animate={{ y: 0 }} transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
+              className="text-[clamp(4rem,10vw,9rem)] font-black uppercase tracking-tighter leading-[0.85] text-transparent"
+              style={{ WebkitTextStroke: '2px rgba(255,255,255,0.3)' }}
+            >
+              Athletics
+            </motion.h1>
+          </div>
+
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }}
+            className="flex flex-col sm:flex-row gap-6 items-start"
           >
-            <div className="hidden md:block absolute top-[4.5rem] left-[10%] right-[10%] h-[2px] bg-gray-100 z-0" />
-            {[
-              { icon: LayoutGrid, title: 'School', desc: 'First stage of skill mastery.' },
-              { icon: Medal, title: 'District', desc: 'Showcasing regional excellence.' },
-              { icon: Award, title: 'State', desc: 'Elite state-wide performance.' },
-              { icon: Trophy, title: 'National', desc: 'Ultimate institutional glory.' },
-            ].map((level, index) => (
-              <motion.div key={index} variants={itemVariants}
-                className="flex flex-col items-center text-center space-y-6 relative z-10 group"
+            <p className="text-gray-300 text-lg font-light leading-relaxed max-w-sm">
+              Champions are not born — they are trained. Building strength, discipline, and winners.
+            </p>
+            <Link to="/inquiry" className="shrink-0 flex items-center gap-3 px-8 py-4 bg-brand-orange text-white font-black text-[11px] uppercase tracking-widest rounded-full shadow-[0_0_40px_rgba(234,88,12,0.5)] hover:shadow-[0_0_60px_rgba(234,88,12,0.7)] hover:bg-orange-500 transition-all duration-300 group">
+              Join Now <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </motion.div>
+
+          {/* Sport tags */}
+          <motion.div initial="hidden" animate="visible"
+            variants={{ visible: { transition: { staggerChildren: 0.07, delayChildren: 1 } } }}
+            className="flex flex-wrap gap-3 mt-14"
+          >
+            {['Cricket', 'Football', 'Athletics', 'Indoor Games', 'Yoga', 'Gymnastics'].map((s, i) => (
+              <motion.span key={i}
+                variants={{ hidden: { opacity: 0, scale: 0.7 }, visible: { opacity: 1, scale: 1 } }}
+                className="px-4 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm text-[11px] font-bold uppercase tracking-widest text-white/40"
               >
-                <div className="w-24 h-24 rounded-full bg-brand-blue text-white flex items-center justify-center group-hover:bg-brand-orange group-hover:scale-125 group-hover:rotate-12 transition-all duration-500 shadow-2xl">
-                  <level.icon className="w-10 h-10" />
-                </div>
-                <div className="space-y-2">
-                  <h3 className="text-2xl font-black uppercase tracking-tighter italic">{level.title}</h3>
-                  <p className="text-gray-400 text-[10px] font-black uppercase tracking-widest">{level.desc}</p>
-                </div>
-              </motion.div>
+                {s}
+              </motion.span>
             ))}
           </motion.div>
         </div>
+
+        {/* Scroll cue */}
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2 }}
+          className="absolute bottom-8 right-10 flex flex-col items-center gap-2"
+        >
+          <motion.div animate={{ y: [0, 8, 0] }} transition={{ duration: 1.5, repeat: Infinity }}
+            className="w-px h-10 bg-gradient-to-b from-brand-orange to-transparent"
+          />
+          <span className="text-[9px] font-black uppercase tracking-[0.4em] text-white/30">Scroll</span>
+        </motion.div>
       </section>
 
-      {/* ── 4. SPORTS SHOWCASE (Light gray) ──────────────────────── */}
-      <section className="py-24 md:py-36 bg-gray-50 border-y border-gray-100 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-24">
-            <span className="text-[10px] font-black tracking-[0.4em] uppercase mb-4 block text-brand-orange italic">Disciplines</span>
-            <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-6 italic text-gray-900 leading-none">Athletic <span className="text-gray-400 font-light">Showcase</span></h2>
+      {/* ── 2. STATS BAND ─────────────────────────────────────────── */}
+      <section className="py-16 bg-gray-900 border-y border-white/5">
+        <div className="max-w-7xl mx-auto px-4 grid grid-cols-2 lg:grid-cols-4 gap-8">
+          <Counter to={5}   suffix="+"  label="Sports Disciplines" />
+          <Counter to={200} suffix="+"  label="Athletes" />
+          <Counter to={15}  suffix="+"  label="Tournaments / Year" />
+          <Counter to={10}  suffix="+"  label="Years of Glory" />
+        </div>
+      </section>
+
+      {/* ── 3. SPORTS SHOWCASE (Hover-reveal masonry) ─────────────── */}
+      <section className="py-28 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mb-16">
+            <motion.span initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
+              className="text-[10px] font-black tracking-[0.4em] uppercase text-brand-orange block mb-3"
+            >Disciplines</motion.span>
+            <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+              className="text-4xl md:text-6xl font-black uppercase tracking-tighter leading-none"
+            >
+              Athletic <span className="text-gray-200">Showcase</span>
+            </motion.h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              { title: 'Cricket', img: 'https://images.unsplash.com/photo-1531415074968-036ba1b575da?auto=format&fit=crop&q=80&w=800', size: 'lg:col-span-2' },
-              { title: 'Football', img: 'https://images.unsplash.com/photo-1517466787929-bc90951d0974?auto=format&fit=crop&q=80&w=800' },
-              { title: 'Athletics', img: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&q=80&w=800' },
-              { title: 'Indoor Games', img: 'https://images.unsplash.com/photo-1544698310-74ea9d1c8258?auto=format&fit=crop&q=80&w=800', size: 'lg:col-span-2' },
-            ].map((sport, index) => (
-              <motion.div key={index}
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {SPORTS.map((sport, i) => (
+              <motion.div key={i}
                 initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-                transition={{ delay: index * 0.1, duration: 1, ease: [0.16, 1, 0.3, 1] }}
-                className={`relative overflow-hidden group rounded-3xl aspect-video lg:aspect-auto h-[360px] ${sport.size || ''}`}
+                transition={{ delay: i * 0.08, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+                className={`relative overflow-hidden rounded-[2rem] group cursor-pointer ${sport.span}`}
               >
                 <img src={sport.img} alt={sport.title}
-                  className="w-full h-full object-cover brightness-75 group-hover:brightness-100 group-hover:scale-110 transition-all duration-[2500ms]"
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-[2000ms] group-hover:scale-110"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent group-hover:from-black/30 transition-all duration-700" />
-                <div className="absolute bottom-8 left-8 text-white">
-                  <h3 className="text-4xl md:text-5xl font-black uppercase tracking-tighter italic">{sport.title}</h3>
-                  <div className="w-0 group-hover:w-full h-[2px] bg-brand-orange transition-all duration-700 mt-3" />
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
+                {/* Default overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-gray-950/90 via-gray-950/30 to-transparent" />
+                {/* Hover: orange tint */}
+                <div className="absolute inset-0 bg-brand-orange/0 group-hover:bg-brand-orange/20 transition-all duration-500" />
 
-      {/* ── 5. TRAINING SYSTEM (White) ─────────────────────────── */}
-      <section className="py-24 md:py-36 bg-white border-b border-gray-100 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-24">
-            <span className="text-[10px] font-black tracking-[0.4em] uppercase mb-4 block text-brand-orange italic">The Methodology</span>
-            <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter italic leading-none">Training <span className="text-gray-400 font-light">System</span></h2>
-          </div>
-          <motion.div variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true }}
-            className="grid grid-cols-1 md:grid-cols-3 gap-12"
-          >
-            {[
-              { icon: Users, title: 'Coaching', desc: 'Expert guidance from professional athletic mentors.' },
-              { icon: Timer, title: 'Practice', desc: 'Rigorous daily drills focusing on stamina and skill.' },
-              { icon: Zap, title: 'Competition', desc: 'Periodic tournaments to build elite psychological endurance.' },
-            ].map((step, index) => (
-              <motion.div key={index} variants={itemVariants}
-                className="flex flex-col items-center text-center space-y-8 group"
-              >
-                <div className="w-20 h-20 rounded-3xl bg-gray-50 text-gray-700 flex items-center justify-center group-hover:bg-brand-orange group-hover:text-white transition-all duration-500 shadow-sm ring-1 ring-gray-100 group-hover:scale-110">
-                  <step.icon className="w-8 h-8" />
-                </div>
-                <div className="space-y-4">
-                  <h3 className="text-2xl font-black uppercase tracking-tighter italic group-hover:translate-x-1 transition-all duration-300">{step.title}</h3>
-                  <p className="text-gray-400 text-[10px] font-black uppercase tracking-widest leading-loose italic max-w-[200px] mx-auto">{step.desc}</p>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ── 6. ATHLETIC ADVANTAGES (Orange gradient) ──────────── */}
-      <section className="py-32 bg-gradient-to-br from-brand-orange via-orange-600 to-orange-700 text-white relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:20px_20px]" />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
-            <motion.div initial={{ opacity: 0, x: -50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 1 }}>
-              <span className="text-[10px] font-black tracking-[0.4em] text-orange-200 uppercase mb-8 block italic">Athlete Transformation</span>
-              <h2 className="text-4xl md:text-7xl font-black mb-12 tracking-tighter uppercase leading-[0.85] italic">
-                Athletic <br /><span className="text-orange-200 font-light">Advantages</span>
-              </h2>
-              <div className="space-y-10">
-                {[
-                  { icon: Heart, title: 'Fitness', desc: 'Long-term health and peak physical condition.' },
-                  { icon: ShieldCheck, title: 'Teamwork', desc: 'Unified goals and collaborative achievement.' },
-                  { icon: Dumbbell, title: 'Discipline', desc: 'Mental toughness and adherence to growth.' },
-                  { icon: Zap, title: 'Leadership', desc: 'Taking initiative on the local and global field.' },
-                ].map((benefit, index) => (
-                  <div key={index} className="flex gap-8 group">
-                    <div className="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center shrink-0 group-hover:bg-white group-hover:text-brand-orange transition-all duration-500">
-                      <benefit.icon className="w-6 h-6" />
-                    </div>
-                    <div className="flex flex-col justify-center">
-                      <h4 className="text-xl font-black uppercase tracking-tight text-white group-hover:translate-x-3 transition-all duration-500">{benefit.title}</h4>
-                      <p className="text-sm text-orange-100 uppercase tracking-widest font-bold mt-1 italic">{benefit.desc}</p>
-                    </div>
+                <div className="absolute inset-0 p-7 flex flex-col justify-between z-10">
+                  {/* Tag top-right */}
+                  <div className="self-end px-3 py-1 bg-white/10 backdrop-blur-md rounded-full text-[9px] font-black uppercase tracking-widest text-white border border-white/15">
+                    {sport.tag}
                   </div>
-                ))}
-              </div>
-            </motion.div>
-            <motion.div initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
-              transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
-              className="relative aspect-square md:aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl border-4 border-white/10 p-3"
-            >
-              <img src="https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&q=80&w=1470"
-                alt="Sprinter at Sunrise" className="w-full h-full object-cover rounded-[1.5rem] brightness-90"
-              />
-              <div className="absolute inset-0 bg-brand-orange/10 rounded-[1.5rem]" />
-            </motion.div>
+                  {/* Title bottom */}
+                  <div>
+                    <h3 className="text-3xl md:text-4xl font-black uppercase tracking-tighter text-white mb-0">{sport.title}</h3>
+                    {/* Animated underline */}
+                    <div className="h-0.5 bg-brand-orange w-0 group-hover:w-full transition-all duration-700 mt-3" />
+                  </div>
+                </div>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* ── 7. CTA (Dark) ─────────────────────────────────────────── */}
-      <section className="py-36 bg-gray-900 text-white relative overflow-hidden">
-        <div className="absolute inset-0 opacity-5 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:24px_24px]" />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 80 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-            transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
-            className="space-y-16"
-          >
-            <span className="text-[10px] font-black tracking-[0.6em] uppercase text-brand-orange block italic">Athlete Recruitment Open</span>
-            <h2 className="text-6xl md:text-[9rem] font-black tracking-tighter uppercase leading-[0.82] italic">
-              Join Our <br /><span className="text-gray-500 font-light">Programs</span>
+      {/* ── 4. ACHIEVEMENT TRACK ──────────────────────────────────── */}
+      <section className="py-24 bg-gray-950 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mb-16">
+            <span className="text-[10px] font-black tracking-[0.4em] uppercase text-brand-orange block mb-3">Progression Path</span>
+            <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter text-white leading-none">
+              Achievement <span className="text-transparent" style={{ WebkitTextStroke: '1px rgba(255,255,255,0.2)' }}>Track</span>
             </h2>
-            <div className="flex flex-col sm:flex-row gap-6 justify-center mt-12">
-              <Link to="/inquiry" className="px-14 py-6 bg-brand-orange text-white font-black text-sm uppercase tracking-[0.4em] hover:bg-orange-600 transition-all duration-300 flex items-center justify-center gap-5 group rounded-full shadow-2xl hover:-translate-y-1">
-                Ready to Join
-                <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform" />
+          </div>
+
+          <div className="relative">
+            {/* Track base */}
+            <div className="absolute top-10 left-0 right-0 h-1 bg-white/10 rounded-full hidden lg:block" />
+            {/* Animated fill */}
+            <motion.div
+              initial={{ scaleX: 0 }} whileInView={{ scaleX: 1 }} viewport={{ once: true }}
+              transition={{ duration: 1.8, ease: [0.16, 1, 0.3, 1] }}
+              className="absolute top-10 left-0 right-0 h-1 bg-gradient-to-r from-gray-400 via-brand-blue via-brand-orange to-yellow-400 rounded-full hidden lg:block origin-left"
+            />
+
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-10">
+              {LEVELS.map((level, i) => (
+                <motion.div key={i}
+                  initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+                  transition={{ delay: i * 0.15 }}
+                  className="flex flex-col items-center text-center group"
+                >
+                  <div className={`w-20 h-20 rounded-full flex items-center justify-center mb-6 border-4 border-gray-950 relative z-10 transition-transform duration-300 group-hover:scale-110 ${level.color}`}>
+                    <level.icon className="w-8 h-8" />
+                  </div>
+                  <span className="text-lg font-black uppercase tracking-tight text-white">{level.label}</span>
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-white/30 mt-1">Level {i + 1}</span>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── 5. TRAINING SYSTEM (Bold 3-col on dark band) ──────────── */}
+      <section className="py-24 bg-gray-900 border-y border-white/5">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <span className="text-[10px] font-black tracking-[0.4em] uppercase text-brand-orange block mb-3">The Methodology</span>
+            <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter text-white leading-none">
+              Training <span className="text-transparent" style={{ WebkitTextStroke: '1px rgba(255,255,255,0.2)' }}>System</span>
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-white/5">
+            {[
+              { icon: Users,  title: 'Expert Coaching',  desc: 'Professional athletic mentors guiding every student with personalized attention and proven methods.' },
+              { icon: Timer,  title: 'Rigorous Practice', desc: 'Daily structured drills building stamina, reflexes, and technical excellence on every front.' },
+              { icon: Zap,    title: 'Live Tournaments',  desc: 'Regular inter-school and district-level competitions to sharpen competitive instinct under pressure.' },
+            ].map((step, i) => (
+              <motion.div key={i}
+                initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+                transition={{ delay: i * 0.12 }}
+                className="flex flex-col items-center text-center p-10 md:p-14 group"
+              >
+                <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mb-8 group-hover:bg-brand-orange group-hover:border-brand-orange transition-all duration-300">
+                  <step.icon className="w-7 h-7 text-white/60 group-hover:text-white transition-colors" />
+                </div>
+                <h3 className="text-xl font-black uppercase tracking-tight text-white mb-4">{step.title}</h3>
+                <p className="text-gray-500 text-sm font-light leading-relaxed">{step.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── 6. SPLIT (Benefits + Image) ───────────────────────────── */}
+      <section className="grid grid-cols-1 lg:grid-cols-2 min-h-[70vh]">
+        {/* Left: Benefits */}
+        <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
+          className="bg-white flex items-center p-12 md:p-16 order-2 lg:order-1"
+        >
+          <div className="w-full">
+            <span className="text-[10px] font-black tracking-[0.4em] uppercase text-brand-orange block mb-6">Athlete Transformation</span>
+            <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter leading-none mb-10">
+              Athletic <span className="text-gray-200">Advantages</span>
+            </h2>
+            <div className="space-y-5">
+              {BENEFITS.map((b, i) => (
+                <motion.div key={i}
+                  initial={{ opacity: 0, x: -16 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                  className="flex items-start gap-5 group p-4 rounded-2xl hover:bg-gray-50 transition-colors duration-300 cursor-default"
+                >
+                  <div className="w-12 h-12 rounded-2xl bg-brand-orange/10 text-brand-orange flex items-center justify-center shrink-0 group-hover:bg-brand-orange group-hover:text-white transition-all duration-300">
+                    <b.icon className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <div className="font-black uppercase tracking-tight text-sm text-gray-900 mb-1">{b.title}</div>
+                    <div className="text-sm text-gray-500 font-light">{b.desc}</div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Right: Image with floating card */}
+        <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
+          className="relative overflow-hidden min-h-[50vh] lg:min-h-0 order-1 lg:order-2 group"
+        >
+          <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=1000&auto=format&fit=crop"
+            alt="Team" className="absolute inset-0 w-full h-full object-cover transition-transform duration-[2000ms] group-hover:scale-105"
+          />
+          <div className="absolute inset-0 bg-gradient-to-l from-transparent to-gray-950/30" />
+          {/* Floating quote */}
+          <div className="absolute bottom-8 left-8 right-8 bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-6 text-white">
+            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-orange-300 mb-2">Our Mantra</p>
+            <p className="text-xl font-black uppercase tracking-tight leading-tight">
+              "Champions are <span className="text-brand-orange">not born</span>. They are trained."
+            </p>
+          </div>
+        </motion.div>
+      </section>
+
+      {/* ── 7. CTA ─────────────────────────────────────────────────── */}
+      <section className="py-32 bg-gray-50 text-center relative overflow-hidden border-t border-gray-100">
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden">
+          <span className="text-[16vw] font-black uppercase text-gray-100 leading-none tracking-tighter whitespace-nowrap">Champion</span>
+        </div>
+        <div className="relative z-10 max-w-3xl mx-auto px-4">
+          <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            <span className="text-[10px] font-black tracking-[0.5em] uppercase text-brand-orange block mb-6">Athlete Recruitment Open</span>
+            <h2 className="text-5xl md:text-7xl font-black tracking-tighter uppercase leading-[0.85] mb-8">
+              Ready to <span className="text-gray-200">Compete?</span>
+            </h2>
+            <p className="text-gray-500 text-lg font-light mb-12 max-w-md mx-auto">
+              Join our sports programs and start your journey to becoming a champion.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link to="/inquiry"
+                className="px-10 py-4 bg-brand-orange text-white font-black text-[11px] uppercase tracking-widest rounded-full shadow-lg hover:bg-orange-600 transition-colors flex items-center justify-center gap-3 group"
+              >
+                Join Our Program
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Link>
-              <Link to="/contact" className="px-14 py-6 border-2 border-white/30 text-white font-black text-sm uppercase tracking-[0.4em] hover:border-brand-orange hover:text-brand-orange transition-all duration-300 flex items-center justify-center gap-5 group rounded-full hover:-translate-y-1">
+              <Link to="/contact"
+                className="px-10 py-4 bg-white border border-gray-200 text-gray-900 font-black text-[11px] uppercase tracking-widest rounded-full hover:border-gray-400 transition-colors"
+              >
                 Contact Office
               </Link>
             </div>
