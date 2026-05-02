@@ -1,330 +1,368 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Filter, Download, Phone, Award, Users, TrendingUp, CheckCircle, ChevronDown } from 'lucide-react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, Cell, LabelList } from 'recharts';
+import { ChevronLeft, ChevronRight, Maximize2, X, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
-const statistics = [
-  { label: 'Pass Percentage', value: 98, suffix: '%', icon: <TrendingUp size={32} className="text-blue-500" /> },
-  { label: 'Highest Score', value: 99.2, suffix: '%', icon: <Award size={32} className="text-amber-500" /> },
-  { label: 'Distinctions (>90%)', value: 45, suffix: '+', icon: <CheckCircle size={32} className="text-green-500" /> },
-  { label: 'Total Students', value: 120, suffix: '', icon: <Users size={32} className="text-purple-500" /> },
+/**
+ * ── RESULTS IMAGE GALLERY ─────────────────────────────────────────────
+ * Drop your result brochures / group photos here.
+ * Each item: { src: '/path/to/image.jpg', label: 'Caption', year: '2024-25' }
+ * ─────────────────────────────────────────────────────────────────────
+ */
+const RESULT_IMAGES = [
+  {
+    src: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=1400&auto=format&fit=crop',
+    label: 'Class 10 EM — Board Results 2024-25',
+    year: '2024-25',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=1400&auto=format&fit=crop',
+    label: 'Class 10 GM — Board Results 2023-24',
+    year: '2023-24',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?q=80&w=1400&auto=format&fit=crop',
+    label: 'Class 12 — Board Results 2022-23',
+    year: '2022-23',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1400&auto=format&fit=crop',
+    label: 'School Toppers — Group Photo 2024',
+    year: '2024-25',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?q=80&w=1400&auto=format&fit=crop',
+    label: 'School Toppers — Group Photo 2023',
+    year: '2023-24',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1546410531-bb4caa6b424d?q=80&w=1400&auto=format&fit=crop',
+    label: 'Annual Results Ceremony 2022',
+    year: '2022-23',
+  },
 ];
 
-const toppers = [
-  { name: 'Aarav Patel', score: 99.2, img: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=400&q=80', rank: 1 },
-  { name: 'Diya Shah', score: 98.8, img: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&q=80', rank: 2 },
-  { name: 'Rohan Desai', score: 98.5, img: 'https://images.unsplash.com/photo-1552058544-f2b08422138a?w=400&q=80', rank: 3 },
-];
 
-const studentsData = [
-  { id: '10EM001', name: 'Aarav Patel', percentage: 99.2, grade: 'A1' },
-  { id: '10EM002', name: 'Diya Shah', percentage: 98.8, grade: 'A1' },
-  { id: '10EM003', name: 'Rohan Desai', percentage: 98.5, grade: 'A1' },
-  { id: '10EM004', name: 'Kavya Mehta', percentage: 92.4, grade: 'A1' },
-  { id: '10EM005', name: 'Aryan Joshi', percentage: 88.5, grade: 'A2' },
-  { id: '10EM006', name: 'Riya Trivedi', percentage: 85.0, grade: 'A2' },
-  { id: '10EM007', name: 'Dev Patel', percentage: 78.5, grade: 'B1' },
-  { id: '10EM008', name: 'Nisha Modi', percentage: 75.2, grade: 'B1' },
-  { id: '10EM009', name: 'Raj Kumar', percentage: 65.4, grade: 'B2' },
-  { id: '10EM010', name: 'Pooja Singh', percentage: 58.0, grade: 'C1' },
-];
+/* ── Lightbox ─────────────────────────────────────────────────── */
+const Lightbox = ({ images, startIndex, onClose }) => {
+  const [current, setCurrent] = useState(startIndex);
 
-const chartData = [
-  { grade: 'A1', count: 45 },
-  { grade: 'A2', count: 35 },
-  { grade: 'B1', count: 25 },
-  { grade: 'B2', count: 10 },
-  { grade: 'C1+', count: 5 },
-];
-
-// Animated Counter Component
-const AnimatedCounter = ({ value, suffix = "" }) => {
-  const [count, setCount] = useState(0);
+  const prev = useCallback(() =>
+    setCurrent(c => (c - 1 + images.length) % images.length), [images.length]);
+  const next = useCallback(() =>
+    setCurrent(c => (c + 1) % images.length), [images.length]);
 
   useEffect(() => {
-    let start = 0;
-    const duration = 2000;
-    const stepTime = Math.abs(Math.floor(duration / value));
-    
-    const timer = setInterval(() => {
-      start += 1;
-      setCount(prev => {
-        if (prev + 1 >= value) {
-          clearInterval(timer);
-          return value;
-        }
-        return prev + 1;
-      });
-    }, stepTime);
-    
-    return () => clearInterval(timer);
-  }, [value]);
-
-  return <span>{typeof value === 'number' && !Number.isInteger(value) ? value : count}{suffix}</span>;
-};
-
-const Result10EMPage = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filterGrade, setFilterGrade] = useState('All');
-
-  const filteredStudents = studentsData.filter(s => {
-    const matchesSearch = s.name.toLowerCase().includes(searchTerm.toLowerCase()) || s.id.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesGrade = filterGrade === 'All' || s.grade === filterGrade;
-    return matchesSearch && matchesGrade;
-  });
+    const onKey = (e) => {
+      if (e.key === 'ArrowLeft') prev();
+      if (e.key === 'ArrowRight') next();
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', onKey);
+    document.body.style.overflow = 'hidden';
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      document.body.style.overflow = '';
+    };
+  }, [prev, next, onClose]);
 
   return (
-    <div className="w-full bg-slate-50 min-h-screen pb-20 ">
-      
-      {/* HERO SECTION */}
-      <section className="relative w-full h-[75vh] flex items-center justify-center max-w-[96%] mx-auto mt-4 rounded-[2rem] overflow-hidden bg-white shadow-lg border border-blue-50">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-900 via-blue-800 to-indigo-900 pointer-events-none"></div>
-        <div className="absolute inset-0 opacity-20 bg-[url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=1200&auto=format&fit=crop')] bg-cover bg-center mix-blend-overlay"></div>
-        
-        <div className="relative z-10 text-center px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="inline-block mb-4 px-6 py-2 rounded-full border border-blue-400/30 bg-blue-500/10 backdrop-blur-md text-blue-200 text-sm font-bold uppercase tracking-widest"
-          >
-            Academic Year 2024-2025
-          </motion.div>
-          
-          <motion.h1 
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-5xl md:text-7xl font-black text-white tracking-tight mb-4 drop-shadow-lg"
-          >
-            Class 10 EM <br/>
-            <span className="text-blue-300">Board Results</span>
-          </motion.h1>
+    <motion.div
+      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+      className="fixed inset-0 z-[9999] bg-black/95 backdrop-blur-sm flex items-center justify-center"
+      onClick={onClose}
+    >
+      {/* Close */}
+      <button onClick={onClose}
+        className="absolute top-6 right-6 w-12 h-12 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-colors z-10"
+      >
+        <X size={20} />
+      </button>
 
-          <motion.p 
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-lg md:text-xl text-blue-100/90 mb-10 max-w-2xl mx-auto font-medium"
-          >
-            Celebrating the outstanding academic excellence and hard work of our English Medium students.
-          </motion.p>
-          
-          <motion.button 
-            initial={{ opacity: 0, scale: 0.9 }} 
-            animate={{ opacity: 1, scale: 1 }} 
-            transition={{ duration: 0.8, delay: 0.6 }}
-            onClick={() => document.getElementById('results-table').scrollIntoView({ behavior: 'smooth' })}
-            className="px-8 py-4 bg-white text-blue-900 rounded-full font-bold shadow-xl hover:shadow-2xl hover:bg-blue-50 transition-all flex items-center mx-auto space-x-2"
-          >
-            <span>View Full Results</span>
-            <ChevronDown size={20} />
-          </motion.button>
-        </div>
-      </section>
+      {/* Counter */}
+      <div className="absolute top-6 left-1/2 -translate-x-1/2 px-5 py-2 rounded-full bg-white/10 border border-white/20 backdrop-blur-md text-white text-[11px] font-black uppercase tracking-widest">
+        {current + 1} / {images.length}
+      </div>
 
-      {/* HIGHLIGHTS SECTION */}
-      <section className="py-20 px-6 max-w-7xl mx-auto -mt-16 relative z-20">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {statistics.map((stat, idx) => (
-            <motion.div 
-              key={idx}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: idx * 0.1 }}
-              className="bg-white/80 backdrop-blur-xl border border-white p-8 rounded-[2rem] shadow-xl hover:-translate-y-2 transition-transform duration-300"
-            >
-              <div className="flex items-center justify-between mb-4">
-                <div className="p-4 bg-slate-50 rounded-2xl">
-                  {stat.icon}
-                </div>
-                <div className="text-4xl font-black text-slate-800">
-                  <AnimatedCounter value={stat.value} suffix={stat.suffix} />
-                </div>
-              </div>
-              <h3 className="text-slate-500 font-bold uppercase tracking-wider text-sm">{stat.label}</h3>
-            </motion.div>
-          ))}
-        </div>
-      </section>
+      {/* Prev */}
+      <button onClick={(e) => { e.stopPropagation(); prev(); }}
+        className="absolute left-4 md:left-8 w-12 h-12 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-colors z-10"
+      >
+        <ChevronLeft size={22} />
+      </button>
 
-      {/* TOPPERS SECTION */}
-      <section className="py-16 px-6 max-w-7xl mx-auto">
-        <motion.div 
-          initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
-          className="text-center mb-16"
-        >
-          <h2 className="text-4xl font-black text-slate-900 mb-4">Our Star Performers</h2>
-          <div className="w-20 h-1.5 bg-blue-500 rounded-full mx-auto"></div>
-        </motion.div>
-
-        <div className="flex flex-col md:flex-row justify-center items-end gap-8 md:gap-12">
-          {toppers.map((topper, idx) => (
-            <motion.div 
-              key={idx}
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: topper.rank === 1 ? 0 : 0.2 }}
-              className={`relative bg-white rounded-[2rem] shadow-2xl border border-slate-100 p-8 flex flex-col items-center text-center transform transition-all hover:scale-105 ${topper.rank === 1 ? 'w-full md:w-1/3 z-10 -translate-y-4 shadow-blue-500/20 shadow-2xl border-blue-100' : 'w-full md:w-1/4'}`}
-            >
-              <div className="absolute -top-6 bg-gradient-to-r from-amber-400 to-amber-600 text-white font-black px-6 py-2 rounded-full shadow-lg border-2 border-white">
-                Rank {topper.rank}
-              </div>
-              <div className={`w-32 h-32 rounded-full overflow-hidden mb-6 mt-4 shadow-inner border-4 border-white ${topper.rank===1 ? 'w-40 h-40 ring-4 ring-blue-100' : 'ring-2 ring-slate-100'}`}>
-                <img src={topper.img} alt={topper.name} className="w-full h-full object-cover" />
-              </div>
-              <h3 className="text-2xl font-black text-slate-900 mb-2">{topper.name}</h3>
-              <div className="text-3xl font-black text-blue-600">
-                {topper.score}%
-              </div>
-              <p className="text-slate-500 mt-2 font-medium">Grade A1</p>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-      {/* PERFORMANCE GRAPH SECTION */}
-      <section className="py-16 px-6 max-w-7xl mx-auto">
-        <div className="bg-white rounded-[2.5rem] p-10 shadow-xl border border-slate-100">
-          <h2 className="text-3xl font-black text-slate-900 mb-8 text-center">Grade Distribution</h2>
-          <div className="h-[400px] w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={chartData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                <XAxis dataKey="grade" axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontWeight: 600 }} dy={10} />
-                <YAxis axisLine={false} tickLine={false} tick={{ fill: '#64748b' }} />
-                <RechartsTooltip 
-                  cursor={{ fill: '#f8fafc' }}
-                  contentStyle={{ borderRadius: '1rem', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
-                />
-                <Bar dataKey="count" radius={[8, 8, 8, 8]}>
-                  {chartData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={index === 0 ? '#3b82f6' : index === 1 ? '#60a5fa' : index === 2 ? '#93c5fd' : '#bfdbfe'} />
-                  ))}
-                  <LabelList dataKey="count" position="top" fill="#334155" fontWeight={700} />
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-      </section>
-
-      {/* TABLE SECTION */}
-      <section id="results-table" className="py-16 px-6 max-w-7xl mx-auto">
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="bg-white rounded-[2.5rem] shadow-xl border border-slate-100 overflow-hidden"
-        >
-          <div className="p-8 md:p-10 bg-slate-50 border-b border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-6">
-            <h2 className="text-3xl font-black text-slate-900">Student Directory</h2>
-            
-            <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
-              <div className="relative">
-                <Search size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-                <input 
-                  type="text" 
-                  placeholder="Search name or ID..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-12 pr-6 py-3 rounded-full border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full md:w-64 bg-white"
-                />
-              </div>
-              <div className="relative">
-                <Filter size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-                <select 
-                  value={filterGrade}
-                  onChange={(e) => setFilterGrade(e.target.value)}
-                  className="pl-12 pr-10 py-3 rounded-full border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none bg-white w-full sm:w-auto"
-                >
-                  <option value="All">All Grades</option>
-                  <option value="A1">A1</option>
-                  <option value="A2">A2</option>
-                  <option value="B1">B1</option>
-                  <option value="B2">B2</option>
-                  <option value="C1">C1</option>
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="bg-white text-slate-500 uppercase text-xs tracking-wider border-b border-slate-100">
-                  <th className="py-6 px-8 font-black">Student Name</th>
-                  <th className="py-6 px-8 font-black">Seat Number</th>
-                  <th className="py-6 px-8 font-black">Percentage</th>
-                  <th className="py-6 px-8 font-black rounded-tr-3xl">Grade</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-50">
-                <AnimatePresence>
-                  {filteredStudents.length > 0 ? (
-                    filteredStudents.map((student, idx) => (
-                      <motion.tr 
-                        key={student.id}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.2 }}
-                        className="hover:bg-slate-50 transition-colors"
-                      >
-                        <td className="py-5 px-8 font-bold text-slate-900">{student.name}</td>
-                        <td className="py-5 px-8 font-medium text-slate-500">{student.id}</td>
-                        <td className="py-5 px-8">
-                          <span className="inline-block bg-blue-50 text-blue-700 font-bold px-3 py-1 rounded-full text-sm">
-                            {student.percentage}%
-                          </span>
-                        </td>
-                        <td className="py-5 px-8 font-black text-slate-900">{student.grade}</td>
-                      </motion.tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan="4" className="py-10 text-center text-slate-500 font-medium">
-                        No students found matching your criteria.
-                      </td>
-                    </tr>
-                  )}
-                </AnimatePresence>
-              </tbody>
-            </table>
-          </div>
-        </motion.div>
-      </section>
-
-      {/* CTA SECTION */}
-      <section className="px-6 pb-10 max-w-7xl mx-auto">
-        <motion.div 
+      {/* Image */}
+      <AnimatePresence mode="wait">
+        <motion.div key={current}
           initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          className="bg-gradient-to-r from-blue-900 to-indigo-900 rounded-[3rem] p-12 md:p-16 flex flex-col md:flex-row items-center justify-between text-white shadow-2xl overflow-hidden relative"
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.95 }}
+          transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          className="px-16 max-w-5xl w-full max-h-[80vh] flex flex-col items-center gap-5"
+          onClick={(e) => e.stopPropagation()}
         >
-          <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3"></div>
-          
-          <div className="relative z-10 mb-8 md:mb-0 md:mr-8 text-center md:text-left">
-            <h2 className="text-3xl md:text-5xl font-black mb-4">Get the Official Results List</h2>
-            <p className="text-blue-200 text-lg max-w-xl">Download the complete digitally signed PDF for Class 10 English Medium Board Results.</p>
-          </div>
-          
-          <div className="relative z-10 flex flex-col sm:flex-row gap-4 shrink-0">
-            <button className="px-8 py-4 bg-white text-blue-900 rounded-full font-bold shadow-xl hover:bg-slate-50 hover:scale-105 transition-all flex items-center justify-center space-x-2">
-              <Download size={20} />
-              <span>Download PDF</span>
-            </button>
-            <button className="px-8 py-4 bg-blue-800/50 text-white rounded-full font-bold border border-blue-400/30 hover:bg-blue-800 transition-colors flex items-center justify-center space-x-2 backdrop-blur-sm">
-              <Phone size={20} />
-              <span>Contact Office</span>
-            </button>
+          <img
+            src={images[current].src}
+            alt={images[current].label}
+            className="max-h-[70vh] w-full object-contain rounded-2xl shadow-2xl"
+          />
+          <div className="text-center">
+            <p className="text-white font-black uppercase tracking-tight text-lg">{images[current].label}</p>
+            <p className="text-white/40 text-[11px] font-bold uppercase tracking-widest mt-1">Academic Year {images[current].year}</p>
           </div>
         </motion.div>
+      </AnimatePresence>
+
+      {/* Next */}
+      <button onClick={(e) => { e.stopPropagation(); next(); }}
+        className="absolute right-4 md:right-8 w-12 h-12 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-colors z-10"
+      >
+        <ChevronRight size={22} />
+      </button>
+
+      {/* Thumbnail strip */}
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 px-4">
+        {images.map((img, i) => (
+          <button key={i}
+            onClick={(e) => { e.stopPropagation(); setCurrent(i); }}
+            className={`w-2 h-2 rounded-full transition-all duration-300 ${i === current ? 'bg-brand-orange w-6' : 'bg-white/30 hover:bg-white/60'}`}
+          />
+        ))}
+      </div>
+    </motion.div>
+  );
+};
+
+/* ── Main featured carousel ───────────────────────────────────── */
+const FeaturedCarousel = ({ images, onImageClick }) => {
+  const [current, setCurrent] = useState(0);
+  const timerRef = useRef(null);
+
+  const resetTimer = useCallback(() => {
+    clearInterval(timerRef.current);
+    timerRef.current = setInterval(() => {
+      setCurrent(c => (c + 1) % images.length);
+    }, 5000);
+  }, [images.length]);
+
+  useEffect(() => {
+    resetTimer();
+    return () => clearInterval(timerRef.current);
+  }, [resetTimer]);
+
+  const go = (dir) => {
+    setCurrent(c => (c + dir + images.length) % images.length);
+    resetTimer();
+  };
+
+  return (
+    <div className="relative overflow-hidden rounded-[2rem] shadow-2xl aspect-[16/9] md:aspect-[21/9] bg-gray-100 group">
+      <AnimatePresence mode="wait">
+        <motion.div key={current}
+          initial={{ opacity: 0, x: 40 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -40 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="absolute inset-0"
+        >
+          <img
+            src={images[current].src}
+            alt={images[current].label}
+            className="w-full h-full object-cover cursor-pointer"
+            onClick={() => onImageClick(current)}
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-gray-950/80 via-transparent to-transparent" />
+        </motion.div>
+      </AnimatePresence>
+
+      {/* Caption */}
+      <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10 z-10 flex items-end justify-between">
+        <AnimatePresence mode="wait">
+          <motion.div key={current}
+            initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+            transition={{ duration: 0.4, delay: 0.2 }}
+          >
+            <span className="text-[9px] font-black uppercase tracking-[0.4em] text-brand-orange block mb-1">
+              Academic Year {images[current].year}
+            </span>
+            <p className="text-white font-black uppercase tracking-tight text-xl md:text-3xl leading-tight">
+              {images[current].label}
+            </p>
+          </motion.div>
+        </AnimatePresence>
+
+        {/* Expand icon */}
+        <button
+          onClick={() => onImageClick(current)}
+          className="shrink-0 ml-4 w-12 h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-colors opacity-0 group-hover:opacity-100"
+        >
+          <Maximize2 size={18} />
+        </button>
+      </div>
+
+      {/* Controls */}
+      <button onClick={() => go(-1)}
+        className="absolute left-4 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-black/40 backdrop-blur-md border border-white/15 flex items-center justify-center text-white hover:bg-black/60 transition-colors z-10 opacity-0 group-hover:opacity-100"
+      >
+        <ChevronLeft size={20} />
+      </button>
+      <button onClick={() => go(1)}
+        className="absolute right-4 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-black/40 backdrop-blur-md border border-white/15 flex items-center justify-center text-white hover:bg-black/60 transition-colors z-10 opacity-0 group-hover:opacity-100"
+      >
+        <ChevronRight size={20} />
+      </button>
+
+      {/* Progress dots */}
+      <div className="absolute bottom-4 right-4 flex gap-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
+        {images.map((_, i) => (
+          <button key={i} onClick={() => { setCurrent(i); resetTimer(); }}
+            className={`h-1.5 rounded-full transition-all duration-300 ${i === current ? 'w-8 bg-brand-orange' : 'w-1.5 bg-white/40 hover:bg-white/70'}`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+/* ── Thumbnail grid ───────────────────────────────────────────── */
+const ThumbnailGrid = ({ images, onImageClick }) => (
+  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+    {images.map((img, i) => (
+      <motion.div key={i}
+        initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }}
+        viewport={{ once: true }} transition={{ delay: i * 0.05 }}
+        whileHover={{ y: -4, scale: 1.03 }}
+        className="relative overflow-hidden rounded-2xl aspect-square cursor-pointer group shadow-sm hover:shadow-xl transition-shadow duration-300"
+        onClick={() => onImageClick(i)}
+      >
+        <img src={img.src} alt={img.label} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+        <div className="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        <div className="absolute inset-0 flex flex-col justify-end p-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <p className="text-white text-[10px] font-black uppercase tracking-wider leading-tight line-clamp-2">{img.label}</p>
+        </div>
+        {/* Expand icon */}
+        <div className="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/50 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+          <Maximize2 size={12} className="text-white" />
+        </div>
+      </motion.div>
+    ))}
+  </div>
+);
+
+/* ═══════════════════════════════════════════════════════════════ */
+const Result10EMPage = () => {
+  const [lightboxIndex, setLightboxIndex] = useState(null);
+
+  return (
+    <div className="min-h-screen bg-white font-sans overflow-x-hidden">
+
+      {/* ── HERO ──────────────────────────────────────────────────── */}
+      <section className="relative min-h-[55vh] flex items-end overflow-hidden bg-gray-950">
+        <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.03)_1px,transparent_1px)] [background-size:28px_28px]" />
+        {/* Blue glow */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <div className="w-[600px] h-[300px] rounded-full"
+            style={{ background: 'radial-gradient(ellipse, rgba(37,99,235,0.2) 0%, transparent 70%)' }} />
+        </div>
+
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 pt-36">
+          <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
+            className="text-[10px] font-black tracking-[0.6em] uppercase text-brand-orange mb-6"
+          >
+            Sunrise School · Academic Excellence
+          </motion.p>
+          <div className="overflow-hidden mb-3">
+            <motion.h1 initial={{ y: '100%' }} animate={{ y: 0 }} transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
+              className="text-[clamp(3rem,9vw,7rem)] font-black uppercase tracking-tighter leading-[0.85] text-white"
+            >
+              Our Results
+            </motion.h1>
+          </div>
+          <div className="overflow-hidden">
+            <motion.h1 initial={{ y: '100%' }} animate={{ y: 0 }} transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.45 }}
+              className="text-[clamp(3rem,9vw,7rem)] font-black uppercase tracking-tighter leading-[0.85] text-transparent"
+              style={{ WebkitTextStroke: '1px rgba(255,255,255,0.2)' }}
+            >
+              Speak for Us
+            </motion.h1>
+          </div>
+          <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }}
+            className="text-gray-400 text-lg font-light mt-8 max-w-lg"
+          >
+            A visual record of our students' hard work, dedication, and academic brilliance — year after year.
+          </motion.p>
+        </div>
       </section>
-      
+
+      {/* ── FEATURED CAROUSEL ─────────────────────────────────────── */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mb-10">
+            <span className="text-[10px] font-black tracking-[0.4em] uppercase text-brand-orange block mb-3">Latest Results</span>
+            <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter leading-none">
+              Featured <span className="text-gray-200">Highlights</span>
+            </h2>
+          </div>
+          <FeaturedCarousel images={RESULT_IMAGES} onImageClick={setLightboxIndex} />
+        </div>
+      </section>
+
+      {/* ── THUMBNAIL GALLERY ─────────────────────────────────────── */}
+      <section className="py-20 bg-gray-50 border-y border-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mb-12">
+            <span className="text-[10px] font-black tracking-[0.4em] uppercase text-brand-orange block mb-3">All Results</span>
+            <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter leading-none">
+              Complete <span className="text-gray-200">Gallery</span>
+            </h2>
+            <p className="text-gray-500 font-light mt-3 text-sm">Click any image to view full size</p>
+          </div>
+          <ThumbnailGrid images={RESULT_IMAGES} onImageClick={setLightboxIndex} />
+        </div>
+      </section>
+
+      {/* ── CTA ───────────────────────────────────────────────────── */}
+      <section className="py-28 bg-white text-center relative overflow-hidden">
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden">
+          <span className="text-[16vw] font-black uppercase text-gray-50 leading-none tracking-tighter whitespace-nowrap">Excellence</span>
+        </div>
+        <div className="relative z-10 max-w-2xl mx-auto px-4">
+          <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            <span className="text-[10px] font-black tracking-[0.5em] uppercase text-brand-orange block mb-6">Admissions 2026-27 Open</span>
+            <h2 className="text-4xl md:text-6xl font-black tracking-tighter uppercase leading-[0.85] mb-6">
+              Be Part of Our <span className="text-gray-200">Legacy</span>
+            </h2>
+            <p className="text-gray-500 font-light mb-10 text-lg">
+              Join Sunrise School and add your name to our hall of excellence.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link to="/inquiry"
+                className="px-10 py-4 bg-brand-blue text-white font-black text-[11px] uppercase tracking-widest rounded-full shadow-lg hover:bg-brand-orange transition-colors duration-300 flex items-center justify-center gap-3 group"
+              >
+                Admission Inquiry
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+              <Link to="/contact"
+                className="px-10 py-4 bg-white border border-gray-200 text-gray-900 font-black text-[11px] uppercase tracking-widest rounded-full hover:border-gray-400 transition-colors"
+              >
+                Contact Office
+              </Link>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ── LIGHTBOX ──────────────────────────────────────────────── */}
+      <AnimatePresence>
+        {lightboxIndex !== null && (
+          <Lightbox
+            images={RESULT_IMAGES}
+            startIndex={lightboxIndex}
+            onClose={() => setLightboxIndex(null)}
+          />
+        )}
+      </AnimatePresence>
+
     </div>
   );
 };
