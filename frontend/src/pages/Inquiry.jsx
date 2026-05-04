@@ -28,7 +28,7 @@ const Inquiry = () => {
             transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
           >
             <span className="text-[10px] font-black tracking-[0.5em] uppercase text-blue-200 mb-6 block">Admission Inquiry</span>
-            <h1 className="text-5xl md:text-8xl lg:text-[9rem] font-black tracking-tighter mb-8 uppercase leading-[0.82]">
+            <h1 className="text-[clamp(3rem,8vw,9rem)] font-black tracking-tighter mb-8 uppercase leading-[0.82]">
               Inquiry <br /><span className="text-blue-200 font-light">Form</span>
             </h1>
             <p className="max-w-2xl mx-auto text-lg md:text-xl text-blue-100 font-medium leading-relaxed">
@@ -182,7 +182,7 @@ const Inquiry = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
           <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 1 }}>
             <span className="text-[10px] font-black tracking-[0.5em] uppercase mb-8 block text-orange-200">Admissions Open</span>
-            <h2 className="text-5xl md:text-8xl font-black mb-10 tracking-tighter uppercase leading-[0.85] italic">
+            <h2 className="text-[clamp(3rem,8vw,8rem)] font-black mb-10 tracking-tighter uppercase leading-[0.85] italic">
               Join the <br /><span className="text-orange-200 font-light">Sunrise Family</span>
             </h2>
             <Link to="/contact" className="inline-flex items-center gap-4 px-12 py-5 bg-white text-brand-orange font-black text-sm uppercase tracking-[0.3em] rounded-full shadow-2xl hover:shadow-white/30 hover:-translate-y-1 transition-all duration-300 group">

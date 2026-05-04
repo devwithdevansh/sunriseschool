@@ -46,7 +46,7 @@ const PrimaryPage = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.1 }}
-            className="text-5xl md:text-7xl font-black text-white tracking-tight leading-tight mb-6"
+            className="text-[clamp(3rem,6vw,4.5rem)] font-black text-white tracking-tight leading-tight mb-6"
           >
             Primary & Secondary <br/>
             <span className="text-blue-400">Education</span>

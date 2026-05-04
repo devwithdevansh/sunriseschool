@@ -60,10 +60,10 @@ const KGPage = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-6xl md:text-8xl font-black text-white drop-shadow-lg tracking-tight leading-none mb-6"
+            className="text-[clamp(3.75rem,8vw,6rem)] font-black text-white drop-shadow-lg tracking-tight leading-none mb-6"
           >
             Kindergarten <br/>
-            <span className="text-yellow-100 text-5xl md:text-7xl">Program</span>
+            <span className="text-yellow-100 text-[clamp(3rem,6vw,4.5rem)]">Program</span>
           </motion.h1>
 
           <motion.p 

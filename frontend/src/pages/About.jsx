@@ -34,7 +34,7 @@ const About = () => {
           >
             <span className="text-[10px] font-black tracking-[0.5em] uppercase text-brand-orange mb-6 block">Established 2016</span>
 
-            <h1 className="text-5xl md:text-8xl lg:text-[9rem] font-black tracking-tighter mb-8 uppercase leading-[0.82]">
+            <h1 className="text-[clamp(3rem,8vw,9rem)] font-black tracking-tighter mb-8 uppercase leading-[0.82]">
               About <br />
               <div className="flex items-center justify-center gap-4 md:gap-8 mt-2">
                 <span className="text-gray-400 font-light">Sunrise</span>

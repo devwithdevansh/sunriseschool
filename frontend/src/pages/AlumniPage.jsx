@@ -58,7 +58,7 @@ const AlumniPage = () => {
             transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
           >
             <span className="text-[12px] font-black tracking-[0.4em] uppercase text-brand-orange mb-6 block">Our Legacy</span>
-            <h1 className="text-5xl md:text-8xl font-black tracking-tighter mb-6 uppercase text-white leading-tight">
+            <h1 className="text-[clamp(3rem,8vw,8rem)] font-black tracking-tighter mb-6 uppercase text-white leading-tight">
               Sunrise <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-brand-orange">Alumni</span>
             </h1>
           </motion.div>

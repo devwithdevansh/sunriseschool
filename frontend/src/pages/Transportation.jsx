@@ -28,7 +28,7 @@ const Transportation = () => {
             transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
           >
             <span className="text-[10px] font-black tracking-[0.5em] uppercase text-blue-200 mb-6 block">Safe Transit</span>
-            <h1 className="text-5xl md:text-8xl lg:text-[9rem] font-black tracking-tighter mb-8 uppercase leading-[0.82]">
+            <h1 className="text-[clamp(2.5rem,7.5vw,9rem)] font-black tracking-tighter mb-8 uppercase leading-[0.82]">
               Transportation <br /><span className="text-blue-200 font-light">Facilities</span>
             </h1>
             <p className="max-w-2xl mx-auto text-lg md:text-xl text-blue-100 font-medium leading-relaxed">
@@ -162,7 +162,7 @@ const Transportation = () => {
             transition={{ duration: 1 }}
           >
             <span className="text-[10px] font-black tracking-[0.5em] uppercase text-brand-orange mb-8 block">Enroll for Transport</span>
-            <h2 className="text-5xl md:text-8xl lg:text-9xl font-black mb-12 tracking-tighter uppercase leading-[0.85] italic">
+            <h2 className="text-[clamp(2.5rem,7vw,8rem)] font-black mb-12 tracking-tighter uppercase leading-[0.85] italic">
               Enroll for <br /><span className="text-gray-500 font-light">Transportation</span>
             </h2>
             <div className="flex flex-col sm:flex-row gap-6 justify-center mt-12">

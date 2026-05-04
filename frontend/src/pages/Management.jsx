@@ -28,7 +28,7 @@ const Management = () => {
             transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
           >
             <span className="text-[10px] font-black tracking-[0.5em] uppercase text-brand-orange mb-6 block italic">Institutional Leadership</span>
-            <h1 className="text-5xl md:text-8xl lg:text-[9rem] font-black tracking-tighter mb-8 uppercase leading-[0.82]">
+            <h1 className="text-[clamp(3rem,8vw,9rem)] font-black tracking-tighter mb-8 uppercase leading-[0.82]">
               Leadership <br /><span className="text-gray-400 font-light">That Shapes</span> <br />Futures
             </h1>
             <p className="max-w-2xl mx-auto text-lg md:text-xl text-gray-500 font-medium leading-relaxed italic">
@@ -48,7 +48,7 @@ const Management = () => {
           transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }} className="text-center"
         >
           <span className="text-[10px] font-black tracking-[0.4em] uppercase mb-8 block text-brand-orange italic">Signature Foundation</span>
-          <h2 className="text-4xl md:text-7xl font-black italic tracking-tighter text-gray-900 leading-[0.9]">
+          <h2 className="text-[clamp(2.25rem,6vw,4.5rem)] font-black italic tracking-tighter text-gray-900 leading-[0.9]">
             "Strong leadership <br /><span className="text-brand-blue">builds strong institutions"</span>
           </h2>
         </motion.div>
@@ -182,7 +182,7 @@ const Management = () => {
             transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
           >
             <span className="text-[10px] font-black tracking-[0.5em] uppercase mb-8 block text-orange-200 italic">Direct Channel</span>
-            <h2 className="text-5xl md:text-8xl lg:text-9xl font-black mb-12 tracking-tighter uppercase leading-[0.85] italic">
+            <h2 className="text-[clamp(3rem,8vw,9rem)] font-black mb-12 tracking-tighter uppercase leading-[0.85] italic">
               Connect with <br /><span className="text-orange-200 font-light italic">Our Leadership</span>
             </h2>
             <div className="flex justify-center mt-16">

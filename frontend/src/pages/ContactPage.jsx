@@ -22,7 +22,7 @@ const ContactPage = () => {
             transition={{ duration: 1.6, ease: [0.16, 1, 0.3, 1] }}
           >
             <span className="text-[10px] font-black tracking-[0.5em] uppercase text-blue-200/60 mb-6 block">Get in Touch</span>
-            <h1 className="text-6xl md:text-9xl font-black tracking-tighter mb-8 uppercase text-white leading-tight">
+            <h1 className="text-[clamp(3.75rem,8vw,8rem)] font-black tracking-tighter mb-8 uppercase text-white leading-tight">
               Contact <span className="text-blue-300/40">Us</span>
             </h1>
           </motion.div>

@@ -40,7 +40,7 @@ const GalleryPage = () => {
             transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
           >
             <span className="text-[10px] font-black tracking-[0.5em] uppercase text-blue-200 mb-6 block">Visual Stories</span>
-            <h1 className="text-5xl md:text-8xl lg:text-[9rem] font-black tracking-tighter mb-8 uppercase leading-[0.82]">
+            <h1 className="text-[clamp(3rem,8vw,9rem)] font-black tracking-tighter mb-8 uppercase leading-[0.82]">
               Our <span className="text-blue-200 font-light">Gallery</span>
             </h1>
             <p className="max-w-2xl mx-auto text-lg md:text-xl text-blue-100 font-medium leading-relaxed">
@@ -122,7 +122,7 @@ const GalleryPage = () => {
             transition={{ duration: 1 }}
           >
             <span className="text-[10px] font-black tracking-[0.5em] uppercase text-brand-orange mb-8 block">Join Our Family</span>
-            <h2 className="text-5xl md:text-7xl font-black mb-10 tracking-tighter uppercase leading-[0.9] italic">
+            <h2 className="text-[clamp(3rem,6vw,4.5rem)] font-black mb-10 tracking-tighter uppercase leading-[0.9] italic">
               Be Part of <br /><span className="text-gray-500 font-light">the Story</span>
             </h2>
             <a href="/inquiry"

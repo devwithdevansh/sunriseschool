@@ -21,7 +21,7 @@ const Counter = ({ to, suffix = '+', label }) => {
   }, [inView, to]);
   return (
     <div ref={ref} className="text-center">
-      <div className="text-5xl md:text-7xl font-black tracking-tighter text-white tabular-nums">
+      <div className="text-[clamp(3rem,6vw,4.5rem)] font-black tracking-tighter text-white tabular-nums">
         {val}<span className="text-brand-orange">{suffix}</span>
       </div>
       <div className="text-[10px] font-black uppercase tracking-[0.3em] text-white/40 mt-3">{label}</div>
@@ -358,7 +358,7 @@ const CompetitiveExams = () => {
         <div className="relative z-10 max-w-3xl mx-auto px-4">
           <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             <span className="text-[10px] font-black tracking-[0.5em] uppercase text-brand-orange block mb-6">Admissions 2026-27 Open</span>
-            <h2 className="text-5xl md:text-7xl font-black tracking-tighter uppercase leading-[0.85] mb-8">
+            <h2 className="text-[clamp(3rem,6vw,4.5rem)] font-black tracking-tighter uppercase leading-[0.85] mb-8">
               Ready to <span className="text-gray-200">Compete?</span>
             </h2>
             <p className="text-gray-500 text-lg font-light mb-12 max-w-md mx-auto">

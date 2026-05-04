@@ -28,7 +28,7 @@ const Stationary = () => {
             transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
           >
             <span className="text-[10px] font-black tracking-[0.5em] uppercase text-orange-200 mb-6 block">Student Essentials</span>
-            <h1 className="text-5xl md:text-8xl lg:text-[9rem] font-black tracking-tighter mb-8 uppercase leading-[0.82]">
+            <h1 className="text-[clamp(3rem,8vw,9rem)] font-black tracking-tighter mb-8 uppercase leading-[0.82]">
               Stationary & <br /><span className="text-orange-200 font-light">Uniform</span>
             </h1>
             <p className="max-w-2xl mx-auto text-lg md:text-xl text-orange-100 font-medium leading-relaxed">
@@ -149,7 +149,7 @@ const Stationary = () => {
             transition={{ duration: 1 }}
           >
             <span className="text-[10px] font-black tracking-[0.5em] uppercase text-brand-orange mb-8 block">Academic Preparedness</span>
-            <h2 className="text-5xl md:text-8xl lg:text-9xl font-black mb-12 tracking-tighter uppercase leading-[0.85] italic">
+            <h2 className="text-[clamp(3rem,8vw,9rem)] font-black mb-12 tracking-tighter uppercase leading-[0.85] italic">
               Get Your <br /><span className="text-gray-500 font-light">Essentials</span>
             </h2>
             <div className="flex flex-col sm:flex-row gap-6 justify-center mt-12">

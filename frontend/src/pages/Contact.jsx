@@ -27,7 +27,7 @@ const Contact = () => {
             transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
           >
             <span className="text-[10px] font-black tracking-[0.5em] uppercase text-brand-orange mb-6 block">Reach Out</span>
-            <h1 className="text-5xl md:text-8xl lg:text-[9rem] font-black tracking-tighter mb-8 uppercase leading-[0.82]">
+            <h1 className="text-[clamp(3rem,8vw,9rem)] font-black tracking-tighter mb-8 uppercase leading-[0.82]">
               Contact <span className="text-gray-300 font-light">Us</span>
             </h1>
             <p className="max-w-2xl mx-auto text-lg md:text-xl text-gray-500 font-medium leading-relaxed">
@@ -160,7 +160,7 @@ const Contact = () => {
             transition={{ duration: 1 }}
           >
             <span className="text-[10px] font-black tracking-[0.5em] uppercase text-brand-orange mb-8 block">Reach Us</span>
-            <h2 className="text-5xl md:text-8xl font-black mb-12 tracking-tighter uppercase leading-[0.9] italic">
+            <h2 className="text-[clamp(3rem,8vw,8rem)] font-black mb-12 tracking-tighter uppercase leading-[0.9] italic">
               Visit Sunrise <br /><span className="text-gray-500 font-light">School</span> Today
             </h2>
             <div className="flex flex-col sm:flex-row gap-6 justify-center mt-12">

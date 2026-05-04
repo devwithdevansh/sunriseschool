@@ -42,7 +42,7 @@ const ActivitiesPage = () => {
             transition={{ duration: 1.6, ease: [0.16, 1, 0.3, 1] }}
           >
             <span className="text-[10px] font-black tracking-[0.5em] uppercase text-brand-orange/80 mb-6 block">Beyond the Classroom</span>
-            <h1 className="text-6xl md:text-9xl font-black tracking-tighter mb-8 uppercase text-white leading-[0.85]">
+            <h1 className="text-[clamp(3.75rem,8vw,8rem)] font-black tracking-tighter mb-8 uppercase text-white leading-[0.85]">
               Student <br /><span className="text-brand-orange/60">Activities</span>
             </h1>
           </motion.div>
@@ -123,7 +123,7 @@ const ActivitiesPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
           <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 1 }}>
             <span className="text-[10px] font-black tracking-[0.5em] uppercase text-orange-200 mb-8 block">Admissions Open</span>
-            <h2 className="text-5xl md:text-8xl font-black mb-12 tracking-tighter uppercase leading-[0.85] italic">
+            <h2 className="text-[clamp(3rem,8vw,8rem)] font-black mb-12 tracking-tighter uppercase leading-[0.85] italic">
               Discover Your <br /><span className="text-orange-200 font-light">Passion Here</span>
             </h2>
             <div className="flex flex-col sm:flex-row gap-6 justify-center">

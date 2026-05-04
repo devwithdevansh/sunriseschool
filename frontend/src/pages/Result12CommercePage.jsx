@@ -85,8 +85,8 @@ const Result12CommercePage = () => {
             <div className="h-[2px] w-12 bg-brand-orange" />
             <span className="text-[11px] font-black tracking-[0.4em] uppercase text-brand-orange">Hall of Fame</span>
           </div>
-          <h1 className="text-[clamp(4rem,10vw,10rem)] font-black uppercase tracking-tighter leading-[0.85] mb-8 text-slate-900">
-            Class 12 <span className="text-brand-blue">Com</span><br />
+          <h1 className="text-[clamp(3rem,8vw,9rem)] font-black uppercase tracking-tighter leading-[0.85] mb-8 text-slate-900">
+            Class 12 <span className="text-brand-blue">Commerce</span><br />
             <span className="text-slate-300">Results</span>
           </h1>
           <p className="text-xl md:text-2xl text-slate-500 font-light max-w-2xl leading-relaxed">
@@ -160,7 +160,7 @@ const Result12CommercePage = () => {
         <div className="relative z-10 max-w-3xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}>
             <span className="text-[11px] font-black tracking-[0.4em] uppercase text-blue-300 block mb-6">Admissions 2026-27 Open</span>
-            <h2 className="text-5xl md:text-7xl font-black tracking-tighter uppercase leading-[0.9] mb-8">
+            <h2 className="text-[clamp(3rem,6vw,4.5rem)] font-black tracking-tighter uppercase leading-[0.9] mb-8">
               Be Part of Our <br/><span className="text-white border-b-4 border-brand-orange pb-2">Legacy</span>
             </h2>
             <p className="text-blue-100 font-light mb-12 text-lg md:text-xl max-w-xl mx-auto leading-relaxed">

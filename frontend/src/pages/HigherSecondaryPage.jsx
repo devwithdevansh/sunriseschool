@@ -46,7 +46,7 @@ const HigherSecondaryPage = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-5xl lg:text-7xl font-black text-white leading-[1.1] tracking-tight mb-6"
+              className="text-[clamp(3rem,6vw,4.5rem)] font-black text-white leading-[1.1] tracking-tight mb-6"
             >
               Commerce <br/>
               Stream.
