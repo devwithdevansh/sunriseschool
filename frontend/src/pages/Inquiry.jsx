@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Mail, Phone, MapPin, Send, ChevronDown, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -14,6 +14,7 @@ const itemVariants = {
 };
 
 const Inquiry = () => {
+  const [isSubmitted, setIsSubmitted] = useState(false);
   return (
     <div className="min-h-screen bg-white text-gray-900 font-sans overflow-x-hidden selection:bg-brand-blue selection:text-white">
 
@@ -64,17 +65,27 @@ const Inquiry = () => {
             transition={{ duration: 0.9 }}
             className="bg-white rounded-3xl p-8 md:p-12 shadow-xl border border-gray-100"
           >
-            <form className="space-y-6">
+            {isSubmitted ? (
+              <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="text-center py-12">
+                <div className="w-20 h-20 bg-green-100 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                </div>
+                <h3 className="text-3xl font-black text-gray-900 mb-4 uppercase tracking-tighter">Inquiry Submitted!</h3>
+                <p className="text-gray-500 font-medium mb-8">Thank you for your interest. Our admissions team will contact you shortly.</p>
+                <button onClick={() => setIsSubmitted(false)} className="px-8 py-4 bg-brand-orange text-white font-black text-sm uppercase tracking-widest rounded-2xl hover:bg-orange-600 transition-all shadow-lg hover:shadow-brand-orange/30 hover:-translate-y-0.5">Submit Another Inquiry</button>
+              </motion.div>
+            ) : (
+            <form className="space-y-6" onSubmit={(e) => { e.preventDefault(); setIsSubmitted(true); }}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Student Name</label>
-                  <input type="text" placeholder="Enter student name"
+                  <input type="text" placeholder="Enter student name" required
                     className="w-full px-5 py-4 rounded-2xl border border-gray-200 focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20 focus:outline-none transition-all duration-300 font-medium bg-gray-50 focus:bg-white"
                   />
                 </div>
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Parent Name</label>
-                  <input type="text" placeholder="Enter parent name"
+                  <input type="text" placeholder="Enter parent name" required
                     className="w-full px-5 py-4 rounded-2xl border border-gray-200 focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20 focus:outline-none transition-all duration-300 font-medium bg-gray-50 focus:bg-white"
                   />
                 </div>
@@ -82,13 +93,13 @@ const Inquiry = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Phone Number</label>
-                  <input type="tel" placeholder="+91 XXXXX XXXXX"
+                  <input type="tel" placeholder="+91 XXXXX XXXXX" required
                     className="w-full px-5 py-4 rounded-2xl border border-gray-200 focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20 focus:outline-none transition-all duration-300 font-medium bg-gray-50 focus:bg-white"
                   />
                 </div>
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Email Address</label>
-                  <input type="email" placeholder="example@email.com"
+                  <input type="email" placeholder="example@email.com" required
                     className="w-full px-5 py-4 rounded-2xl border border-gray-200 focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20 focus:outline-none transition-all duration-300 font-medium bg-gray-50 focus:bg-white"
                   />
                 </div>
@@ -96,7 +107,7 @@ const Inquiry = () => {
               <div>
                 <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Class Interested</label>
                 <div className="relative">
-                  <select className="w-full px-5 py-4 rounded-2xl border border-gray-200 focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20 focus:outline-none transition-all duration-300 appearance-none bg-gray-50 focus:bg-white font-medium">
+                  <select required className="w-full px-5 py-4 rounded-2xl border border-gray-200 focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20 focus:outline-none transition-all duration-300 appearance-none bg-gray-50 focus:bg-white font-medium">
                     <option value="">Select a class</option>
                     <option value="playhouse">Playhouse</option>
                     <option value="kg">KG</option>
@@ -113,13 +124,14 @@ const Inquiry = () => {
                   className="w-full px-5 py-4 rounded-2xl border border-gray-200 focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20 focus:outline-none transition-all duration-300 resize-none font-medium bg-gray-50 focus:bg-white"
                 />
               </div>
-              <button type="button"
+              <button type="submit"
                 className="w-full py-5 bg-brand-orange text-white font-black text-sm uppercase tracking-widest rounded-2xl hover:bg-orange-600 transition-all duration-300 shadow-lg hover:shadow-brand-orange/30 hover:-translate-y-0.5 active:scale-[0.98] flex items-center justify-center gap-3 group"
               >
                 Submit Inquiry
                 <Send className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
               </button>
             </form>
+            )}
           </motion.div>
         </div>
       </section>

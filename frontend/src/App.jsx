@@ -23,6 +23,7 @@ import Transportation from './pages/Transportation.jsx'
 import Stationary from './pages/Stationary.jsx'
 import AlumniPage from './pages/AlumniPage.jsx'
 import TrusteeMessage from './pages/TrusteeMessage.jsx'
+import NoticeBoard from './pages/NoticeBoard.jsx'
 
 
 
@@ -52,6 +53,7 @@ export default function App() {
         <Route path="/stationary" element={<Stationary />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/alumni" element={<AlumniPage />} />
+        <Route path="/notice" element={<NoticeBoard />} />
         <Route path="*" element={<div>404 - Page Not Found</div>} />
       </Route>
     </Routes>
