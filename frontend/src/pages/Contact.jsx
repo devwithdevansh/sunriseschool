@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Phone, Mail, MapPin, MessageCircle, ArrowRight, Send, Globe, Clock } from 'lucide-react';
+import { Phone, Mail, MapPin, MessageCircle, ArrowRight, Send, Globe, Clock, ChevronDown } from 'lucide-react';
 
 const Contact = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -117,37 +117,67 @@ const Contact = () => {
               
               <AnimatePresence mode="wait">
                 {isSubmitted ? (
-                  <motion.div key="success" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} className="bg-white p-10 rounded-3xl shadow-xl text-center border border-gray-100">
-                    <div className="w-24 h-24 bg-green-50 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
-                      <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                  <motion.div key="success" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} className="text-center py-10">
+                    <div className="w-20 h-20 bg-green-100 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                      <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
                     </div>
-                    <h3 className="text-3xl font-black uppercase tracking-tighter mb-4">Message Sent!</h3>
-                    <p className="text-gray-500 font-medium mb-8 leading-relaxed">Your message has been delivered to our administrative desk. We will respond to the provided email shortly.</p>
-                    <button onClick={() => setIsSubmitted(false)} className="px-8 py-4 bg-gray-900 text-white font-black text-xs uppercase tracking-[0.2em] rounded-xl hover:bg-brand-blue transition-all">Send Another</button>
+                    <h3 className="text-3xl font-black uppercase tracking-tighter mb-4 text-gray-900">Message Sent!</h3>
+                    <p className="text-gray-500 font-medium mb-8 leading-relaxed">Thank you for reaching out. Our team will contact you shortly regarding your request.</p>
+                    <button onClick={() => setIsSubmitted(false)} className="px-8 py-4 bg-brand-orange text-white font-black text-sm uppercase tracking-widest rounded-2xl hover:bg-orange-600 transition-all shadow-lg hover:shadow-brand-orange/30 hover:-translate-y-0.5">Send Another Message</button>
                   </motion.div>
                 ) : (
-                  <motion.form key="form" onSubmit={(e) => { e.preventDefault(); setIsSubmitted(true); }} className="space-y-8" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                      <div className="relative group">
-                        <input type="text" id="name" required className="w-full pb-4 bg-transparent border-b-2 border-gray-200 text-lg focus:outline-none focus:border-brand-blue transition-colors peer" placeholder=" " />
-                        <label htmlFor="name" className="absolute left-0 top-0 text-gray-400 font-medium text-lg pointer-events-none transition-all peer-focus:-top-6 peer-focus:text-xs peer-focus:text-brand-blue peer-focus:font-bold peer-focus:uppercase peer-focus:tracking-widest peer-valid:-top-6 peer-valid:text-xs peer-valid:text-gray-500 peer-valid:font-bold peer-valid:uppercase peer-valid:tracking-widest">Your Name *</label>
+                  <motion.form key="form" onSubmit={(e) => { e.preventDefault(); setIsSubmitted(true); }} className="space-y-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Student Name</label>
+                        <input type="text" placeholder="Enter student name" required
+                          className="w-full px-5 py-4 rounded-2xl border border-gray-200 focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20 focus:outline-none transition-all duration-300 font-medium bg-white focus:bg-white"
+                        />
                       </div>
-                      <div className="relative group">
-                        <input type="tel" id="phone" required className="w-full pb-4 bg-transparent border-b-2 border-gray-200 text-lg focus:outline-none focus:border-brand-blue transition-colors peer" placeholder=" " />
-                        <label htmlFor="phone" className="absolute left-0 top-0 text-gray-400 font-medium text-lg pointer-events-none transition-all peer-focus:-top-6 peer-focus:text-xs peer-focus:text-brand-blue peer-focus:font-bold peer-focus:uppercase peer-focus:tracking-widest peer-valid:-top-6 peer-valid:text-xs peer-valid:text-gray-500 peer-valid:font-bold peer-valid:uppercase peer-valid:tracking-widest">Phone Number *</label>
+                      <div>
+                        <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Parent Name</label>
+                        <input type="text" placeholder="Enter parent name" required
+                          className="w-full px-5 py-4 rounded-2xl border border-gray-200 focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20 focus:outline-none transition-all duration-300 font-medium bg-white focus:bg-white"
+                        />
                       </div>
                     </div>
-                    <div className="relative group mt-10">
-                      <input type="email" id="email" required className="w-full pb-4 bg-transparent border-b-2 border-gray-200 text-lg focus:outline-none focus:border-brand-blue transition-colors peer" placeholder=" " />
-                      <label htmlFor="email" className="absolute left-0 top-0 text-gray-400 font-medium text-lg pointer-events-none transition-all peer-focus:-top-6 peer-focus:text-xs peer-focus:text-brand-blue peer-focus:font-bold peer-focus:uppercase peer-focus:tracking-widest peer-valid:-top-6 peer-valid:text-xs peer-valid:text-gray-500 peer-valid:font-bold peer-valid:uppercase peer-valid:tracking-widest">Email Address *</label>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Phone Number</label>
+                        <input type="tel" placeholder="+91 XXXXX XXXXX" required
+                          className="w-full px-5 py-4 rounded-2xl border border-gray-200 focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20 focus:outline-none transition-all duration-300 font-medium bg-white focus:bg-white"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Email Address</label>
+                        <input type="email" placeholder="example@email.com" required
+                          className="w-full px-5 py-4 rounded-2xl border border-gray-200 focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20 focus:outline-none transition-all duration-300 font-medium bg-white focus:bg-white"
+                        />
+                      </div>
                     </div>
-                    <div className="relative group mt-10">
-                      <textarea id="message" required rows={4} className="w-full pb-4 bg-transparent border-b-2 border-gray-200 text-lg focus:outline-none focus:border-brand-blue transition-colors peer resize-none" placeholder=" " />
-                      <label htmlFor="message" className="absolute left-0 top-0 text-gray-400 font-medium text-lg pointer-events-none transition-all peer-focus:-top-6 peer-focus:text-xs peer-focus:text-brand-blue peer-focus:font-bold peer-focus:uppercase peer-focus:tracking-widest peer-valid:-top-6 peer-valid:text-xs peer-valid:text-gray-500 peer-valid:font-bold peer-valid:uppercase peer-valid:tracking-widest">How can we help? *</label>
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Class Interested</label>
+                      <div className="relative">
+                        <select required className="w-full px-5 py-4 rounded-2xl border border-gray-200 focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20 focus:outline-none transition-all duration-300 appearance-none bg-white focus:bg-white font-medium">
+                          <option value="">Select a class</option>
+                          <option value="playhouse">Playhouse</option>
+                          <option value="kg">KG</option>
+                          <option value="1-5">1 – 5</option>
+                          <option value="6-10">6 – 10</option>
+                          <option value="11-12">11 – 12 Commerce</option>
+                        </select>
+                        <ChevronDown className="absolute right-5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                      </div>
                     </div>
-                    <button type="submit" className="mt-8 flex items-center justify-between w-full md:w-auto px-10 py-5 bg-brand-orange text-white font-black text-sm uppercase tracking-[0.2em] rounded-full shadow-[0_10px_30px_rgba(234,88,12,0.3)] hover:shadow-[0_15px_40px_rgba(234,88,12,0.4)] hover:-translate-y-1 transition-all duration-300 group">
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Message</label>
+                      <textarea rows={4} placeholder="Tell us about your requirements..."
+                        className="w-full px-5 py-4 rounded-2xl border border-gray-200 focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20 focus:outline-none transition-all duration-300 resize-none font-medium bg-white focus:bg-white"
+                      />
+                    </div>
+                    <button type="submit" className="w-full py-5 bg-brand-orange text-white font-black text-sm uppercase tracking-widest rounded-2xl hover:bg-orange-600 transition-all duration-300 shadow-lg hover:shadow-brand-orange/30 hover:-translate-y-0.5 active:scale-[0.98] flex items-center justify-center gap-3 group">
                       Submit Request
-                      <Send className="w-5 h-5 ml-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                      <Send className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                     </button>
                   </motion.form>
                 )}

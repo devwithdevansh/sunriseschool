@@ -75,62 +75,62 @@ const Inquiry = () => {
                 <button onClick={() => setIsSubmitted(false)} className="px-8 py-4 bg-brand-orange text-white font-black text-sm uppercase tracking-widest rounded-2xl hover:bg-orange-600 transition-all shadow-lg hover:shadow-brand-orange/30 hover:-translate-y-0.5">Submit Another Inquiry</button>
               </motion.div>
             ) : (
-            <form className="space-y-6" onSubmit={(e) => { e.preventDefault(); setIsSubmitted(true); }}>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Student Name</label>
-                  <input type="text" placeholder="Enter student name" required
-                    className="w-full px-5 py-4 rounded-2xl border border-gray-200 focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20 focus:outline-none transition-all duration-300 font-medium bg-gray-50 focus:bg-white"
-                  />
+              <form className="space-y-6" onSubmit={(e) => { e.preventDefault(); setIsSubmitted(true); }}>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Student Name</label>
+                    <input type="text" placeholder="Enter student name" required
+                      className="w-full px-5 py-4 rounded-2xl border border-gray-200 focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20 focus:outline-none transition-all duration-300 font-medium bg-gray-50 focus:bg-white"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Parent Name</label>
+                    <input type="text" placeholder="Enter parent name" required
+                      className="w-full px-5 py-4 rounded-2xl border border-gray-200 focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20 focus:outline-none transition-all duration-300 font-medium bg-gray-50 focus:bg-white"
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Phone Number</label>
+                    <input type="tel" placeholder="+91 XXXXX XXXXX" required
+                      className="w-full px-5 py-4 rounded-2xl border border-gray-200 focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20 focus:outline-none transition-all duration-300 font-medium bg-gray-50 focus:bg-white"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Email Address</label>
+                    <input type="email" placeholder="example@email.com" required
+                      className="w-full px-5 py-4 rounded-2xl border border-gray-200 focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20 focus:outline-none transition-all duration-300 font-medium bg-gray-50 focus:bg-white"
+                    />
+                  </div>
                 </div>
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Parent Name</label>
-                  <input type="text" placeholder="Enter parent name" required
-                    className="w-full px-5 py-4 rounded-2xl border border-gray-200 focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20 focus:outline-none transition-all duration-300 font-medium bg-gray-50 focus:bg-white"
-                  />
+                  <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Class Interested</label>
+                  <div className="relative">
+                    <select required className="w-full px-5 py-4 rounded-2xl border border-gray-200 focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20 focus:outline-none transition-all duration-300 appearance-none bg-gray-50 focus:bg-white font-medium">
+                      <option value="">Select a class</option>
+                      <option value="playhouse">Playhouse</option>
+                      <option value="kg">KG</option>
+                      <option value="1-5">1 – 5</option>
+                      <option value="6-10">6 – 10</option>
+                      <option value="11-12">11 – 12 Commerce</option>
+                    </select>
+                    <ChevronDown className="absolute right-5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                  </div>
                 </div>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Phone Number</label>
-                  <input type="tel" placeholder="+91 XXXXX XXXXX" required
-                    className="w-full px-5 py-4 rounded-2xl border border-gray-200 focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20 focus:outline-none transition-all duration-300 font-medium bg-gray-50 focus:bg-white"
+                  <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Message</label>
+                  <textarea rows={4} placeholder="Tell us about your requirements..."
+                    className="w-full px-5 py-4 rounded-2xl border border-gray-200 focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20 focus:outline-none transition-all duration-300 resize-none font-medium bg-gray-50 focus:bg-white"
                   />
                 </div>
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Email Address</label>
-                  <input type="email" placeholder="example@email.com" required
-                    className="w-full px-5 py-4 rounded-2xl border border-gray-200 focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20 focus:outline-none transition-all duration-300 font-medium bg-gray-50 focus:bg-white"
-                  />
-                </div>
-              </div>
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Class Interested</label>
-                <div className="relative">
-                  <select required className="w-full px-5 py-4 rounded-2xl border border-gray-200 focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20 focus:outline-none transition-all duration-300 appearance-none bg-gray-50 focus:bg-white font-medium">
-                    <option value="">Select a class</option>
-                    <option value="playhouse">Playhouse</option>
-                    <option value="kg">KG</option>
-                    <option value="1-5">1 – 5</option>
-                    <option value="6-10">6 – 10</option>
-                    <option value="11-12">11 – 12 Commerce</option>
-                  </select>
-                  <ChevronDown className="absolute right-5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
-                </div>
-              </div>
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Message</label>
-                <textarea rows={4} placeholder="Tell us about your requirements..."
-                  className="w-full px-5 py-4 rounded-2xl border border-gray-200 focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20 focus:outline-none transition-all duration-300 resize-none font-medium bg-gray-50 focus:bg-white"
-                />
-              </div>
-              <button type="submit"
-                className="w-full py-5 bg-brand-orange text-white font-black text-sm uppercase tracking-widest rounded-2xl hover:bg-orange-600 transition-all duration-300 shadow-lg hover:shadow-brand-orange/30 hover:-translate-y-0.5 active:scale-[0.98] flex items-center justify-center gap-3 group"
-              >
-                Submit Inquiry
-                <Send className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-              </button>
-            </form>
+                <button type="submit"
+                  className="w-full py-5 bg-brand-orange text-white font-black text-sm uppercase tracking-widest rounded-2xl hover:bg-orange-600 transition-all duration-300 shadow-lg hover:shadow-brand-orange/30 hover:-translate-y-0.5 active:scale-[0.98] flex items-center justify-center gap-3 group"
+                >
+                  Submit Inquiry
+                  <Send className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                </button>
+              </form>
             )}
           </motion.div>
         </div>
