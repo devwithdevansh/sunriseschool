@@ -6,7 +6,6 @@ import {
   Search, 
   Trash2, 
   ExternalLink, 
-  Filter,
   X,
   Grid,
   List,
@@ -24,134 +23,108 @@ const MOCK_MEDIA = [
 export default function MediaPage() {
   const [viewMode, setViewMode] = useState('grid')
   const [showUpload, setShowUpload] = useState(false)
-  const [selectedCategory, setSelectedCategory] = useState('All')
-
-  const categories = ['All', 'Events', 'Infrastructure', 'Classrooms', 'Sports']
+  const [filter, setFilter] = useState('All')
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="space-y-8"
-    >
-      <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div className="page-container">
+      <div className="topbar" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '48px' }}>
         <div>
-          <h2 className="text-3xl font-black text-slate-900 tracking-tight">Media Library</h2>
-          <p className="text-slate-500 font-medium">Upload and organize school photos and videos.</p>
+          <h2>Media Library</h2>
+          <p>Upload and organize school photos and videos for the public gallery.</p>
         </div>
         <button 
           onClick={() => setShowUpload(true)}
-          className="primary-button flex items-center gap-2 self-start"
+          className="primary-button" 
+          style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
         >
-          <Upload size={20} />
-          Upload New Media
+          <Upload size={18} /> Upload Media
         </button>
-      </header>
+      </div>
 
-      {/* Media Toolbar */}
-      <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
-        <div className="flex items-center gap-2 overflow-x-auto pb-2 lg:pb-0 w-full lg:w-auto">
-          {categories.map((cat) => (
+      <div style={{ display: 'flex', gap: '24px', alignItems: 'center', marginBottom: '48px', padding: '16px', background: 'white', borderRadius: '24px', border: '1px solid var(--border-subtle)' }}>
+        <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', flex: 1 }}>
+          {['All', 'Events', 'Infrastructure', 'Sports'].map((cat) => (
             <button
               key={cat}
-              onClick={() => setSelectedCategory(cat)}
-              className={`px-6 py-2.5 rounded-2xl text-sm font-bold transition-all shrink-0 ${
-                selectedCategory === cat 
-                ? 'bg-blue-600 text-white shadow-lg shadow-blue-200' 
-                : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-100'
-              }`}
+              onClick={() => setFilter(cat)}
+              style={{
+                padding: '8px 20px',
+                borderRadius: '12px',
+                fontSize: '0.8rem',
+                fontWeight: 700,
+                border: 'none',
+                cursor: 'pointer',
+                transition: '0.2s',
+                background: filter === cat ? '#1a1a1a' : '#f5f5f5',
+                color: filter === cat ? 'white' : '#8c8c8c'
+              }}
             >
               {cat}
             </button>
           ))}
         </div>
-
-        <div className="flex items-center gap-3 w-full lg:w-auto">
-          <div className="flex bg-white border border-slate-100 p-1.5 rounded-2xl">
-            <button 
-              onClick={() => setViewMode('grid')}
-              className={`p-2 rounded-xl transition-all ${viewMode === 'grid' ? 'bg-slate-100 text-blue-600 shadow-sm' : 'text-slate-400'}`}
-            >
-              <Grid size={20} />
-            </button>
-            <button 
-              onClick={() => setViewMode('list')}
-              className={`p-2 rounded-xl transition-all ${viewMode === 'list' ? 'bg-slate-100 text-blue-600 shadow-sm' : 'text-slate-400'}`}
-            >
-              <List size={20} />
-            </button>
-          </div>
-          <div className="flex-1 lg:w-64 bg-white border border-slate-100 px-4 py-2.5 rounded-2xl flex items-center gap-2">
-            <Search size={18} className="text-slate-400" />
-            <input type="text" placeholder="Search files..." className="bg-transparent border-none outline-none text-sm font-medium w-full" />
-          </div>
+        <div className="flex bg-slate-50 p-1.5 rounded-xl border border-slate-100">
+          <button onClick={() => setViewMode('grid')} style={{ padding: '8px', borderRadius: '10px', background: viewMode === 'grid' ? 'white' : 'transparent', border: 'none', cursor: 'pointer', boxShadow: viewMode === 'grid' ? '0 4px 12px rgba(0,0,0,0.05)' : 'none' }}>
+            <Grid size={18} color={viewMode === 'grid' ? '#1a1a1a' : '#8c8c8c'} />
+          </button>
+          <button onClick={() => setViewMode('list')} style={{ padding: '8px', borderRadius: '10px', background: viewMode === 'list' ? 'white' : 'transparent', border: 'none', cursor: 'pointer', boxShadow: viewMode === 'list' ? '0 4px 12px rgba(0,0,0,0.05)' : 'none' }}>
+            <List size={18} color={viewMode === 'list' ? '#1a1a1a' : '#8c8c8c'} />
+          </button>
         </div>
       </div>
 
       {viewMode === 'grid' ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '32px' }}>
           {MOCK_MEDIA.map((item) => (
-            <motion.div
-              layout
-              key={item.id}
-              whileHover={{ y: -8 }}
-              className="card p-0 overflow-hidden group cursor-pointer border-slate-100"
-            >
-              <div className="aspect-[4/3] relative overflow-hidden bg-slate-100">
-                <img src={item.url} alt={item.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                <div className="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4">
-                  <button className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-slate-900 hover:scale-110 transition-transform">
-                    <ExternalLink size={20} />
-                  </button>
-                  <button className="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform">
-                    <Trash2 size={20} />
-                  </button>
-                </div>
-                <div className="absolute top-4 left-4">
-                  <span className="badge badge-blue shadow-lg">{item.category}</span>
+            <div key={item.id} className="card" style={{ padding: 0, overflow: 'hidden', group: 'true' }}>
+              <div style={{ height: '200px', background: '#f5f5f5', position: 'relative' }}>
+                <img src={item.url} alt={item.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                <div style={{ position: 'absolute', top: '12px', right: '12px' }}>
+                  <span className="badge badge-orange" style={{ background: 'rgba(255,255,255,0.9)', backdropFilter: 'blur(4px)', color: '#1a1a1a' }}>{item.category}</span>
                 </div>
               </div>
-              <div className="p-5">
-                <h4 className="font-bold text-slate-900 truncate mb-1">{item.title}</h4>
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-black uppercase text-slate-400 tracking-widest">{item.type}</span>
-                  <span className="text-[10px] font-black uppercase text-slate-400 tracking-widest">{item.size}</span>
+              <div style={{ padding: '24px' }}>
+                <h4 style={{ margin: 0, fontSize: '1rem', fontWeight: 900 }}>{item.title}</h4>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '12px' }}>
+                  <span style={{ fontSize: '0.7rem', fontWeight: 800, color: '#8c8c8c', textTransform: 'uppercase' }}>{item.type} • {item.size}</span>
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <button style={{ border: 'none', background: 'none', color: '#8c8c8c', cursor: 'pointer' }}><ExternalLink size={16} /></button>
+                    <button style={{ border: 'none', background: 'none', color: '#ef4444', cursor: 'pointer' }}><Trash2 size={16} /></button>
+                  </div>
                 </div>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       ) : (
-        <div className="card">
-          <div className="table-wrap">
+        <div className="card" style={{ padding: 0 }}>
+          <div className="table-wrap" style={{ border: 'none', borderRadius: 0 }}>
             <table className="data-table">
               <thead>
                 <tr>
                   <th>Preview</th>
-                  <th>Filename</th>
+                  <th>Title</th>
                   <th>Category</th>
-                  <th>Type</th>
                   <th>Size</th>
-                  <th>Actions</th>
+                  <th style={{ textAlign: 'right' }}>Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {MOCK_MEDIA.map((item) => (
                   <tr key={item.id}>
                     <td>
-                      <div className="w-12 h-12 rounded-xl overflow-hidden bg-slate-100">
-                        <img src={item.url} className="w-full h-full object-cover" />
+                      <div style={{ width: '48px', height: '48px', borderRadius: '10px', overflow: 'hidden' }}>
+                        <img src={item.url} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                       </div>
                     </td>
-                    <td><div className="font-bold text-slate-900">{item.title}</div></td>
-                    <td><span className="badge badge-blue">{item.category}</span></td>
-                    <td><span className="text-xs font-bold text-slate-500 uppercase tracking-widest">{item.type}</span></td>
-                    <td><span className="text-xs font-bold text-slate-500 tracking-widest">{item.size}</span></td>
-                    <td>
-                      <div className="table-actions">
-                        <button className="p-2 hover:bg-slate-50 text-slate-600 rounded-lg"><ExternalLink size={18} /></button>
-                        <button className="p-2 hover:bg-red-50 text-red-600 rounded-lg"><Trash2 size={18} /></button>
-                      </div>
+                    <td><span style={{ fontWeight: 700 }}>{item.title}</span></td>
+                    <td><span className="badge badge-gray">{item.category}</span></td>
+                    <td><span style={{ color: '#8c8c8c', fontSize: '0.85rem' }}>{item.size}</span></td>
+                    <td style={{ textAlign: 'right' }}>
+                       <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
+                          <button style={{ padding: '8px', borderRadius: '8px', border: '1px solid var(--border-subtle)', background: 'white', cursor: 'pointer' }}><ExternalLink size={16} /></button>
+                          <button style={{ padding: '8px', borderRadius: '8px', border: '1px solid #fee2e2', background: '#fff1f1', color: '#ef4444', cursor: 'pointer' }}><Trash2 size={16} /></button>
+                       </div>
                     </td>
                   </tr>
                 ))}
@@ -161,45 +134,40 @@ export default function MediaPage() {
         </div>
       )}
 
-      {/* Upload Overlay */}
+      {/* Polish Upload Modal */}
       <AnimatePresence>
         {showUpload && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
+          <div style={{ position: 'fixed', inset: 0, zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px' }}>
             <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               onClick={() => setShowUpload(false)}
-              className="absolute inset-0 bg-slate-900/60 backdrop-blur-md"
+              style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.2)', backdropFilter: 'blur(4px)' }}
             />
             <motion.div 
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              className="relative w-full max-w-xl bg-white rounded-[40px] shadow-2xl p-10 text-center overflow-hidden"
+              initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.95, opacity: 0 }}
+              style={{ position: 'relative', width: '100%', maxWidth: '500px', background: 'white', borderRadius: '32px', padding: '40px', boxShadow: '0 24px 48px rgba(0,0,0,0.1)' }}
             >
-              <div className="mb-8">
-                <div className="w-20 h-20 bg-blue-50 text-blue-500 rounded-3xl flex items-center justify-center mx-auto mb-6">
-                  <Upload size={32} />
-                </div>
-                <h3 className="text-3xl font-black text-slate-900 tracking-tight">Upload Media</h3>
-                <p className="text-slate-500 font-medium mt-2">Add photos or videos to the school gallery.</p>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>
+                <h3 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 900 }}>Upload Media</h3>
+                <button onClick={() => setShowUpload(false)} style={{ border: 'none', background: '#f5f5f5', padding: '8px', borderRadius: '10px', cursor: 'pointer' }}>
+                  <X size={20} />
+                </button>
               </div>
 
-              <div className="border-4 border-dashed border-slate-50 rounded-[32px] p-16 mb-8 hover:border-blue-100 hover:bg-slate-50 transition-all group cursor-pointer">
-                <FolderOpen size={48} className="mx-auto text-slate-200 group-hover:text-blue-400 mb-4 transition-colors" />
-                <p className="font-bold text-slate-400 group-hover:text-slate-600 transition-colors">Drag and drop files here</p>
-                <span className="text-xs font-bold text-slate-300 mt-2 block">PNG, JPG or MP4 (Max 100MB)</span>
+              <div style={{ border: '2px dashed var(--border-subtle)', borderRadius: '24px', padding: '48px', textAlign: 'center', background: '#fcfcfc', marginBottom: '32px' }}>
+                <FolderOpen size={40} color="#8c8c8c" style={{ margin: '0 auto 16px' }} />
+                <p style={{ margin: 0, fontSize: '0.9rem', fontWeight: 700 }}>Drag files here to upload</p>
+                <p style={{ margin: '4px 0 0', fontSize: '0.75rem', color: '#8c8c8c' }}>Supports JPG, PNG, MP4 (Max 50MB)</p>
               </div>
 
-              <div className="flex gap-4">
-                <button className="primary-button flex-1 py-4">Start Upload</button>
-                <button onClick={() => setShowUpload(false)} className="flex-1 py-4 font-bold text-slate-500 hover:bg-slate-50 rounded-2xl transition-all">Cancel</button>
+              <div style={{ display: 'flex', gap: '16px' }}>
+                <button className="primary-button" style={{ flex: 1, padding: '18px' }}>Select Files</button>
+                <button onClick={() => setShowUpload(false)} className="secondary-button" style={{ flex: 1, padding: '18px' }}>Cancel</button>
               </div>
             </motion.div>
           </div>
         )}
       </AnimatePresence>
-    </motion.div>
+    </div>
   )
 }

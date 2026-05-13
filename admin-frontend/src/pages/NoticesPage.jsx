@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
-  Bell, 
   Plus, 
   Search, 
   Edit3, 
@@ -10,8 +9,8 @@ import {
   Paperclip, 
   X,
   Calendar,
-  Filter,
-  Megaphone
+  Megaphone,
+  Bell
 } from 'lucide-react'
 
 const MOCK_NOTICES = [
@@ -21,100 +20,74 @@ const MOCK_NOTICES = [
 ]
 
 export default function NoticesPage() {
-  const [notices, setNotices] = useState(MOCK_NOTICES)
+  const [notices] = useState(MOCK_NOTICES)
   const [isAdding, setIsAdding] = useState(false)
-  const [search, setSearch] = useState('')
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="space-y-8"
-    >
-      <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div className="page-container">
+      <div className="topbar" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '48px' }}>
         <div>
-          <h2 className="text-3xl font-black text-slate-900 tracking-tight">Notice Board</h2>
-          <p className="text-slate-500 font-medium">Broadcast announcements and official circulars to the community.</p>
+          <h2>Notice Board</h2>
+          <p>Broadcast announcements and official circulars to the community.</p>
         </div>
         <button 
           onClick={() => setIsAdding(true)}
-          className="primary-button flex items-center gap-2 self-start"
+          className="primary-button" 
+          style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
         >
-          <Plus size={20} />
-          Create New Notice
+          <Plus size={18} /> Create New Notice
         </button>
-      </header>
-
-      {/* Toolbar */}
-      <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
-        <div className="relative w-full lg:w-96">
-          <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-          <input 
-            type="text" 
-            placeholder="Search announcements..." 
-            className="w-full bg-white border border-slate-100 px-14 py-4 rounded-[20px] text-sm font-medium focus:border-blue-200 transition-all outline-none"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </div>
-        <div className="flex gap-3 w-full lg:w-auto">
-          <button className="px-6 py-3 bg-white border border-slate-100 rounded-2xl text-xs font-black uppercase tracking-widest text-slate-500 flex items-center gap-2 hover:bg-slate-50 transition-all">
-            <Filter size={16} /> Filter by Category
-          </button>
-        </div>
       </div>
 
-      <article className="bg-white rounded-[40px] border border-slate-100 shadow-sm overflow-hidden">
-        <div className="table-wrap border-none">
+      <div className="card" style={{ padding: 0 }}>
+        <div style={{ padding: '24px 32px', borderBottom: '1px solid var(--border-subtle)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 900 }}>Announcements</h3>
+          <div style={{ position: 'relative', width: '250px' }}>
+            <Search size={14} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#8c8c8c' }} />
+            <input 
+              type="text" 
+              placeholder="Filter notices..." 
+              style={{ width: '100%', padding: '8px 12px 8px 36px', borderRadius: '10px', border: '1px solid var(--border-subtle)', background: '#fcfcfc', fontSize: '0.8rem', fontWeight: 600, outline: 'none' }} 
+            />
+          </div>
+        </div>
+
+        <div className="table-wrap" style={{ border: 'none', borderRadius: 0 }}>
           <table className="data-table">
             <thead>
-              <tr className="bg-slate-50/50">
-                <th className="!pl-8">Notice Content</th>
+              <tr>
+                <th>Notice Content</th>
                 <th>Category</th>
-                <th>Publish Date</th>
                 <th>Visibility</th>
-                <th className="!pr-8">Actions</th>
+                <th style={{ textAlign: 'right' }}>Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-50">
+            <tbody>
               {notices.map((notice) => (
-                <tr key={notice.id} className="hover:bg-slate-50/50 transition-colors group">
-                  <td className="!pl-8">
-                    <div className="flex items-center gap-4 py-4">
-                      <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 ${notice.isPinned ? 'bg-orange-50 text-orange-500' : 'bg-blue-50 text-blue-500'}`}>
-                        {notice.isPinned ? <Pin size={20} className="fill-orange-500" /> : <Megaphone size={20} />}
+                <tr key={notice.id}>
+                  <td>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                      <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: notice.isPinned ? '#fff5ef' : '#f5f5f5', color: notice.isPinned ? 'var(--brand-orange)' : '#666', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        {notice.isPinned ? <Pin size={18} /> : <Megaphone size={18} />}
                       </div>
                       <div>
-                        <span className="block font-black text-slate-900 line-clamp-1">{notice.title}</span>
-                        <span className="text-xs font-medium text-slate-400 line-clamp-1">{notice.content}</span>
+                        <p style={{ margin: 0, fontWeight: 700, fontSize: '0.9rem' }}>{notice.title}</p>
+                        <p style={{ margin: 0, fontSize: '0.75rem', color: '#8c8c8c' }}>{notice.date}</p>
                       </div>
                     </div>
                   </td>
-                  <td>
-                    <span className="badge badge-blue">{notice.category}</span>
-                  </td>
-                  <td>
-                    <div className="flex items-center gap-2 text-sm font-bold text-slate-500">
-                      <Calendar size={14} className="text-slate-300" /> {notice.date}
-                    </div>
-                  </td>
+                  <td><span className="badge badge-gray">{notice.category}</span></td>
                   <td>
                     {notice.isPinned ? (
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-orange-50 text-orange-600 rounded-full text-[10px] font-black uppercase tracking-widest ring-1 ring-orange-100">
-                        Pinned Alert
-                      </span>
+                      <span className="badge badge-orange" style={{ fontSize: '10px' }}>Pinned Alert</span>
                     ) : (
-                      <span className="text-[10px] font-black uppercase tracking-widest text-slate-300">Standard</span>
+                      <span style={{ fontSize: '10px', fontWeight: 700, color: '#ccc', textTransform: 'uppercase' }}>Standard</span>
                     )}
                   </td>
-                  <td className="!pr-8">
-                    <div className="flex items-center gap-2">
-                      <button className="p-3 bg-slate-50 hover:bg-slate-900 hover:text-white text-slate-400 rounded-2xl transition-all">
-                        <Edit3 size={18} />
-                      </button>
-                      <button className="p-3 bg-slate-50 hover:bg-red-50 text-slate-400 hover:text-red-600 rounded-2xl transition-all">
-                        <Trash2 size={18} />
-                      </button>
+                  <td style={{ textAlign: 'right' }}>
+                    <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
+                      <button style={{ padding: '8px', borderRadius: '8px', border: '1px solid var(--border-subtle)', background: 'white', cursor: 'pointer' }}><Edit3 size={16} /></button>
+                      <button style={{ padding: '8px', borderRadius: '8px', border: '1px solid #fee2e2', background: '#fff1f1', color: '#ef4444', cursor: 'pointer' }}><Trash2 size={16} /></button>
                     </div>
                   </td>
                 </tr>
@@ -122,50 +95,42 @@ export default function NoticesPage() {
             </tbody>
           </table>
         </div>
-      </article>
+      </div>
 
-      {/* Notice Form Overlay */}
+      {/* Polish Form Drawer */}
       <AnimatePresence>
         {isAdding && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-end">
+          <div style={{ position: 'fixed', inset: 0, zIndex: 100, display: 'flex', justifyContent: 'flex-end' }}>
             <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               onClick={() => setIsAdding(false)}
-              className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
+              style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.2)', backdropFilter: 'blur(4px)' }}
             />
             <motion.div 
-              initial={{ x: '100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '100%' }}
+              initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="relative w-full max-w-2xl h-full bg-white shadow-2xl p-10 overflow-y-auto"
+              style={{ position: 'relative', width: '500px', height: '100%', background: 'white', padding: '48px', boxShadow: '-16px 0 32px rgba(0,0,0,0.05)', overflowY: 'auto' }}
             >
-              <div className="flex items-center justify-between mb-10">
-                <div>
-                  <h3 className="text-2xl font-black text-slate-900">Create Announcement</h3>
-                  <p className="text-slate-500 font-medium">Compose a new notice for the school community.</p>
-                </div>
-                <button onClick={() => setIsAdding(false)} className="p-3 hover:bg-slate-100 rounded-2xl transition-colors">
-                  <X size={24} />
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '40px' }}>
+                <h3 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 900 }}>Create Announcement</h3>
+                <button onClick={() => setIsAdding(false)} style={{ border: 'none', background: '#f5f5f5', padding: '8px', borderRadius: '10px', cursor: 'pointer' }}>
+                  <X size={20} />
                 </button>
               </div>
 
-              <form className="space-y-8" onSubmit={(e) => e.preventDefault()}>
+              <form className="space-y-6">
                 <div className="field-group">
-                  <label className="field-label">Announcement Title</label>
-                  <input type="text" placeholder="e.g. Annual Day Schedule Update" className="field-input" required />
+                  <label className="field-label">Notice Title</label>
+                  <input type="text" className="field-input" placeholder="e.g. Summer Vacation 2026" />
                 </div>
-
-                <div className="grid grid-cols-2 gap-6">
+                
+                <div className="grid grid-cols-2 gap-4">
                   <div className="field-group">
                     <label className="field-label">Category</label>
                     <select className="field-input">
                       <option>General</option>
-                      <option>Exams</option>
+                      <option>Academic</option>
                       <option>Events</option>
-                      <option>Holidays</option>
                     </select>
                   </div>
                   <div className="field-group">
@@ -175,41 +140,27 @@ export default function NoticesPage() {
                 </div>
 
                 <div className="field-group">
-                  <label className="field-label">Notice Details</label>
-                  <textarea rows={6} className="field-textarea" placeholder="Write the full announcement here..."></textarea>
+                  <label className="field-label">Content</label>
+                  <textarea className="field-textarea" style={{ height: '150px' }} placeholder="Write the announcement details..." />
                 </div>
 
-                <div className="flex items-center justify-between p-6 bg-slate-50 rounded-3xl border border-slate-100">
-                  <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-orange-500 shadow-sm">
-                      <Pin size={20} />
-                    </div>
-                    <div>
-                      <p className="font-bold text-slate-900 text-sm">Pin to Top</p>
-                      <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Always visible at the top of the board</p>
-                    </div>
-                  </div>
-                  <input type="checkbox" className="w-6 h-6 accent-blue-600 rounded-lg" />
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '20px', background: '#fcfcfc', borderRadius: '16px', border: '1px solid var(--border-subtle)' }}>
+                   <input type="checkbox" style={{ width: '20px', height: '20px', accentColor: 'var(--brand-orange)' }} />
+                   <div>
+                     <p style={{ margin: 0, fontSize: '0.85rem', fontWeight: 700 }}>Pin to Top</p>
+                     <p style={{ margin: 0, fontSize: '0.7rem', color: '#8c8c8c' }}>Make this notice primary on the board</p>
+                   </div>
                 </div>
 
-                <div className="field-group">
-                  <label className="field-label">PDF Attachment</label>
-                  <div className="border-4 border-dashed border-slate-50 rounded-[32px] p-12 text-center hover:border-blue-100 hover:bg-slate-50 transition-all group cursor-pointer">
-                    <Paperclip size={40} className="mx-auto text-slate-200 group-hover:text-blue-400 mb-4 transition-colors" />
-                    <p className="font-bold text-slate-400 group-hover:text-slate-600 transition-colors">Click to attach official circular</p>
-                    <p className="text-xs font-bold text-slate-300 mt-2 block">Maximum size: 10MB</p>
-                  </div>
-                </div>
-
-                <div className="pt-6 flex gap-4">
-                  <button type="submit" className="primary-button flex-1 py-4">Broadcast Notice</button>
-                  <button type="button" onClick={() => setIsAdding(false)} className="flex-1 py-4 font-bold text-slate-500 hover:bg-slate-50 rounded-2xl transition-all">Discard Draft</button>
+                <div style={{ marginTop: '48px', display: 'flex', gap: '16px' }}>
+                  <button type="button" className="primary-button" style={{ flex: 1, padding: '18px' }}>Broadcast Now</button>
+                  <button type="button" onClick={() => setIsAdding(false)} className="secondary-button" style={{ flex: 1, padding: '18px' }}>Cancel</button>
                 </div>
               </form>
             </motion.div>
           </div>
         )}
       </AnimatePresence>
-    </motion.div>
+    </div>
   )
 }

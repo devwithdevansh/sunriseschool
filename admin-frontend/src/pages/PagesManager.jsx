@@ -9,7 +9,8 @@ import {
   Eye, 
   Save, 
   RotateCcw,
-  Info
+  Info,
+  ArrowLeft
 } from 'lucide-react'
 
 const MOCK_PAGES = [
@@ -127,141 +128,128 @@ export default function PagesManager() {
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="space-y-8"
-    >
-      <header className="topbar">
-        <div>
-          <h2>Pages Manager</h2>
-          <p>Control the text, banners, and settings of your website pages.</p>
-        </div>
-      </header>
+    <div className="page-container">
+      <div className="topbar">
+        <h2>Pages Manager</h2>
+        <p>Control the text, banners, and settings of your website pages.</p>
+      </div>
 
       {!selectedPage ? (
-        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '24px' }}>
           {MOCK_PAGES.map((page) => (
-            <motion.div
+            <div
               key={page.slug}
-              whileHover={{ y: -5 }}
               onClick={() => handlePageSelect(page)}
-              className="card cursor-pointer group hover:border-blue-400 transition-all"
+              className="card"
+              style={{ cursor: 'pointer', transition: 'all 0.2s', border: '1px solid var(--border-subtle)' }}
             >
-              <div className="flex items-center gap-4 mb-4">
-                <div className="w-12 h-12 bg-blue-50 text-blue-500 rounded-xl flex items-center justify-center group-hover:bg-blue-500 group-hover:text-white transition-colors">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '24px' }}>
+                <div style={{ width: '48px', height: '48px', background: '#f5f5f5', borderRadius: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#1a1a1a' }}>
                   <FileText size={24} />
                 </div>
                 <div>
-                  <h3 className="font-bold text-slate-900">{page.title}</h3>
-                  <span className="text-xs text-slate-400 font-medium">/{page.slug}</span>
+                  <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: 900 }}>{page.title}</h3>
+                  <span style={{ fontSize: '0.75rem', color: '#8c8c8c' }}>/{page.slug}</span>
                 </div>
               </div>
-              <div className="flex items-center justify-between mt-6 pt-4 border-t border-slate-50">
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Updated {page.lastUpdated}</span>
-                <ChevronRight size={16} className="text-slate-300 group-hover:text-blue-500 transform group-hover:translate-x-1 transition-all" />
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '20px', borderTop: '1px solid var(--border-subtle)' }}>
+                <span style={{ fontSize: '0.7rem', fontWeight: 700, color: '#ccc', textTransform: 'uppercase' }}>Last Updated: {page.lastUpdated}</span>
+                <ChevronRight size={16} color="#ccc" />
               </div>
-            </motion.div>
+            </div>
           ))}
-        </section>
+        </div>
       ) : (
-        <div className="grid grid-cols-12 gap-8">
-          {/* Section Navigation */}
-          <aside className="col-span-12 lg:col-span-3 space-y-4">
+        <div style={{ display: 'grid', gridTemplateColumns: '300px 1fr', gap: '48px', alignItems: 'flex-start' }}>
+          <aside style={{ position: 'sticky', top: '128px' }}>
             <button 
               onClick={() => setSelectedPage(null)}
-              className="flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-blue-600 mb-6"
+              style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', color: '#8c8c8c', fontWeight: 700, fontSize: '0.85rem', marginBottom: '32px' }}
             >
-              <RotateCcw size={16} /> Back to List
+              <ArrowLeft size={16} /> Back to List
             </button>
-            <h3 className="text-xs font-black uppercase tracking-[0.2em] text-slate-400 mb-4">Sections</h3>
-            <div className="flex flex-col gap-2">
+            
+            <h3 style={{ fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', color: '#8c8c8c', letterSpacing: '0.1em', marginBottom: '16px' }}>Page Sections</h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               {(PAGE_SECTION_DATA[selectedPage.slug] || []).map((sec) => (
                 <button
                   key={sec.id}
                   onClick={() => setActiveSection(sec.id)}
-                  className={`flex items-center gap-3 p-4 rounded-xl text-sm font-bold transition-all ${
-                    activeSection === sec.id 
-                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-200' 
-                    : 'bg-white text-slate-600 hover:bg-slate-50'
-                  }`}
+                  style={{
+                    padding: '16px 20px',
+                    borderRadius: '14px',
+                    fontSize: '0.9rem',
+                    fontWeight: 700,
+                    textAlign: 'left',
+                    border: 'none',
+                    cursor: 'pointer',
+                    transition: '0.2s',
+                    background: activeSection === sec.id ? '#1a1a1a' : 'white',
+                    color: activeSection === sec.id ? 'white' : '#8c8c8c',
+                    boxShadow: activeSection === sec.id ? '0 8px 16px rgba(0,0,0,0.05)' : 'none'
+                  }}
                 >
-                  <Layout size={18} />
                   {sec.label}
                 </button>
               ))}
             </div>
-            
-            <div className="mt-8 p-6 bg-orange-50 rounded-2xl border border-orange-100">
-              <div className="flex gap-3 text-orange-700">
-                <Info size={18} className="shrink-0" />
-                <p className="text-xs font-semibold leading-relaxed">
-                  The sections for <strong>{selectedPage.title}</strong> are mapped to keep the design stable while you edit content.
-                </p>
-              </div>
+
+            <div style={{ marginTop: '48px', padding: '24px', background: '#f8fafc', borderRadius: '24px', border: '1px solid #e2e8f0' }}>
+               <div style={{ display: 'flex', gap: '12px' }}>
+                 <Info size={18} color="#3b82f6" style={{ shrink: 0 }} />
+                 <p style={{ margin: 0, fontSize: '0.8rem', color: '#475569', lineHeight: '1.5', fontWeight: 600 }}>
+                   Changes saved here will reflect on the public website immediately after saving.
+                 </p>
+               </div>
             </div>
           </aside>
 
-          {/* Editor Area */}
-          <main className="col-span-12 lg:col-span-9">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeSection}
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                className="card"
-              >
-                <div className="flex items-center justify-between mb-8">
-                  <div>
-                    <h3 className="text-xl font-bold text-slate-900">
-                      {(PAGE_SECTION_DATA[selectedPage.slug] || []).find(s => s.id === activeSection)?.label}
-                    </h3>
-                    <p className="text-sm text-slate-500">Updating /{selectedPage.slug}</p>
-                  </div>
-                  <div className="flex gap-3">
-                    <button className="p-3 rounded-xl border border-slate-200 hover:bg-slate-50 transition-all text-slate-600">
-                      <Eye size={20} />
-                    </button>
-                    <button className="primary-button flex items-center gap-2">
-                      <Save size={18} />
-                      Save Changes
-                    </button>
-                  </div>
-                </div>
+          <main className="card" style={{ padding: '48px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '48px' }}>
+              <div>
+                <h3 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 900 }}>
+                  {(PAGE_SECTION_DATA[selectedPage.slug] || []).find(s => s.id === activeSection)?.label}
+                </h3>
+                <p style={{ margin: '4px 0 0', color: '#8c8c8c', fontWeight: 600 }}>Editing /{selectedPage.slug}</p>
+              </div>
+              <div style={{ display: 'flex', gap: '12px' }}>
+                <button className="secondary-button" style={{ padding: '12px 20px' }}>
+                   <Eye size={18} />
+                </button>
+                <button className="primary-button" style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '12px 24px' }}>
+                   <Save size={18} /> Save Changes
+                </button>
+              </div>
+            </div>
 
-                <form className="space-y-8">
-                  {(PAGE_SECTION_DATA[selectedPage.slug] || []).find(s => s.id === activeSection)?.fields.map((field) => (
-                    <div key={field.id} className="field-group">
-                      <div className="flex items-center justify-between mb-2">
-                        <label className="text-sm font-bold text-slate-700 flex items-center gap-2">
-                          {field.type === 'text' ? <Type size={14} className="text-blue-500" /> : <AlignLeft size={14} className="text-blue-500" />}
-                          {field.label}
-                        </label>
-                        <span className="text-[10px] font-bold text-slate-300 uppercase tracking-widest">KEY: {field.id}</span>
-                      </div>
-                      
-                      {field.type === 'text' ? (
-                        <input 
-                          type="text" 
-                          defaultValue={field.value} 
-                          className="field-input w-full"
-                        />
-                      ) : (
-                        <textarea 
-                          rows={4} 
-                          defaultValue={field.value} 
-                          className="field-textarea w-full"
-                        />
-                      )}
-                    </div>
-                  ))}
-                </form>
-              </motion.div>
-            </AnimatePresence>
+            <form className="space-y-8">
+              {(PAGE_SECTION_DATA[selectedPage.slug] || []).find(s => s.id === activeSection)?.fields.map((field) => (
+                <div key={field.id} className="field-group">
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+                    <label className="field-label">{field.label}</label>
+                    <span style={{ fontSize: '0.65rem', fontWeight: 800, color: '#ccc' }}>ID: {field.id}</span>
+                  </div>
+                  
+                  {field.type === 'text' ? (
+                    <input 
+                      type="text" 
+                      defaultValue={field.value} 
+                      className="field-input" 
+                    />
+                  ) : (
+                    <textarea 
+                      rows={4} 
+                      defaultValue={field.value} 
+                      className="field-textarea"
+                      style={{ height: '120px' }}
+                    />
+                  )}
+                </div>
+              ))}
+            </form>
           </main>
         </div>
       )}
-    </motion.div>
+    </div>
   )
 }

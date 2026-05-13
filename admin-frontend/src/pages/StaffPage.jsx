@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
-  Users, 
   Plus, 
   Search, 
   Mail, 
@@ -11,7 +10,6 @@ import {
   X,
   UserPlus,
   ShieldCheck,
-  GraduationCap
 } from 'lucide-react'
 
 const MOCK_STAFF = [
@@ -29,146 +27,123 @@ export default function StaffPage() {
   const departments = ['All', 'Management', 'Academics', 'Mathematics', 'Sports']
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="space-y-8"
-    >
-      <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div className="page-container">
+      <div className="topbar" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '48px' }}>
         <div>
-          <h2 className="text-3xl font-black text-slate-900 tracking-tight">Staff & Faculty</h2>
-          <p className="text-slate-500 font-medium">Manage teacher profiles and school management directory.</p>
+          <h2>Staff Directory</h2>
+          <p>Manage your institution's faculty and management profiles.</p>
         </div>
         <button 
           onClick={() => setShowForm(true)}
-          className="primary-button flex items-center gap-2 self-start"
+          className="primary-button" 
+          style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
         >
-          <UserPlus size={20} />
-          Add Staff Member
+          <UserPlus size={18} /> Add Staff Member
         </button>
-      </header>
+      </div>
 
-      {/* Filter Toolbar */}
-      <div className="flex flex-col lg:flex-row gap-6 items-center justify-between bg-white p-4 rounded-[32px] border border-slate-100 shadow-sm">
-        <div className="flex items-center gap-2 overflow-x-auto w-full lg:w-auto pb-2 lg:pb-0">
+      {/* Filter & Search Bar */}
+      <div style={{ display: 'flex', gap: '24px', alignItems: 'center', marginBottom: '48px', padding: '16px', background: 'white', borderRadius: '24px', border: '1px solid var(--border-subtle)' }}>
+        <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', flex: 1 }}>
           {departments.map((dept) => (
             <button
               key={dept}
               onClick={() => setFilter(dept)}
-              className={`px-6 py-2 rounded-xl text-sm font-bold transition-all shrink-0 ${
-                filter === dept 
-                ? 'bg-slate-900 text-white shadow-lg' 
-                : 'bg-slate-50 text-slate-500 hover:bg-slate-100'
-              }`}
+              style={{
+                padding: '8px 20px',
+                borderRadius: '12px',
+                fontSize: '0.8rem',
+                fontWeight: 700,
+                border: 'none',
+                cursor: 'pointer',
+                transition: '0.2s',
+                background: filter === dept ? '#1a1a1a' : '#f5f5f5',
+                color: filter === dept ? 'white' : '#8c8c8c'
+              }}
             >
               {dept}
             </button>
           ))}
         </div>
-        <div className="flex items-center gap-3 w-full lg:w-96 bg-slate-50 px-5 py-3 rounded-2xl">
-          <Search size={18} className="text-slate-400" />
-          <input type="text" placeholder="Search by name or designation..." className="bg-transparent border-none outline-none text-sm font-medium w-full" />
+        <div style={{ position: 'relative', width: '300px' }}>
+          <Search size={16} style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: '#8c8c8c' }} />
+          <input 
+            type="text" 
+            placeholder="Search staff..." 
+            style={{ width: '100%', padding: '12px 12px 12px 44px', borderRadius: '14px', border: '1px solid var(--border-subtle)', background: '#fcfcfc', fontSize: '0.85rem', fontWeight: 600, outline: 'none' }} 
+          />
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
+      {/* Staff Grid */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '32px' }}>
         {staff.map((member) => (
-          <motion.div
-            layout
-            key={member.id}
-            whileHover={{ y: -10 }}
-            className="card p-0 overflow-hidden group border-slate-100 shadow-sm hover:shadow-xl transition-all"
-          >
-            <div className="p-8 text-center bg-gradient-to-b from-slate-50 to-white">
-              <div className="relative inline-block mb-6">
-                <div className="w-24 h-24 rounded-[32px] overflow-hidden border-4 border-white shadow-xl mx-auto">
-                  <img src={member.image} alt={member.name} className="w-full h-full object-cover" />
-                </div>
-                {member.department === 'Management' && (
-                  <div className="absolute -top-2 -right-2 w-8 h-8 bg-brand-orange text-white rounded-full flex items-center justify-center shadow-lg">
-                    <ShieldCheck size={16} />
-                  </div>
-                )}
+          <div key={member.id} className="card" style={{ padding: 0, overflow: 'hidden', transition: 'all 0.3s ease' }}>
+            <div style={{ height: '140px', background: '#f8fafc', borderBottom: '1px solid var(--border-subtle)', position: 'relative' }}>
+               <div style={{ position: 'absolute', bottom: '-40px', left: '32px' }}>
+                  <img 
+                    src={member.image} 
+                    alt={member.name} 
+                    style={{ width: '80px', height: '80px', borderRadius: '20px', border: '4px solid white', objectCover: 'cover', boxShadow: '0 8px 16px rgba(0,0,0,0.05)' }} 
+                  />
+               </div>
+            </div>
+            <div style={{ padding: '56px 32px 32px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 900 }}>{member.name}</h3>
+                {member.department === 'Management' && <ShieldCheck size={16} color="var(--brand-orange)" />}
               </div>
-              <h3 className="text-lg font-black text-slate-900 mb-1">{member.name}</h3>
-              <p className="text-xs font-black text-blue-600 uppercase tracking-widest mb-4">{member.designation}</p>
+              <p style={{ margin: 0, fontSize: '0.75rem', fontWeight: 800, color: 'var(--brand-orange)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{member.designation}</p>
               
-              <div className="flex items-center justify-center gap-2 mb-6">
-                <span className="px-3 py-1 bg-slate-100 text-slate-500 rounded-full text-[10px] font-bold uppercase tracking-widest">{member.department}</span>
-                <span className="px-3 py-1 bg-slate-100 text-slate-500 rounded-full text-[10px] font-bold uppercase tracking-widest">{member.experience}</span>
+              <div style={{ display: 'flex', gap: '8px', marginTop: '20px' }}>
+                <span className="badge badge-gray">{member.department}</span>
+                <span className="badge badge-gray">{member.experience}</span>
               </div>
 
-              <div className="flex items-center justify-center gap-3">
-                <button className="w-10 h-10 bg-white border border-slate-100 text-slate-400 hover:text-blue-600 hover:border-blue-100 rounded-xl flex items-center justify-center transition-all shadow-sm">
-                  <Mail size={18} />
+              <div style={{ display: 'flex', gap: '12px', marginTop: '32px' }}>
+                <button style={{ flex: 1, padding: '12px', borderRadius: '12px', border: '1px solid var(--border-subtle)', background: 'white', color: '#1a1a1a', fontWeight: 700, fontSize: '0.8rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                  <Edit3 size={16} /> Edit
                 </button>
-                <button className="w-10 h-10 bg-white border border-slate-100 text-slate-400 hover:text-green-600 hover:border-green-100 rounded-xl flex items-center justify-center transition-all shadow-sm">
-                  <Phone size={18} />
-                </button>
-                <div className="w-px h-6 bg-slate-100 mx-1" />
-                <button className="w-10 h-10 bg-white border border-slate-100 text-slate-400 hover:text-red-600 hover:border-red-100 rounded-xl flex items-center justify-center transition-all shadow-sm">
-                  <Trash2 size={18} />
+                <button style={{ padding: '12px', borderRadius: '12px', border: '1px solid #fee2e2', background: '#fff1f1', color: '#ef4444', cursor: 'pointer' }}>
+                  <Trash2 size={16} />
                 </button>
               </div>
             </div>
-            <div className="bg-slate-900 p-4 text-center opacity-0 group-hover:opacity-100 transition-opacity">
-              <button className="text-white text-xs font-bold flex items-center justify-center gap-2 mx-auto">
-                <Edit3 size={14} /> Edit Profile
-              </button>
-            </div>
-          </motion.div>
+          </div>
         ))}
       </div>
 
-      {/* Add Staff Form Overlay */}
+      {/* Polish Form Drawer */}
       <AnimatePresence>
         {showForm && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-end">
+          <div style={{ position: 'fixed', inset: 0, zIndex: 100, display: 'flex', justifyContent: 'flex-end' }}>
             <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               onClick={() => setShowForm(false)}
-              className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
+              style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.2)', backdropFilter: 'blur(4px)' }}
             />
             <motion.div 
-              initial={{ x: '100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '100%' }}
+              initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="relative w-full max-w-2xl h-full bg-white shadow-2xl p-10 overflow-y-auto"
+              style={{ position: 'relative', width: '500px', height: '100%', background: 'white', padding: '48px', boxShadow: '-16px 0 32px rgba(0,0,0,0.05)', overflowY: 'auto' }}
             >
-              <div className="flex items-center justify-between mb-10">
-                <div>
-                  <h3 className="text-2xl font-black text-slate-900">Add New Staff</h3>
-                  <p className="text-slate-500 font-medium">Register a new faculty or management member.</p>
-                </div>
-                <button onClick={() => setShowForm(false)} className="p-3 hover:bg-slate-100 rounded-2xl transition-colors">
-                  <X size={24} />
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '40px' }}>
+                <h3 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 900 }}>Add New Staff</h3>
+                <button onClick={() => setShowForm(false)} style={{ border: 'none', background: '#f5f5f5', padding: '8px', borderRadius: '10px', cursor: 'pointer' }}>
+                  <X size={20} />
                 </button>
               </div>
 
-              <form className="space-y-8">
-                <div className="flex items-center gap-8 p-8 bg-slate-50 rounded-[32px] border border-slate-100">
-                  <div className="w-24 h-24 bg-slate-200 rounded-[32px] flex items-center justify-center border-4 border-white shadow-xl shrink-0">
-                    <Plus size={32} className="text-slate-400" />
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-slate-900 mb-1">Profile Photo</h4>
-                    <p className="text-xs text-slate-500 mb-4">Upload a high-quality headshot.</p>
-                    <button type="button" className="text-xs font-bold text-blue-600 px-4 py-2 bg-blue-50 rounded-lg">Upload Image</button>
-                  </div>
-                </div>
-
+              <form className="space-y-6">
                 <div className="field-group">
                   <label className="field-label">Full Name</label>
-                  <input type="text" className="field-input" placeholder="e.g. Mr. John Doe" />
+                  <input type="text" className="field-input" placeholder="e.g. Dr. John Doe" />
                 </div>
-
-                <div className="grid grid-cols-2 gap-6">
+                
+                <div className="grid grid-cols-2 gap-4">
                   <div className="field-group">
                     <label className="field-label">Designation</label>
-                    <input type="text" className="field-input" placeholder="e.g. Senior Teacher" />
+                    <input type="text" className="field-input" placeholder="e.g. HOD Mathematics" />
                   </div>
                   <div className="field-group">
                     <label className="field-label">Department</label>
@@ -176,33 +151,29 @@ export default function StaffPage() {
                       <option>Academics</option>
                       <option>Management</option>
                       <option>Sports</option>
-                      <option>Administration</option>
-                    </select>
-                  </div>
-                  <div className="field-group">
-                    <label className="field-label">Role Level / Section</label>
-                    <select className="field-input">
-                      <option>Faculty / Teacher</option>
-                      <option>Senior Leadership</option>
-                      <option>Admin / Operational Team</option>
                     </select>
                   </div>
                 </div>
 
                 <div className="field-group">
-                  <label className="field-label">Personal Message / Quote (For Leadership)</label>
-                  <textarea className="field-textarea" placeholder="e.g. Education is the manifestation of perfection..." />
+                  <label className="field-label">Experience</label>
+                  <input type="text" className="field-input" placeholder="e.g. 10 Years" />
                 </div>
 
-                <div className="flex gap-4 pt-6">
-                  <button type="button" className="primary-button flex-1 py-4">Save Staff Profile</button>
-                  <button type="button" onClick={() => setShowForm(false)} className="flex-1 py-4 font-bold text-slate-500 hover:bg-slate-50 rounded-2xl transition-all">Cancel</button>
+                <div className="field-group">
+                  <label className="field-label">Brief Biography</label>
+                  <textarea className="field-textarea" style={{ height: '120px' }} placeholder="Write a short intro..." />
+                </div>
+
+                <div style={{ marginTop: '48px', display: 'flex', gap: '16px' }}>
+                  <button type="button" className="primary-button" style={{ flex: 1, padding: '18px' }}>Save Profile</button>
+                  <button type="button" onClick={() => setShowForm(false)} className="secondary-button" style={{ flex: 1, padding: '18px' }}>Cancel</button>
                 </div>
               </form>
             </motion.div>
           </div>
         )}
       </AnimatePresence>
-    </motion.div>
+    </div>
   )
 }
