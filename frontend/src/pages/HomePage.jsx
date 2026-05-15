@@ -9,7 +9,7 @@ import ProgramsSection from '../components/ProgramsSection.jsx';
 import AchievementsSection from '../components/AchievementsSection.jsx';
 import ExamsSection from '../components/ExamsSection.jsx';
 import AdmissionCTA from '../components/AdmissionCTA.jsx';
-
+c 
 const HomePage = () => {
   const [isMobile, setIsMobile] = useState(false);
   const containerRef = useRef(null);

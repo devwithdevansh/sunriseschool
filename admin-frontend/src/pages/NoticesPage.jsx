@@ -13,8 +13,8 @@ import {
   Calendar
 } from 'lucide-react'
 const INITIAL_NOTICES = [
-  { _id: '1', title: 'Summer Vacation 2026', content: 'School will be closed from May 1st to June 5th.', category: 'General', isPinned: true, createdAt: new Date().toISOString() },
-  { _id: '2', title: 'Annual Sports Day', content: 'Sports meet will be held on Feb 20th.', category: 'Events', isPinned: false, createdAt: new Date().toISOString() },
+  { _id: '1', title: 'Summer Vacation 2026', content: 'School will be closed from May 1st to June 5th.', category: 'Holidays', isPinned: true, date: new Date().toISOString().split('T')[0], attachment: null },
+  { _id: '2', title: 'Annual Sports Day', content: 'Sports meet will be held on Feb 20th.', category: 'Events', isPinned: false, date: new Date().toISOString().split('T')[0], attachment: null },
 ]
 
 export default function NoticesPage() {
@@ -24,9 +24,11 @@ export default function NoticesPage() {
   const [editingNotice, setEditingNotice] = useState(null)
   const [formData, setFormData] = useState({
     title: '',
+    date: new Date().toISOString().split('T')[0],
     content: '',
     category: 'General',
-    isPinned: false
+    isPinned: false,
+    attachment: null
   })
 
   const handleOpenForm = (notice = null) => {
@@ -34,17 +36,21 @@ export default function NoticesPage() {
       setEditingNotice(notice)
       setFormData({
         title: notice.title,
+        date: notice.date || new Date().toISOString().split('T')[0],
         content: notice.content,
         category: notice.category,
-        isPinned: notice.isPinned
+        isPinned: notice.isPinned,
+        attachment: notice.attachment || null
       })
     } else {
       setEditingNotice(null)
       setFormData({
         title: '',
+        date: new Date().toISOString().split('T')[0],
         content: '',
         category: 'General',
-        isPinned: false
+        isPinned: false,
+        attachment: null
       })
     }
     setShowForm(true)
@@ -52,10 +58,13 @@ export default function NoticesPage() {
 
   const handleSave = (e) => {
     e.preventDefault()
+    
+    const finalData = { ...formData };
+
     if (editingNotice) {
-      setNotices(notices.map(n => n._id === editingNotice._id ? { ...formData, _id: n._id, createdAt: n.createdAt } : n))
+      setNotices(notices.map(n => n._id === editingNotice._id ? { ...finalData, _id: n._id } : n))
     } else {
-      setNotices([...notices, { ...formData, _id: Date.now().toString(), createdAt: new Date().toISOString() }])
+      setNotices([...notices, { ...finalData, _id: Date.now().toString() }])
     }
     setShowForm(false)
   }
@@ -117,7 +126,7 @@ export default function NoticesPage() {
                       <div>
                         <p style={{ margin: 0, fontWeight: 600, fontSize: '0.95rem' }}>{notice.title}</p>
                         <p style={{ margin: 0, fontSize: '0.8rem', color: '#64748b', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                          <Calendar size={12} /> {new Date(notice.createdAt).toLocaleDateString()}
+                          <Calendar size={12} /> {notice.date} {notice.attachment ? '📎 (Attached)' : ''}
                         </p>
                       </div>
                     </div>
@@ -177,19 +186,32 @@ export default function NoticesPage() {
                       required
                     />
                   </div>
-                  
-                  <div className="field-group">
-                    <label className="field-label">Category</label>
-                    <select 
-                      className="field-select"
-                      value={formData.category}
-                      onChange={(e) => setFormData({...formData, category: e.target.value})}
-                    >
-                      <option>General</option>
-                      <option>Academic</option>
-                      <option>Events</option>
-                      <option>Admission</option>
-                    </select>
+
+                  <div className="field-group" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                    <div>
+                      <label className="field-label">Date</label>
+                      <input 
+                        type="date" 
+                        className="field-input" 
+                        value={formData.date}
+                        onChange={(e) => setFormData({...formData, date: e.target.value})}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="field-label">Category</label>
+                      <select 
+                        className="field-select"
+                        value={formData.category}
+                        onChange={(e) => setFormData({...formData, category: e.target.value})}
+                      >
+                        <option>General</option>
+                        <option>Academics</option>
+                        <option>Exams</option>
+                        <option>Events</option>
+                        <option>Holidays</option>
+                      </select>
+                    </div>
                   </div>
 
                   <div className="field-group">
@@ -202,6 +224,31 @@ export default function NoticesPage() {
                       onChange={(e) => setFormData({...formData, content: e.target.value})}
                       required
                     />
+                  </div>
+
+                  <div className="field-group">
+                    <label className="field-label">Attachment (PDF/Image)</label>
+                    <input 
+                      type="file" 
+                      className="field-input" 
+                      style={{ paddingTop: '8px' }}
+                      onChange={(e) => {
+                        const file = e.target.files[0];
+                        if (file) {
+                          let sizeMB = (file.size / 1024 / 1024).toFixed(2);
+                          let sizeStr = sizeMB > 1 ? `${sizeMB} MB` : `${(file.size / 1024).toFixed(0)} KB`;
+                          setFormData({...formData, attachment: { name: file.name, size: sizeStr }})
+                        } else {
+                          setFormData({...formData, attachment: null})
+                        }
+                      }}
+                      accept=".pdf,.jpg,.jpeg,.png"
+                    />
+                    {formData.attachment && (
+                      <p style={{ marginTop: '8px', fontSize: '0.85rem', color: '#64748b' }}>
+                        Selected: {formData.attachment.name} ({formData.attachment.size})
+                      </p>
+                    )}
                   </div>
 
                   <div style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '24px', background: '#f8fafc', borderRadius: '16px', border: '1px solid #e2e8f0', cursor: 'pointer' }} onClick={() => setFormData({...formData, isPinned: !formData.isPinned})}>

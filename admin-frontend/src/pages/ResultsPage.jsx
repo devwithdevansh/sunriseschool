@@ -16,8 +16,8 @@ import {
   Loader2
 } from 'lucide-react'
 const INITIAL_RESULTS = [
-  { _id: '1', title: 'SSC Board 2025', academicYear: '2024-25', classLevel: '10th Board', toppers: [{ name: 'Aarav Mehta', percentage: '98.5%', rank: 1 }] },
-  { _id: '2', title: 'HSC Science 2025', academicYear: '2024-25', classLevel: '12th Science', toppers: [{ name: 'Isha Patel', percentage: '96.2%', rank: 1 }] },
+  { _id: '1', title: 'Class 10 EM — Board Results', academicYear: '2024-25', classLevel: '10 EM', imageSrc: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=1000&auto=format&fit=crop' },
+  { _id: '2', title: 'Commerce Toppers — Group Photo', academicYear: '2024-25', classLevel: '12 Commerce', imageSrc: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1000&auto=format&fit=crop' },
 ]
 
 export default function ResultsPage() {
@@ -28,13 +28,9 @@ export default function ResultsPage() {
   const [formData, setFormData] = useState({
     title: '',
     academicYear: '2025-26',
-    classLevel: '10th Board',
-    pdfUrl: '',
-    toppers: []
+    classLevel: '10 EM',
+    imageSrc: ''
   })
-
-  // Topper Form State
-  const [newTopper, setNewTopper] = useState({ name: '', percentage: '', rank: '', image: '' })
 
   const handleOpenForm = (result = null) => {
     if (result) {
@@ -43,17 +39,15 @@ export default function ResultsPage() {
         title: result.title,
         academicYear: result.academicYear,
         classLevel: result.classLevel,
-        pdfUrl: result.pdfUrl,
-        toppers: result.toppers || []
+        imageSrc: result.imageSrc || ''
       })
     } else {
       setEditingResult(null)
       setFormData({
         title: '',
         academicYear: '2025-26',
-        classLevel: '10th Board',
-        pdfUrl: '',
-        toppers: []
+        classLevel: '10 EM',
+        imageSrc: ''
       })
     }
     setShowForm(true)
@@ -73,22 +67,6 @@ export default function ResultsPage() {
     if (window.confirm("Are you sure you want to delete this result?")) {
       setResults(results.filter(r => r._id !== id))
     }
-  }
-
-  const addTopper = () => {
-    if (newTopper.name && newTopper.percentage) {
-      setFormData({
-        ...formData,
-        toppers: [...formData.toppers, { ...newTopper, rank: parseInt(newTopper.rank) || formData.toppers.length + 1 }]
-      })
-      setNewTopper({ name: '', percentage: '', rank: '', image: '' })
-    }
-  }
-
-  const removeTopper = (index) => {
-    const updatedToppers = [...formData.toppers]
-    updatedToppers.splice(index, 1)
-    setFormData({ ...formData, toppers: updatedToppers })
   }
 
   return (
@@ -112,8 +90,8 @@ export default function ResultsPage() {
           {/* Summary Row */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '24px', marginBottom: '40px' }}>
             {[
-              { label: 'Total Published', value: results.length, icon: GraduationCap, color: '#6366f1' },
-              { label: 'Total Toppers', value: results.reduce((acc, curr) => acc + (curr.toppers?.length || 0), 0), icon: Trophy, color: '#f59e0b' },
+              { label: 'Total Gallery Images', value: results.length, icon: GraduationCap, color: '#6366f1' },
+              { label: '10 EM Images', value: results.filter(r => r.classLevel === '10 EM').length, icon: Trophy, color: '#f59e0b' },
               { label: 'Recent Year', value: results[0]?.academicYear || 'N/A', icon: CheckCircle2, color: '#10b981' },
             ].map((stat, i) => (
               <div key={i} className="card" style={{ display: 'flex', alignItems: 'center', gap: '20px', padding: '24px', margin: 0 }}>
@@ -145,10 +123,10 @@ export default function ResultsPage() {
             <table className="data-table">
               <thead>
                 <tr>
-                  <th>Result Title</th>
+                  <th>Gallery Title / Label</th>
                   <th>Academic Year</th>
                   <th>Category</th>
-                  <th>Toppers</th>
+                  <th>Image</th>
                   <th style={{ textAlign: 'right' }}>Actions</th>
                 </tr>
               </thead>
@@ -166,10 +144,11 @@ export default function ResultsPage() {
                     <td><span style={{ color: '#64748b', fontWeight: 500 }}>{res.academicYear}</span></td>
                     <td><span className="badge badge-info">{res.classLevel}</span></td>
                     <td>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                        <Trophy size={14} color="#f59e0b" />
-                        <span style={{ fontWeight: 600 }}>{res.toppers?.length || 0} Students</span>
-                      </div>
+                      {res.imageSrc ? (
+                        <img src={res.imageSrc} alt="" style={{ width: '60px', height: '40px', objectFit: 'cover', borderRadius: '6px' }} />
+                      ) : (
+                        <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>No Image</span>
+                      )}
                     </td>
                     <td style={{ textAlign: 'right' }}>
                       <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
@@ -209,11 +188,11 @@ export default function ResultsPage() {
               <div style={{ padding: '40px' }}>
                 <form onSubmit={handleSave} className="space-y-8">
                   <div className="field-group">
-                    <label className="field-label">Result Title</label>
+                    <label className="field-label">Gallery Label / Title</label>
                     <input 
                       type="text" 
                       className="field-input" 
-                      placeholder="e.g. SSC Board March 2026" 
+                      placeholder="e.g. Class 10 EM — Board Results" 
                       value={formData.title}
                       onChange={(e) => setFormData({...formData, title: e.target.value})}
                       required
@@ -231,6 +210,7 @@ export default function ResultsPage() {
                         <option>2025-26</option>
                         <option>2024-25</option>
                         <option>2023-24</option>
+                        <option>2022-23</option>
                       </select>
                     </div>
                     <div className="field-group">
@@ -240,76 +220,28 @@ export default function ResultsPage() {
                         value={formData.classLevel}
                         onChange={(e) => setFormData({...formData, classLevel: e.target.value})}
                       >
-                        <option>10th Board</option>
-                        <option>12th Science</option>
-                        <option>12th Commerce</option>
-                        <option>School Internal</option>
+                        <option>10 EM</option>
+                        <option>10 GM</option>
+                        <option>12 Commerce</option>
                       </select>
                     </div>
                   </div>
 
                   <div className="field-group">
-                    <label className="field-label">Result PDF URL</label>
+                    <label className="field-label">Image URL</label>
                     <input 
                       type="text" 
                       className="field-input" 
-                      placeholder="https://drive.google.com/..." 
-                      value={formData.pdfUrl}
-                      onChange={(e) => setFormData({...formData, pdfUrl: e.target.value})}
+                      placeholder="https://images.unsplash.com/..." 
+                      value={formData.imageSrc}
+                      onChange={(e) => setFormData({...formData, imageSrc: e.target.value})}
+                      required
                     />
-                  </div>
-
-                  <div style={{ borderTop: '2px solid #f1f5f9', paddingTop: '32px', marginTop: '32px' }}>
-                    <h4 style={{ fontSize: '1.1rem', fontWeight: 800, marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                      <Trophy size={20} color="#f59e0b" /> Manage Toppers
-                    </h4>
-                    
-                    {/* Topper Form */}
-                    <div style={{ background: '#f8fafc', padding: '24px', borderRadius: '16px', marginBottom: '24px' }}>
-                      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', gap: '12px', marginBottom: '12px' }}>
-                        <input 
-                          type="text" className="field-input" placeholder="Student Name" 
-                          value={newTopper.name} onChange={(e) => setNewTopper({...newTopper, name: e.target.value})}
-                        />
-                        <input 
-                          type="text" className="field-input" placeholder="Percentage" 
-                          value={newTopper.percentage} onChange={(e) => setNewTopper({...newTopper, percentage: e.target.value})}
-                        />
-                        <input 
-                          type="number" className="field-input" placeholder="Rank" 
-                          value={newTopper.rank} onChange={(e) => setNewTopper({...newTopper, rank: e.target.value})}
-                        />
+                    {formData.imageSrc && (
+                      <div style={{ marginTop: '16px', borderRadius: '12px', overflow: 'hidden', border: '1px solid var(--border-subtle)', height: '180px' }}>
+                        <img src={formData.imageSrc} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                       </div>
-                      <div style={{ display: 'flex', gap: '12px' }}>
-                        <input 
-                          type="text" className="field-input" placeholder="Photo URL" 
-                          value={newTopper.image} onChange={(e) => setNewTopper({...newTopper, image: e.target.value})}
-                        />
-                        <button type="button" onClick={addTopper} className="secondary-button" style={{ display: 'flex', alignItems: 'center', gap: '8px', whiteSpace: 'nowrap' }}>
-                          <UserPlus size={18} /> Add
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Toppers List */}
-                    <div className="space-y-3">
-                      {formData.toppers.map((topper, idx) => (
-                        <div key={idx} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 20px', background: 'white', border: '1px solid #e2e8f0', borderRadius: '12px' }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                            <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#6366f1', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', fontWeight: 800 }}>
-                              {topper.rank}
-                            </div>
-                            <div>
-                              <div style={{ fontWeight: 700, fontSize: '0.9rem' }}>{topper.name}</div>
-                              <div style={{ fontSize: '0.75rem', color: '#64748b' }}>{topper.percentage}</div>
-                            </div>
-                          </div>
-                          <button type="button" onClick={() => removeTopper(idx)} style={{ color: '#ef4444', border: 'none', background: 'none', cursor: 'pointer' }}>
-                            <Trash2 size={16} />
-                          </button>
-                        </div>
-                      ))}
-                    </div>
+                    )}
                   </div>
 
                   <div style={{ display: 'flex', gap: '16px', padding: '40px 0' }}>
