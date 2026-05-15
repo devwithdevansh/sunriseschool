@@ -18,16 +18,9 @@ import {
 
 const navItems = [
   { to: '/', label: 'Dashboard', icon: LayoutDashboard },
-  { to: '/pages', label: 'Pages', icon: FileText },
   { to: '/notices', label: 'Notices', icon: Bell },
   { to: '/results', label: 'Results', icon: GraduationCap },
-  { to: '/staff', label: 'Staff', icon: Users },
-  { to: '/media', label: 'Media', icon: Image },
-  { to: '/activities', label: 'Activities', icon: Activity },
-  { to: '/alumni', label: 'Alumni', icon: Award },
-  { to: '/exams', label: 'Exams', icon: ClipboardCheck },
   { to: '/inquiries', label: 'Inquiries', icon: Mail },
-  { to: '/settings', label: 'Settings', icon: Settings },
 ]
 
 export default function AdminLayout() {
@@ -35,7 +28,7 @@ export default function AdminLayout() {
     <div className="app-shell">
       <aside className="sidebar">
         <div className="brand-block">
-          <h1>Sunrise<span style={{color: 'var(--brand-orange)'}}>.</span></h1>
+          <h1>Sunrise<span className="brand-dot"></span></h1>
         </div>
 
         <nav className="sidebar-nav">

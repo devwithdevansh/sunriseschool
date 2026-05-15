@@ -3,10 +3,10 @@
 @tailwind utilities;
 
 :root {
-  font-family: "Segoe UI", "Helvetica Neue", sans-serif;
-  line-height: 1.5;
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  line-height: 1.6;
   font-weight: 400;
-  color: #10203a;
+  color: #1e293b;
   background: #f8fafc;
   font-synthesis: none;
   text-rendering: optimizeLegibility;

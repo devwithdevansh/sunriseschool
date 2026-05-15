@@ -1,113 +1,132 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { 
-  Users, 
   Bell, 
   Mail, 
-  Layout,
+  GraduationCap,
   ArrowRight,
   Plus,
-  ExternalLink
+  ExternalLink,
+  Zap,
+  TrendingUp,
+  Clock
 } from 'lucide-react'
 import { motion } from 'framer-motion'
+import api from '../services/api'
+import { useNavigate } from 'react-router-dom'
 
 export default function HomePage() {
-  const [stats] = useState([
-    { label: 'Website Pages', value: '18', icon: Layout, color: '#3b82f6' },
-    { label: 'Active Notices', value: '07', icon: Bell, color: '#f59e0b' },
-    { label: 'New Inquiries', value: '14', icon: Mail, color: '#10b981' },
-    { label: 'Staff Records', value: '32', icon: Users, color: '#8b5cf6' },
-  ])
+  const navigate = useNavigate()
+  const [counts, setCounts] = useState({ notices: 0, results: 0, inquiries: 0 })
+  const [loading, setLoading] = useState(true)
 
-  const [recentActivity] = useState([
-    { id: 1, content: 'Notice published: Summer Vacation 2026', time: '10 mins ago', type: 'notice' },
-    { id: 2, content: 'New inquiry from Deepak Patel (Class 10)', time: '2 hours ago', type: 'inquiry' },
-    { id: 3, content: 'Staff record updated: Mrs. Anjali Shah', time: '4 hours ago', type: 'staff' },
-    { id: 4, content: 'New photo added to Sports Gallery', time: 'Yesterday', type: 'media' },
-  ])
+  useEffect(() => {
+    const fetchCounts = async () => {
+      try {
+        const [n, r, i] = await Promise.all([
+          api.get('/notices'),
+          api.get('/results'),
+          api.get('/inquiries')
+        ])
+        setCounts({
+          notices: n.data.data.length,
+          results: r.data.data.length,
+          inquiries: i.data.data.length
+        })
+      } catch (err) {
+        console.error("Failed to load counts", err)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchCounts()
+  }, [])
+
+  const stats = [
+    { label: 'Active Notices', value: counts.notices, icon: Bell, color: '#f59e0b', trend: '+2 this week' },
+    { label: 'Total Results', value: counts.results, icon: GraduationCap, color: '#6366f1', trend: 'Updated today' },
+    { label: 'New Inquiries', value: counts.inquiries, icon: Mail, color: '#10b981', trend: '4 pending' },
+  ]
 
   return (
-    <motion.div 
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="dashboard-container"
-    >
-      <div className="page-header">
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-          <div>
-            <h2 style={{ fontSize: '2.5rem', fontWeight: 900, letterSpacing: '-0.04em' }}>Overview</h2>
-            <p style={{ color: '#8c8c8c', fontWeight: 500, marginTop: '8px' }}>Welcome back, Principal. Here is your institutional snapshot.</p>
-          </div>
-          <button className="primary-button" style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem' }}>
-            <ExternalLink size={16} /> Visit Site
-          </button>
+    <div className="page-container">
+      <div className="topbar" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '48px' }}>
+        <div>
+          <h2>Dashboard</h2>
+          <p>Institutional command center for Sunrise School.</p>
         </div>
+        <button className="secondary-button" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <ExternalLink size={16} /> Open Website
+        </button>
       </div>
 
-      <div className="stats-grid" style={{ marginTop: '48px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px', marginBottom: '48px' }}>
         {stats.map((stat, idx) => (
-          <div key={idx} className="stat-card">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-              <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: `${stat.color}10`, color: stat.color, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <stat.icon size={20} />
+          <div key={idx} className="card" style={{ margin: 0, position: 'relative', overflow: 'hidden' }}>
+            <div style={{ position: 'relative', zIndex: 2 }}>
+              <div style={{ width: '56px', height: '56px', borderRadius: '16px', background: `${stat.color}15`, color: stat.color, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '20px' }}>
+                <stat.icon size={26} />
+              </div>
+              <span style={{ fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', color: 'var(--text-muted)', display: 'block', marginBottom: '8px', letterSpacing: '0.05em' }}>{stat.label}</span>
+              <div style={{ fontSize: '2.5rem', fontWeight: 800, marginBottom: '8px' }}>{loading ? '...' : stat.value}</div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem', color: '#10b981', fontWeight: 600 }}>
+                <TrendingUp size={14} /> {stat.trend}
               </div>
             </div>
-            <span className="label" style={{ fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', color: '#8c8c8c', display: 'block', marginBottom: '8px' }}>{stat.label}</span>
-            <div className="value" style={{ fontSize: '2rem', fontWeight: 900 }}>{stat.value}</div>
+            <div style={{ position: 'absolute', right: '-20px', bottom: '-20px', opacity: 0.03 }}>
+              <stat.icon size={120} />
+            </div>
           </div>
         ))}
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1.6fr 1fr', gap: '48px', marginTop: '64px' }}>
-        <div className="activity-section">
-          <h3 style={{ fontSize: '1.25rem', fontWeight: 900, marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-            Live Stream <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#22c55e' }}></div>
+      <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '32px' }}>
+        <div className="card" style={{ margin: 0 }}>
+          <h3 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+            Quick Actions <Zap size={20} color="var(--brand-secondary)" />
           </h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            {recentActivity.map((activity) => (
-              <div 
-                key={activity.id}
-                style={{ padding: '20px 24px', background: 'white', borderRadius: '20px', border: '1px solid var(--border-subtle)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                  <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: '#f5f5f5', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    {activity.type === 'notice' && <Bell size={18} color="#f59e0b" />}
-                    {activity.type === 'inquiry' && <Mail size={18} color="#10b981" />}
-                    {activity.type === 'staff' && <Users size={18} color="#3b82f6" />}
-                    {activity.type === 'media' && <Layout size={18} color="#8b5cf6" />}
-                  </div>
-                  <div>
-                    <p style={{ margin: 0, fontSize: '0.9rem', fontWeight: 700, color: '#1a1a1a' }}>{activity.content}</p>
-                    <p style={{ margin: 0, fontSize: '0.75rem', fontWeight: 500, color: '#8c8c8c' }}>{activity.time}</p>
-                  </div>
-                </div>
-                <ArrowRight size={18} color="#e2e8f0" />
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+            <button onClick={() => navigate('/notices')} className="secondary-button" style={{ height: '140px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: '12px', border: '1px solid #e2e8f0' }}>
+              <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: '#fffbeb', color: '#f59e0b', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Bell size={24} />
               </div>
-            ))}
+              <span style={{ fontWeight: 700 }}>Post Notice</span>
+            </button>
+            <button onClick={() => navigate('/results')} className="secondary-button" style={{ height: '140px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: '12px', border: '1px solid #e2e8f0' }}>
+              <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: '#eef2ff', color: '#6366f1', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <GraduationCap size={24} />
+              </div>
+              <span style={{ fontWeight: 700 }}>Upload Results</span>
+            </button>
+            <button onClick={() => navigate('/inquiries')} className="secondary-button" style={{ height: '140px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: '12px', border: '1px solid #e2e8f0', gridColumn: 'span 2' }}>
+              <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: '#ecfdf5', color: '#10b981', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Mail size={24} />
+              </div>
+              <span style={{ fontWeight: 700 }}>View Admission Desk</span>
+            </button>
           </div>
         </div>
 
-        <div style={{ background: 'white', padding: '40px', borderRadius: '32px', border: '1px solid var(--border-subtle)' }}>
-          <h3 style={{ fontSize: '1.25rem', fontWeight: 900, marginBottom: '24px' }}>Control Center</h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            <button className="primary-button" style={{ textAlign: 'left', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#1a1a1a', padding: '18px 24px' }}>
-              Create New Notice <Plus size={16} />
-            </button>
-            <button className="primary-button" style={{ background: '#f8fafc', color: '#1a1a1a', border: '1px solid #e2e8f0', textAlign: 'left', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '18px 24px' }}>
-              Admission Desk <ArrowRight size={18} />
-            </button>
-            <button className="primary-button" style={{ background: '#f8fafc', color: '#1a1a1a', border: '1px solid #e2e8f0', textAlign: 'left', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '18px 24px' }}>
-              Academic Records <ArrowRight size={18} />
-            </button>
-          </div>
-          
-          <div style={{ marginTop: '40px', padding: '24px', background: '#fff5ef', borderRadius: '20px', border: '1px solid #ffe8d9' }}>
-            <p style={{ margin: 0, fontSize: '0.75rem', fontWeight: 800, color: 'var(--brand-orange)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Pro Tip</p>
-            <p style={{ margin: '8px 0 0', fontSize: '0.85rem', fontWeight: 600, color: '#9a3412', lineHeight: '1.5' }}>
-              Pinned notices are always visible first to students. Use them for urgent closures or board updates.
-            </p>
+        <div className="card" style={{ margin: 0, background: 'var(--text-main)', color: 'white' }}>
+          <h3 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+            System Status <Clock size={20} color="#10b981" />
+          </h3>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <div style={{ padding: '20px', background: 'rgba(255,255,255,0.05)', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.1)' }}>
+              <p style={{ margin: 0, fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', fontWeight: 600, textTransform: 'uppercase' }}>Last Update</p>
+              <p style={{ margin: '4px 0 0', fontWeight: 700, fontSize: '1.1rem' }}>Today at 14:32</p>
+            </div>
+            <div style={{ padding: '20px', background: 'rgba(255,255,255,0.05)', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.1)' }}>
+              <p style={{ margin: 0, fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', fontWeight: 600, textTransform: 'uppercase' }}>Admin Session</p>
+              <p style={{ margin: '4px 0 0', fontWeight: 700, fontSize: '1.1rem' }}>Principal Sanjay (Root)</p>
+            </div>
+            <div style={{ marginTop: '20px', padding: '24px', background: 'rgba(99, 102, 241, 0.2)', borderRadius: '20px', border: '1px solid rgba(99, 102, 241, 0.3)' }}>
+              <p style={{ margin: 0, fontSize: '0.85rem', fontWeight: 600, lineHeight: 1.6 }}>
+                The portal is now running the v2.0 premium engine. All modules are synchronized with the cloud backend.
+              </p>
+            </div>
           </div>
         </div>
       </div>
-    </motion.div>
+    </div>
   )
 }
