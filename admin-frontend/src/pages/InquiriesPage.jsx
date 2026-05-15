@@ -14,38 +14,20 @@ import {
   Calendar,
   MessageSquare
 } from 'lucide-react'
-import api from '../services/api'
+const INITIAL_INQUIRIES = [
+  { _id: '1', studentName: 'Aarav Mehta', parentName: 'Sanjay Mehta', phone: '+91 98250 12345', email: 'aarav@example.com', class: 'Class 8', createdAt: new Date().toISOString(), status: 'New', message: 'Interested in science stream.' },
+  { _id: '2', studentName: 'Isha Patel', parentName: 'Deepak Patel', phone: '+91 94260 67890', email: 'isha@example.com', class: 'KG', createdAt: new Date().toISOString(), status: 'Replied', message: 'Wanted to know about transport.' },
+]
 
 export default function InquiriesPage() {
-  const [inquiries, setInquiries] = useState([])
-  const [loading, setLoading] = useState(true)
+  const [inquiries, setInquiries] = useState(INITIAL_INQUIRIES)
+  const [loading, setLoading] = useState(false)
   const [filter, setFilter] = useState('All')
   const [selectedInquiry, setSelectedInquiry] = useState(null)
 
-  useEffect(() => {
-    fetchInquiries()
-  }, [])
-
-  const fetchInquiries = async () => {
-    try {
-      setLoading(true)
-      const res = await api.get('/inquiries')
-      setInquiries(res.data.data)
-    } catch (err) {
-      console.error("Failed to fetch inquiries", err)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const handleDelete = async (id) => {
+  const handleDelete = (id) => {
     if (window.confirm("Remove this inquiry record?")) {
-      try {
-        await api.delete(`/inquiries/${id}`)
-        fetchInquiries()
-      } catch (err) {
-        console.error("Error deleting", err)
-      }
+      setInquiries(inquiries.filter(inq => inq._id !== id))
     }
   }
 

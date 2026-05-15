@@ -15,11 +15,14 @@ import {
   Trophy,
   Loader2
 } from 'lucide-react'
-import api from '../services/api'
+const INITIAL_RESULTS = [
+  { _id: '1', title: 'SSC Board 2025', academicYear: '2024-25', classLevel: '10th Board', toppers: [{ name: 'Aarav Mehta', percentage: '98.5%', rank: 1 }] },
+  { _id: '2', title: 'HSC Science 2025', academicYear: '2024-25', classLevel: '12th Science', toppers: [{ name: 'Isha Patel', percentage: '96.2%', rank: 1 }] },
+]
 
 export default function ResultsPage() {
-  const [results, setResults] = useState([])
-  const [loading, setLoading] = useState(true)
+  const [results, setResults] = useState(INITIAL_RESULTS)
+  const [loading, setLoading] = useState(false)
   const [showForm, setShowForm] = useState(false)
   const [editingResult, setEditingResult] = useState(null)
   const [formData, setFormData] = useState({
@@ -32,22 +35,6 @@ export default function ResultsPage() {
 
   // Topper Form State
   const [newTopper, setNewTopper] = useState({ name: '', percentage: '', rank: '', image: '' })
-
-  useEffect(() => {
-    fetchResults()
-  }, [])
-
-  const fetchResults = async () => {
-    try {
-      setLoading(true)
-      const res = await api.get('/results')
-      setResults(res.data.data)
-    } catch (err) {
-      console.error("Failed to fetch results", err)
-    } finally {
-      setLoading(false)
-    }
-  }
 
   const handleOpenForm = (result = null) => {
     if (result) {
@@ -72,29 +59,19 @@ export default function ResultsPage() {
     setShowForm(true)
   }
 
-  const handleSave = async (e) => {
+  const handleSave = (e) => {
     e.preventDefault()
-    try {
-      if (editingResult) {
-        await api.put(`/results/${editingResult._id}`, formData)
-      } else {
-        await api.post('/results', formData)
-      }
-      fetchResults()
-      setShowForm(false)
-    } catch (err) {
-      console.error("Error saving result", err)
+    if (editingResult) {
+      setResults(results.map(r => r._id === editingResult._id ? { ...formData, _id: r._id } : r))
+    } else {
+      setResults([...results, { ...formData, _id: Date.now().toString() }])
     }
+    setShowForm(false)
   }
 
-  const handleDelete = async (id) => {
+  const handleDelete = (id) => {
     if (window.confirm("Are you sure you want to delete this result?")) {
-      try {
-        await api.delete(`/results/${id}`)
-        fetchResults()
-      } catch (err) {
-        console.error("Error deleting", err)
-      }
+      setResults(results.filter(r => r._id !== id))
     }
   }
 

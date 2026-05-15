@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { 
   Bell, 
   Mail, 
@@ -11,35 +11,12 @@ import {
   Clock
 } from 'lucide-react'
 import { motion } from 'framer-motion'
-import api from '../services/api'
 import { useNavigate } from 'react-router-dom'
 
 export default function HomePage() {
   const navigate = useNavigate()
-  const [counts, setCounts] = useState({ notices: 0, results: 0, inquiries: 0 })
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    const fetchCounts = async () => {
-      try {
-        const [n, r, i] = await Promise.all([
-          api.get('/notices'),
-          api.get('/results'),
-          api.get('/inquiries')
-        ])
-        setCounts({
-          notices: n.data.data.length,
-          results: r.data.data.length,
-          inquiries: i.data.data.length
-        })
-      } catch (err) {
-        console.error("Failed to load counts", err)
-      } finally {
-        setLoading(false)
-      }
-    }
-    fetchCounts()
-  }, [])
+  const [counts] = useState({ notices: 12, results: 8, inquiries: 24 })
+  const [loading] = useState(false)
 
   const stats = [
     { label: 'Active Notices', value: counts.notices, icon: Bell, color: '#f59e0b', trend: '+2 this week' },

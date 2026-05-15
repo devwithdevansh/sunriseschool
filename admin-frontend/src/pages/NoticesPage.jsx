@@ -12,11 +12,14 @@ import {
   Loader2,
   Calendar
 } from 'lucide-react'
-import api from '../services/api'
+const INITIAL_NOTICES = [
+  { _id: '1', title: 'Summer Vacation 2026', content: 'School will be closed from May 1st to June 5th.', category: 'General', isPinned: true, createdAt: new Date().toISOString() },
+  { _id: '2', title: 'Annual Sports Day', content: 'Sports meet will be held on Feb 20th.', category: 'Events', isPinned: false, createdAt: new Date().toISOString() },
+]
 
 export default function NoticesPage() {
-  const [notices, setNotices] = useState([])
-  const [loading, setLoading] = useState(true)
+  const [notices, setNotices] = useState(INITIAL_NOTICES)
+  const [loading, setLoading] = useState(false)
   const [showForm, setShowForm] = useState(false)
   const [editingNotice, setEditingNotice] = useState(null)
   const [formData, setFormData] = useState({
@@ -25,22 +28,6 @@ export default function NoticesPage() {
     category: 'General',
     isPinned: false
   })
-
-  useEffect(() => {
-    fetchNotices()
-  }, [])
-
-  const fetchNotices = async () => {
-    try {
-      setLoading(true)
-      const res = await api.get('/notices')
-      setNotices(res.data.data)
-    } catch (err) {
-      console.error("Failed to fetch notices", err)
-    } finally {
-      setLoading(false)
-    }
-  }
 
   const handleOpenForm = (notice = null) => {
     if (notice) {
@@ -63,29 +50,19 @@ export default function NoticesPage() {
     setShowForm(true)
   }
 
-  const handleSave = async (e) => {
+  const handleSave = (e) => {
     e.preventDefault()
-    try {
-      if (editingNotice) {
-        await api.put(`/notices/${editingNotice._id}`, formData)
-      } else {
-        await api.post('/notices', formData)
-      }
-      fetchNotices()
-      setShowForm(false)
-    } catch (err) {
-      console.error("Error saving notice", err)
+    if (editingNotice) {
+      setNotices(notices.map(n => n._id === editingNotice._id ? { ...formData, _id: n._id, createdAt: n.createdAt } : n))
+    } else {
+      setNotices([...notices, { ...formData, _id: Date.now().toString(), createdAt: new Date().toISOString() }])
     }
+    setShowForm(false)
   }
 
-  const handleDelete = async (id) => {
+  const handleDelete = (id) => {
     if (window.confirm("Delete this notice forever?")) {
-      try {
-        await api.delete(`/notices/${id}`)
-        fetchNotices()
-      } catch (err) {
-        console.error("Error deleting", err)
-      }
+      setNotices(notices.filter(n => n._id !== id))
     }
   }
 
