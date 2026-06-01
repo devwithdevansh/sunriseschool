@@ -1,35 +1,71 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { 
-  GraduationCap, 
-  Plus, 
-  Search, 
-  FileDown, 
-  Trash2, 
-  Edit3, 
+import { useAuth } from '../context/AuthContext'
+import toast from 'react-hot-toast'
+import {
+  Plus,
+  Search,
+  Trash2,
+  Edit3,
   X,
-  CheckCircle2,
-  AlertCircle,
   FileText,
-  UserPlus,
-  Trophy,
-  Loader2
+  Image as ImageIcon,
+  Expand,
+  Filter,
+  ChevronRight,
+  Loader2,
+  Upload,
+  Calendar,
+  Layers
 } from 'lucide-react'
-const INITIAL_RESULTS = [
-  { _id: '1', title: 'Class 10 EM — Board Results', academicYear: '2024-25', classLevel: '10 EM', imageSrc: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=1000&auto=format&fit=crop' },
-  { _id: '2', title: 'Commerce Toppers — Group Photo', academicYear: '2024-25', classLevel: '12 Commerce', imageSrc: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1000&auto=format&fit=crop' },
-]
+
+const INITIAL_RESULTS = [];
+
+const CATEGORIES = ['10 EM', '10 GM', '12 Commerce']
+const YEARS = ['2025-26', '2024-25', '2023-24', '2022-23']
 
 export default function ResultsPage() {
+  const { getAuthHeader, token } = useAuth()
   const [results, setResults] = useState(INITIAL_RESULTS)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [showForm, setShowForm] = useState(false)
   const [editingResult, setEditingResult] = useState(null)
+  const [selectedYear, setSelectedYear] = useState('All')
+  const [selectedCategory, setSelectedCategory] = useState('All')
+  const [searchQuery, setSearchQuery] = useState('')
+  const [uploading, setUploading] = useState(false)
+
+  const fetchResults = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/api/results');
+      const data = await response.json();
+      if (data.status === 'success') {
+        setResults(data.data);
+      }
+    } catch (error) {
+      console.error("Error fetching results:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchResults();
+  }, []);
+
   const [formData, setFormData] = useState({
     title: '',
-    academicYear: '2025-26',
+    academicYear: '2024-25',
     classLevel: '10 EM',
     imageSrc: ''
+  })
+
+  // Filtering logic
+  const filteredResults = results.filter(res => {
+    const matchesYear = selectedYear === 'All' || res.academicYear === selectedYear
+    const matchesCategory = selectedCategory === 'All' || res.classLevel === selectedCategory
+    const matchesSearch = res.title.toLowerCase().includes(searchQuery.toLowerCase())
+    return matchesYear && matchesCategory && matchesSearch
   })
 
   const handleOpenForm = (result = null) => {
@@ -45,7 +81,7 @@ export default function ResultsPage() {
       setEditingResult(null)
       setFormData({
         title: '',
-        academicYear: '2025-26',
+        academicYear: '2024-25',
         classLevel: '10 EM',
         imageSrc: ''
       })
@@ -53,202 +89,394 @@ export default function ResultsPage() {
     setShowForm(true)
   }
 
-  const handleSave = (e) => {
-    e.preventDefault()
-    if (editingResult) {
-      setResults(results.map(r => r._id === editingResult._id ? { ...formData, _id: r._id } : r))
-    } else {
-      setResults([...results, { ...formData, _id: Date.now().toString() }])
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setUploading(true);
+    const form = new FormData();
+    form.append('image', file);
+
+    try {
+      const res = await fetch('http://localhost:5000/api/upload', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        body: form
+      });
+      const data = await res.json();
+      if (res.ok && data.status === 'success') {
+        setFormData({ ...formData, imageSrc: data.url });
+        toast.success('Image uploaded successfully');
+      } else {
+        toast.error(data.message || 'Image upload failed');
+      }
+    } catch (error) {
+      console.error("Upload error:", error);
+      toast.error('Error uploading image');
+    } finally {
+      setUploading(false);
     }
-    setShowForm(false)
   }
 
-  const handleDelete = (id) => {
+  const handleSave = async (e) => {
+    e.preventDefault()
+    setLoading(true);
+
+    try {
+      if (editingResult) {
+        const res = await fetch(`http://localhost:5000/api/results/${editingResult._id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', ...getAuthHeader() },
+          body: JSON.stringify(formData)
+        });
+        if (res.ok) {
+          fetchResults();
+          toast.success('Result updated successfully');
+        } else {
+          toast.error('Failed to update result');
+        }
+      } else {
+        const res = await fetch('http://localhost:5000/api/results', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', ...getAuthHeader() },
+          body: JSON.stringify(formData)
+        });
+        if (res.ok) {
+          fetchResults();
+          toast.success('Result added successfully');
+        } else {
+          toast.error('Failed to add result');
+        }
+      }
+    } catch (error) {
+      console.error("Error saving result:", error);
+      toast.error('An error occurred while saving');
+    } finally {
+      setLoading(false);
+      setShowForm(false);
+    }
+  }
+
+  const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this result?")) {
-      setResults(results.filter(r => r._id !== id))
+      try {
+        setLoading(true);
+        const res = await fetch(`http://localhost:5000/api/results/${id}`, { 
+          method: 'DELETE',
+          headers: getAuthHeader()
+        });
+        if (res.ok) {
+          fetchResults();
+          toast.success('Result deleted');
+        } else {
+          toast.error('Failed to delete result');
+        }
+      } catch (error) {
+        console.error("Error deleting result:", error);
+        toast.error('Error deleting result');
+      } finally {
+        setLoading(false);
+      }
     }
   }
 
   return (
-    <div className="page-container">
-      <div className="topbar" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '48px' }}>
-        <div>
-          <h2>Academic Results</h2>
-          <p>Manage board results and honor your school's top achievers.</p>
-        </div>
-        <button onClick={() => handleOpenForm()} className="primary-button">
-          <Plus size={18} /> New Result Entry
-        </button>
-      </div>
-
-      {loading ? (
-        <div style={{ display: 'flex', justifyContent: 'center', padding: '100px' }}>
-          <Loader2 className="animate-spin" size={40} color="var(--brand-primary)" />
-        </div>
-      ) : (
-        <>
-          {/* Summary Row */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '24px', marginBottom: '40px' }}>
-            {[
-              { label: 'Total Gallery Images', value: results.length, icon: GraduationCap, color: '#6366f1' },
-              { label: '10 EM Images', value: results.filter(r => r.classLevel === '10 EM').length, icon: Trophy, color: '#f59e0b' },
-              { label: 'Recent Year', value: results[0]?.academicYear || 'N/A', icon: CheckCircle2, color: '#10b981' },
-            ].map((stat, i) => (
-              <div key={i} className="card" style={{ display: 'flex', alignItems: 'center', gap: '20px', padding: '24px', margin: 0 }}>
-                <div style={{ width: '56px', height: '56px', borderRadius: '16px', background: `${stat.color}15`, color: stat.color, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <stat.icon size={26} />
-                </div>
-                <div>
-                  <span style={{ fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>{stat.label}</span>
-                  <div style={{ fontSize: '1.5rem', fontWeight: 800 }}>{stat.value}</div>
-                </div>
+    <div className="min-h-screen bg-[#f8fafc] pb-20">
+      {/* Premium Header Section */}
+      <div className="bg-white border-b border-slate-200 pt-12 pb-8 px-8 md:px-12">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <div>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="h-1 w-12 bg-[#ea580c]" />
+                <span className="text-[11px] font-black tracking-[0.4em] uppercase text-[#ea580c]">Management Console</span>
               </div>
-            ))}
+              <h1 className="text-5xl md:text-6xl font-black text-[#0f172a] tracking-tight uppercase leading-none">
+                Results <span className="text-slate-300">Gallery</span>
+              </h1>
+              <p className="mt-4 text-slate-500 font-medium max-w-xl">
+                Curate and organize student achievements. These records will be directly reflected on the main website's Hall of Fame.
+              </p>
+            </div>
+            <button
+              onClick={() => handleOpenForm()}
+              className="flex items-center gap-2 bg-[#2563eb] text-white px-8 py-4 rounded-2xl font-bold hover:bg-[#1d4ed8] transition-all hover:-translate-y-1 shadow-lg shadow-blue-600/20 whitespace-nowrap"
+            >
+              <Plus size={20} strokeWidth={3} />
+              Add New Record
+            </button>
           </div>
 
-          <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
-            <div style={{ padding: '24px 32px', borderBottom: '1px solid var(--border-subtle)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#fcfcfc' }}>
-              <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 700 }}>Active Records</h3>
-              <div style={{ position: 'relative', width: '280px' }}>
-                <Search size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
-                <input 
-                  type="text" 
-                  placeholder="Filter by title or year..." 
-                  className="field-input"
-                  style={{ paddingLeft: '40px', paddingTop: '10px', paddingBottom: '10px' }}
-                />
-              </div>
+          {/* Filters Bar */}
+          <div className="mt-12 flex flex-wrap items-center gap-4">
+            <div className="relative flex-grow max-w-md">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+              <input
+                type="text"
+                placeholder="Search by title..."
+                className="w-full pl-12 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all font-medium text-slate-700"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
             </div>
 
-            <table className="data-table">
-              <thead>
-                <tr>
-                  <th>Gallery Title / Label</th>
-                  <th>Academic Year</th>
-                  <th>Category</th>
-                  <th>Image</th>
-                  <th style={{ textAlign: 'right' }}>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {results.map((res) => (
-                  <tr key={res._id}>
-                    <td>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-                        <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                          <FileText size={18} color="#64748b" />
-                        </div>
-                        <span style={{ fontWeight: 600 }}>{res.title}</span>
-                      </div>
-                    </td>
-                    <td><span style={{ color: '#64748b', fontWeight: 500 }}>{res.academicYear}</span></td>
-                    <td><span className="badge badge-info">{res.classLevel}</span></td>
-                    <td>
-                      {res.imageSrc ? (
-                        <img src={res.imageSrc} alt="" style={{ width: '60px', height: '40px', objectFit: 'cover', borderRadius: '6px' }} />
-                      ) : (
-                        <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>No Image</span>
-                      )}
-                    </td>
-                    <td style={{ textAlign: 'right' }}>
-                      <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
-                        <button onClick={() => handleOpenForm(res)} style={{ padding: '8px', borderRadius: '10px', border: '1px solid #e2e8f0', background: 'white', cursor: 'pointer', transition: '0.2s' }}><Edit3 size={16} /></button>
-                        <button onClick={() => handleDelete(res._id)} style={{ padding: '8px', borderRadius: '10px', border: '1px solid #fee2e2', background: '#fef2f2', color: '#ef4444', cursor: 'pointer', transition: '0.2s' }}><Trash2 size={16} /></button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </>
-      )}
+            <div className="flex items-center gap-2 bg-white p-1 rounded-xl border border-slate-200">
+              <button
+                onClick={() => setSelectedYear('All')}
+                className={`px-4 py-2.5 rounded-lg text-sm font-bold transition-all ${selectedYear === 'All' ? 'bg-[#0f172a] text-white' : 'text-slate-500 hover:bg-slate-50'}`}
+              >
+                All Years
+              </button>
+              {YEARS.map(year => (
+                <button
+                  key={year}
+                  onClick={() => setSelectedYear(year)}
+                  className={`px-4 py-2.5 rounded-lg text-sm font-bold transition-all ${selectedYear === year ? 'bg-[#2563eb] text-white' : 'text-slate-500 hover:bg-slate-50'}`}
+                >
+                  {year}
+                </button>
+              ))}
+            </div>
 
-      {/* Form Drawer */}
+            <div className="flex items-center gap-2 bg-white p-1 rounded-xl border border-slate-200">
+              <button
+                onClick={() => setSelectedCategory('All')}
+                className={`px-4 py-2.5 rounded-lg text-sm font-bold transition-all ${selectedCategory === 'All' ? 'bg-[#0f172a] text-white' : 'text-slate-500 hover:bg-slate-50'}`}
+              >
+                All Categories
+              </button>
+              {CATEGORIES.map(cat => (
+                <button
+                  key={cat}
+                  onClick={() => setSelectedCategory(cat)}
+                  className={`px-4 py-2.5 rounded-lg text-sm font-bold transition-all ${selectedCategory === cat ? 'bg-[#ea580c] text-white' : 'text-slate-500 hover:bg-slate-50'}`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Gallery Grid */}
+      <div className="max-w-7xl mx-auto px-8 md:px-12 mt-12">
+        {filteredResults.length === 0 ? (
+          <div className="bg-white rounded-3xl border-2 border-dashed border-slate-200 py-24 text-center">
+            <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6">
+              <ImageIcon className="text-slate-300" size={32} />
+            </div>
+            <h3 className="text-xl font-bold text-slate-900">No results found</h3>
+            <p className="text-slate-500 mt-2">Try adjusting your filters or add a new record.</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <AnimatePresence mode="popLayout">
+              {filteredResults.map((res) => (
+                <motion.div
+                  layout
+                  key={res._id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  className="group relative bg-white rounded-3xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-2xl hover:shadow-blue-600/10 transition-all duration-500"
+                >
+                  {/* Image Preview */}
+                  <div className="aspect-[4/3] relative overflow-hidden bg-slate-100">
+                    <img
+                      src={res.imageSrc}
+                      alt={res.title}
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+                    {/* Action Buttons Overlay */}
+                    <div className="absolute top-4 right-4 flex flex-col gap-2 translate-x-12 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-500">
+                      <button
+                        onClick={() => handleOpenForm(res)}
+                        className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg hover:bg-blue-50 text-blue-600 transition-colors"
+                      >
+                        <Edit3 size={18} />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(res._id)}
+                        className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg hover:bg-red-50 text-red-600 transition-colors"
+                      >
+                        <Trash2 size={18} />
+                      </button>
+                    </div>
+
+                    <div className="absolute bottom-4 left-4 flex gap-2 translate-y-8 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
+                      <span className="px-3 py-1 bg-[#2563eb] text-white text-[9px] font-black uppercase tracking-widest rounded-full shadow-lg">
+                        {res.classLevel}
+                      </span>
+                      <span className="px-3 py-1 bg-[#ea580c] text-white text-[9px] font-black uppercase tracking-widest rounded-full shadow-lg">
+                        Year {res.academicYear}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Content */}
+                  <div className="p-6">
+                    <h3 className="text-lg font-bold text-[#0f172a] leading-tight mb-2 group-hover:text-[#2563eb] transition-colors">
+                      {res.title}
+                    </h3>
+                    <div className="flex items-center justify-between text-slate-400 text-sm font-medium mt-4">
+                      <div className="flex items-center gap-2">
+                        <Calendar size={14} />
+                        <span>Updated Recently</span>
+                      </div>
+                      <button className="text-slate-300 group-hover:text-[#2563eb] transition-colors">
+                        <Expand size={18} />
+                      </button>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </div>
+        )}
+      </div>
+
+      {/* Modern Form Drawer */}
       <AnimatePresence>
         {showForm && (
-          <div style={{ position: 'fixed', inset: 0, zIndex: 1000, display: 'flex', justifyContent: 'flex-end' }}>
-            <motion.div 
+          <div className="fixed inset-0 z-[100] flex justify-end">
+            <motion.div
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               onClick={() => setShowForm(false)}
-              style={{ position: 'absolute', inset: 0, background: 'rgba(15, 23, 42, 0.3)', backdropFilter: 'blur(8px)' }}
+              className="absolute inset-0 bg-slate-950/40 backdrop-blur-sm"
             />
-            <motion.div 
+            <motion.div
               initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-              style={{ position: 'relative', width: '600px', height: '100%', background: 'white', padding: '0', boxShadow: '-20px 0 50px rgba(0,0,0,0.1)', overflowY: 'auto' }}
+              className="relative w-full max-w-xl h-full bg-white shadow-2xl overflow-y-auto"
             >
-              <div style={{ position: 'sticky', top: 0, background: 'white', zIndex: 10, padding: '32px 40px', borderBottom: '1px solid var(--border-subtle)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <h3 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 800 }}>{editingResult ? 'Edit Result' : 'New Result Entry'}</h3>
-                <button onClick={() => setShowForm(false)} style={{ border: 'none', background: '#f1f5f9', padding: '10px', borderRadius: '12px', cursor: 'pointer' }}>
-                  <X size={20} />
+              <div className="sticky top-0 z-10 bg-white/80 backdrop-blur-md border-b border-slate-100 px-8 py-8 flex items-center justify-between">
+                <div>
+                  <h2 className="text-2xl font-black text-slate-900 tracking-tight">
+                    {editingResult ? 'EDIT RECORD' : 'NEW GALLERY ENTRY'}
+                  </h2>
+                  <p className="text-slate-500 text-sm font-medium">Class 10 & 12 Board Results</p>
+                </div>
+                <button
+                  onClick={() => setShowForm(false)}
+                  className="w-12 h-12 bg-slate-50 text-slate-400 rounded-2xl flex items-center justify-center hover:bg-slate-100 hover:text-slate-600 transition-all"
+                >
+                  <X size={24} />
                 </button>
               </div>
 
-              <div style={{ padding: '40px' }}>
+              <div className="p-8">
                 <form onSubmit={handleSave} className="space-y-8">
-                  <div className="field-group">
-                    <label className="field-label">Gallery Label / Title</label>
-                    <input 
-                      type="text" 
-                      className="field-input" 
-                      placeholder="e.g. Class 10 EM — Board Results" 
+                  {/* Title Field */}
+                  <div className="space-y-3">
+                    <label className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 flex items-center gap-2">
+                      <FileText size={14} /> Record Label
+                    </label>
+                    <input
+                      type="text"
+                      className="w-full px-6 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all font-bold text-slate-900"
+                      placeholder="e.g. Class 10 EM — Subject Toppers"
                       value={formData.title}
-                      onChange={(e) => setFormData({...formData, title: e.target.value})}
+                      onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                       required
                     />
                   </div>
-                  
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-                    <div className="field-group">
-                      <label className="field-label">Academic Year</label>
-                      <select 
-                        className="field-select"
+
+                  {/* Year & Category Grid */}
+                  <div className="grid grid-cols-2 gap-6">
+                    <div className="space-y-3">
+                      <label className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 flex items-center gap-2">
+                        <Calendar size={14} /> Academic Year
+                      </label>
+                      <select
+                        className="w-full px-6 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all font-bold text-slate-900 appearance-none cursor-pointer"
                         value={formData.academicYear}
-                        onChange={(e) => setFormData({...formData, academicYear: e.target.value})}
+                        onChange={(e) => setFormData({ ...formData, academicYear: e.target.value })}
                       >
-                        <option>2025-26</option>
-                        <option>2024-25</option>
-                        <option>2023-24</option>
-                        <option>2022-23</option>
+                        {YEARS.map(year => <option key={year} value={year}>{year}</option>)}
                       </select>
                     </div>
-                    <div className="field-group">
-                      <label className="field-label">Category</label>
-                      <select 
-                        className="field-select"
+                    <div className="space-y-3">
+                      <label className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 flex items-center gap-2">
+                        <Layers size={14} /> Category
+                      </label>
+                      <select
+                        className="w-full px-6 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all font-bold text-slate-900 appearance-none cursor-pointer"
                         value={formData.classLevel}
-                        onChange={(e) => setFormData({...formData, classLevel: e.target.value})}
+                        onChange={(e) => setFormData({ ...formData, classLevel: e.target.value })}
                       >
-                        <option>10 EM</option>
-                        <option>10 GM</option>
-                        <option>12 Commerce</option>
+                        {CATEGORIES.map(cat => <option key={cat} value={cat}>{cat}</option>)}
                       </select>
                     </div>
                   </div>
 
-                  <div className="field-group">
-                    <label className="field-label">Image URL</label>
-                    <input 
-                      type="text" 
-                      className="field-input" 
-                      placeholder="https://images.unsplash.com/..." 
-                      value={formData.imageSrc}
-                      onChange={(e) => setFormData({...formData, imageSrc: e.target.value})}
-                      required
-                    />
-                    {formData.imageSrc && (
-                      <div style={{ marginTop: '16px', borderRadius: '12px', overflow: 'hidden', border: '1px solid var(--border-subtle)', height: '180px' }}>
-                        <img src={formData.imageSrc} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                      </div>
-                    )}
+                  {/* Image Upload Field */}
+                  <div className="space-y-3">
+                    <label className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 flex items-center gap-2">
+                      <Upload size={14} /> Upload Image (Cloudinary)
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        disabled={uploading}
+                        className="hidden"
+                        id="image-upload"
+                      />
+                      <label
+                        htmlFor="image-upload"
+                        className={`flex items-center justify-center gap-2 w-full px-6 py-4 bg-slate-50 border-2 border-dashed ${uploading ? 'border-blue-400 bg-blue-50/50' : 'border-slate-300 hover:border-blue-500 hover:bg-slate-100'} rounded-2xl cursor-pointer transition-all`}
+                      >
+                        {uploading ? (
+                          <>
+                            <Loader2 size={20} className="animate-spin text-blue-500" />
+                            <span className="font-bold text-blue-500">Uploading to Cloudinary...</span>
+                          </>
+                        ) : (
+                          <>
+                            <Upload size={20} className="text-slate-400" />
+                            <span className="font-bold text-slate-600">Click to browse or drag & drop</span>
+                          </>
+                        )}
+                      </label>
+                    </div>
                   </div>
 
-                  <div style={{ display: 'flex', gap: '16px', padding: '40px 0' }}>
-                    <button type="submit" className="primary-button" style={{ flex: 1, padding: '16px', justifyContent: 'center' }}>
-                      {editingResult ? 'Update Record' : 'Save & Publish'}
+                  {/* Preview Area */}
+                  <div className="mt-8">
+                    <label className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 mb-4 block">Visual Preview</label>
+                    <div className="aspect-video w-full rounded-3xl bg-slate-50 border-2 border-dashed border-slate-200 overflow-hidden flex items-center justify-center">
+                      {formData.imageSrc ? (
+                        <img src={formData.imageSrc} alt="Preview" className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="text-center">
+                          <ImageIcon className="mx-auto text-slate-200 mb-3" size={48} />
+                          <p className="text-slate-400 text-sm font-medium">Enter image URL to see preview</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Submit Actions */}
+                  <div className="pt-8 flex gap-4">
+                    <button
+                      type="submit"
+                      className="flex-grow bg-[#2563eb] text-white py-5 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-[#1d4ed8] transition-all shadow-xl shadow-blue-600/20 active:scale-[0.98]"
+                    >
+                      {editingResult ? 'Update Record' : 'Publish to Website'}
                     </button>
-                    <button type="button" onClick={() => setShowForm(false)} className="secondary-button" style={{ flex: 1, padding: '16px' }}>Cancel</button>
+                    <button
+                      type="button"
+                      onClick={() => setShowForm(false)}
+                      className="px-8 bg-slate-50 text-slate-500 py-5 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-slate-100 transition-all"
+                    >
+                      Cancel
+                    </button>
                   </div>
                 </form>
               </div>

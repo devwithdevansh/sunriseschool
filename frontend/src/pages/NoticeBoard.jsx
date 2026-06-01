@@ -1,83 +1,41 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bell, Calendar, Download, Search, Pin, ChevronDown, FileText, Filter } from 'lucide-react';
 
-const MOCK_NOTICES = [
-  {
-    id: 1,
-    title: "Urgent: School Closure due to Heavy Rainfall",
-    date: "May 04, 2026",
-    category: "General",
-    isPinned: true,
-    content: "Please be informed that the school will remain closed tomorrow due to the red alert issued by the meteorological department for Rajkot. All scheduled unit tests will be postponed, and the new dates will be announced shortly. Stay safe.",
-    attachment: null,
-  },
-  {
-    id: 2,
-    title: "Term 2 Final Examination Timetable",
-    date: "May 02, 2026",
-    category: "Exams",
-    isPinned: true,
-    content: "The official timetable for the Term 2 Final Examinations for classes 1 through 12 has been released. Examinations will commence from the 20th of May. Please download the attached PDF for detailed dates, subjects, and timings. Admit cards will be distributed in classrooms next week.",
-    attachment: { name: "Term2_Timetable_Final.pdf", size: "1.2 MB" },
-  },
-  {
-    id: 3,
-    title: "Annual Sports Meet 2026 Registration",
-    date: "Apr 28, 2026",
-    category: "Events",
-    isPinned: false,
-    content: "Registration for the upcoming Annual Sports Meet is now open. Students interested in athletics (100m, 200m, 400m), team sports (Basketball, Volleyball), and relay races must submit their names to their respective House Captains by the end of this week. Trials will begin next Monday.",
-    attachment: null,
-  },
-  {
-    id: 4,
-    title: "Parent-Teacher Meeting (PTM) for Primary Section",
-    date: "Apr 25, 2026",
-    category: "Academics",
-    isPinned: false,
-    content: "A mandatory Parent-Teacher Meeting is scheduled for all Primary Section students (Class 1-5) this Saturday from 9:00 AM to 12:30 PM. Parents are requested to review their child's unit test papers and discuss academic progress with the class teachers.",
-    attachment: { name: "PTM_Guidelines_Seating.pdf", size: "840 KB" },
-  },
-  {
-    id: 5,
-    title: "Revised Fee Payment Guidelines",
-    date: "Apr 20, 2026",
-    category: "General",
-    isPinned: false,
-    content: "To enhance convenience, we have completely upgraded our fee payment portal. All upcoming tuition and transport fees must now be paid strictly through the online payment gateway available on the school website. Cash payments at the administrative counter will no longer be accepted.",
-    attachment: { name: "Fee_Payment_Tutorial.pdf", size: "2.5 MB" },
-  },
-  {
-    id: 6,
-    title: "Summer Vacation Announcement",
-    date: "Apr 15, 2026",
-    category: "Holidays",
-    isPinned: false,
-    content: "The school management is pleased to announce that the school will remain closed for the summer vacation starting from May 10th to June 15th. We wish all students and parents a joyful and restful break. Holiday homework assignments have been uploaded to the student portal.",
-    attachment: null,
-  },
-  {
-    id: 7,
-    title: "Science Exhibition: Call for Projects",
-    date: "Apr 10, 2026",
-    category: "Events",
-    isPinned: false,
-    content: "The Science Department is hosting the Annual Science Exhibition next month. Students from Class 8-12 are encouraged to form teams of up to 3 members and submit their working model proposals to their science teachers by Friday.",
-    attachment: { name: "Exhibition_Rules.pdf", size: "450 KB" },
-  }
-];
+const MOCK_NOTICES = [];
 
 const CATEGORIES = ["All", "Academics", "Exams", "Events", "Holidays", "General"];
 
 const NoticeBoard = () => {
+  const [notices, setNotices] = useState([]);
   const [activeCategory, setActiveCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [expandedId, setExpandedId] = useState(null);
 
+  useEffect(() => {
+    const fetchNotices = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/notices');
+        const data = await response.json();
+        if (data.status === 'success') {
+          // Format the date strings to match UI expectation (e.g., "May 04, 2026")
+          const formattedData = data.data.map(n => ({
+            ...n,
+            id: n._id, // map _id to id for the UI
+            date: new Date(n.date).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }).replace(',', ', ')
+          }));
+          setNotices(formattedData);
+        }
+      } catch (error) {
+        console.error("Failed to fetch notices:", error);
+      }
+    };
+    fetchNotices();
+  }, []);
+
   // Filter and sort notices
   const filteredNotices = useMemo(() => {
-    let result = MOCK_NOTICES;
+    let result = notices;
 
     if (activeCategory !== "All") {
       result = result.filter(n => n.category === activeCategory);
@@ -88,13 +46,13 @@ const NoticeBoard = () => {
       result = result.filter(n => n.title.toLowerCase().includes(q) || n.content.toLowerCase().includes(q));
     }
 
-    // Sort: Pinned first, then by ID (assuming ID reflects chronology for mock data)
+    // Sort: Pinned first, then chronologically by date
     return result.sort((a, b) => {
       if (a.isPinned && !b.isPinned) return -1;
       if (!a.isPinned && b.isPinned) return 1;
-      return b.id - a.id;
+      return new Date(b.date) - new Date(a.date);
     });
-  }, [activeCategory, searchQuery]);
+  }, [notices, activeCategory, searchQuery]);
 
   return (
     <div className="min-h-screen bg-[#f8f9fa] text-slate-900 font-sans selection:bg-brand-orange selection:text-white">

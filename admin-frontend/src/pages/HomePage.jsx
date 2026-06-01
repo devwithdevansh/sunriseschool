@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { 
   Bell, 
   Mail, 
@@ -12,16 +12,51 @@ import {
 } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 
 export default function HomePage() {
   const navigate = useNavigate()
-  const [counts] = useState({ notices: 12, results: 8, inquiries: 24 })
-  const [loading] = useState(false)
+  const { user, getAuthHeader } = useAuth()
+  const [counts, setCounts] = useState({ notices: 0, results: 0, inquiries: 0 })
+  const [loading, setLoading] = useState(true)
+  const [lastUpdate, setLastUpdate] = useState('Syncing...')
+
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        const [noticesRes, resultsRes, inquiriesRes] = await Promise.all([
+          fetch('http://localhost:5000/api/notices'),
+          fetch('http://localhost:5000/api/results'),
+          fetch('http://localhost:5000/api/inquiries', { headers: getAuthHeader() })
+        ]);
+
+        const [notices, results, inquiries] = await Promise.all([
+          noticesRes.json(),
+          resultsRes.json(),
+          inquiriesRes.json()
+        ]);
+
+        setCounts({
+          notices: notices.data?.length || 0,
+          results: results.data?.length || 0,
+          inquiries: inquiries.data?.length || 0
+        });
+        
+        setLastUpdate(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }))
+      } catch (error) {
+        console.error("Error fetching dashboard stats:", error);
+        setLastUpdate('Offline')
+      } finally {
+        setLoading(false)
+      }
+    };
+    fetchDashboardData();
+  }, [getAuthHeader]);
 
   const stats = [
-    { label: 'Active Notices', value: counts.notices, icon: Bell, color: '#f59e0b', trend: '+2 this week' },
-    { label: 'Total Results', value: counts.results, icon: GraduationCap, color: '#6366f1', trend: 'Updated today' },
-    { label: 'New Inquiries', value: counts.inquiries, icon: Mail, color: '#10b981', trend: '4 pending' },
+    { label: 'Active Notices', value: counts.notices, icon: Bell, color: '#f59e0b', trend: 'Live on site' },
+    { label: 'Total Results', value: counts.results, icon: GraduationCap, color: '#6366f1', trend: 'Live on site' },
+    { label: 'New Inquiries', value: counts.inquiries, icon: Mail, color: '#10b981', trend: 'Awaiting review' },
   ]
 
   return (
@@ -89,12 +124,12 @@ export default function HomePage() {
           </h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             <div style={{ padding: '20px', background: 'rgba(255,255,255,0.05)', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.1)' }}>
-              <p style={{ margin: 0, fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', fontWeight: 600, textTransform: 'uppercase' }}>Last Update</p>
-              <p style={{ margin: '4px 0 0', fontWeight: 700, fontSize: '1.1rem' }}>Today at 14:32</p>
+              <p style={{ margin: 0, fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', fontWeight: 600, textTransform: 'uppercase' }}>Last Sync</p>
+              <p style={{ margin: '4px 0 0', fontWeight: 700, fontSize: '1.1rem' }}>Today at {lastUpdate}</p>
             </div>
             <div style={{ padding: '20px', background: 'rgba(255,255,255,0.05)', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.1)' }}>
               <p style={{ margin: 0, fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', fontWeight: 600, textTransform: 'uppercase' }}>Admin Session</p>
-              <p style={{ margin: '4px 0 0', fontWeight: 700, fontSize: '1.1rem' }}>Principal Sanjay (Root)</p>
+              <p style={{ margin: '4px 0 0', fontWeight: 700, fontSize: '1.1rem' }}>Sunrise School Admin</p>
             </div>
             <div style={{ marginTop: '20px', padding: '24px', background: 'rgba(99, 102, 241, 0.2)', borderRadius: '20px', border: '1px solid rgba(99, 102, 241, 0.3)' }}>
               <p style={{ margin: 0, fontSize: '0.85rem', fontWeight: 600, lineHeight: 1.6 }}>

@@ -3,28 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, X, ArrowRight, Expand } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-const RESULT_IMAGES = [
-  // 2024-25
-  { src: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=1000&auto=format&fit=crop', label: 'Class 10 EM — Board Results', year: '2024-25' },
-  { src: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1000&auto=format&fit=crop', label: 'School Toppers — Group Photo', year: '2024-25' },
-  { src: 'https://images.unsplash.com/photo-1546410531-bb4caa6b424d?q=80&w=1000&auto=format&fit=crop', label: 'Annual Results Ceremony', year: '2024-25' },
-  { src: 'https://images.unsplash.com/photo-1529390079861-591de354faf5?q=80&w=1000&auto=format&fit=crop', label: 'Outstanding Performers', year: '2024-25' },
-  { src: 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?q=80&w=1000&auto=format&fit=crop', label: 'Academic Excellence Award', year: '2024-25' },
-  { src: 'https://images.unsplash.com/photo-1513258496099-481a8041cb15?q=80&w=1000&auto=format&fit=crop', label: 'Top 10 Achievers', year: '2024-25' },
-  // 2023-24
-  { src: 'https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=1000&auto=format&fit=crop', label: 'Class 10 EM — Board Results', year: '2023-24' },
-  { src: 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?q=80&w=1000&auto=format&fit=crop', label: 'School Toppers — Group Photo', year: '2023-24' },
-  { src: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=1000&auto=format&fit=crop', label: 'Subject Wise Toppers', year: '2023-24' },
-  { src: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=1000&auto=format&fit=crop', label: 'Felicitation Ceremony', year: '2023-24' },
-  { src: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1000&auto=format&fit=crop', label: 'Gold Medalists', year: '2023-24' },
-  // 2022-23
-  { src: 'https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?q=80&w=1000&auto=format&fit=crop', label: 'Class 10 EM — Board Results', year: '2022-23' },
-  { src: 'https://images.unsplash.com/photo-1503676382385-40dc1678280a?q=80&w=1000&auto=format&fit=crop', label: 'Valedictorian Award', year: '2022-23' },
-  { src: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=1000&auto=format&fit=crop', label: 'Results Day Celebration', year: '2022-23' },
-  { src: 'https://images.unsplash.com/photo-1532012197267-da84d127e765?q=80&w=1000&auto=format&fit=crop', label: 'Proud Parents Moment', year: '2022-23' },
-  { src: 'https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=1000&auto=format&fit=crop', label: 'Graduation Batch', year: '2022-23' },
-  { src: 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?q=80&w=1000&auto=format&fit=crop', label: 'Principal\'s Honor List', year: '2022-23' },
-];
+const RESULT_IMAGES = [];
 
 const Lightbox = ({ images, startIndex, onClose }) => {
   const [current, setCurrent] = useState(startIndex);
@@ -72,9 +51,31 @@ const Lightbox = ({ images, startIndex, onClose }) => {
 
 const Result10EMPage = () => {
   const [lightboxIndex, setLightboxIndex] = useState(null);
-  const uniqueYears = [...new Set(RESULT_IMAGES.map(img => img.year))].sort().reverse();
-  const [selectedYear, setSelectedYear] = useState(uniqueYears[0]);
-  const filteredImages = RESULT_IMAGES.filter(img => img.year === selectedYear);
+  const [resultImages, setResultImages] = useState([]);
+  const [selectedYear, setSelectedYear] = useState('');
+  
+  useEffect(() => {
+    const fetchResults = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/results');
+        const data = await response.json();
+        if (data.status === 'success') {
+          const formatted = data.data
+            .filter(r => r.classLevel === '10 EM')
+            .map(r => ({ src: r.imageSrc, label: r.title, year: r.academicYear }));
+          setResultImages(formatted);
+          const uniqueYears = [...new Set(formatted.map(img => img.year))].sort().reverse();
+          if (uniqueYears.length > 0) setSelectedYear(uniqueYears[0]);
+        }
+      } catch (error) {
+        console.error("Failed to fetch results:", error);
+      }
+    };
+    fetchResults();
+  }, []);
+
+  const uniqueYears = [...new Set(resultImages.map(img => img.year))].sort().reverse();
+  const filteredImages = resultImages.filter(img => img.year === selectedYear);
 
   return (
     <div className="min-h-screen bg-[#f8f9fa] text-slate-900 font-sans selection:bg-brand-orange selection:text-white">

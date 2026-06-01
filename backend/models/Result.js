@@ -13,20 +13,12 @@ const resultSchema = new mongoose.Schema({
   classLevel: {
     type: String,
     required: true,
-    enum: ['10th Board', '12th Science', '12th Commerce', 'School Internal']
+    enum: ['10 EM', '10 GM', '12 Commerce']
   },
-  pdfUrl: {
+  imageSrc: {
     type: String,
     required: true
   },
-  toppers: [
-    {
-      name: String,
-      percentage: String,
-      rank: Number,
-      image: String
-    }
-  ],
   isArchived: {
     type: Boolean,
     default: false

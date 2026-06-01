@@ -15,6 +15,56 @@ const itemVariants = {
 
 const Inquiry = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formData, setFormData] = useState({
+    studentName: '',
+    parentName: '',
+    phone: '',
+    email: '',
+    class: '',
+    message: ''
+  });
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    try {
+      const response = await fetch('http://localhost:5000/api/inquiries', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+      if (response.ok) {
+        setIsSubmitted(true);
+        setFormData({
+          studentName: '',
+          parentName: '',
+          phone: '',
+          email: '',
+          class: '',
+          message: ''
+        });
+      } else {
+        const errorData = await response.json();
+        console.error("Submission failed:", errorData);
+        // Handle Zod validation errors format
+        let errorMessage = errorData.message || 'Unknown error';
+        if (errorData.errors && errorData.errors.length > 0) {
+          errorMessage = errorData.errors.map(e => `${e.path}: ${e.message}`).join(', ');
+        }
+        alert("Failed to submit inquiry:\n" + errorMessage);
+      }
+    } catch (error) {
+      console.error("Error submitting inquiry:", error);
+      alert("Error submitting inquiry. Please check your connection to the backend.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
   return (
     <div className="min-h-screen bg-white text-gray-900 font-sans overflow-x-hidden selection:bg-brand-blue selection:text-white">
 
@@ -75,17 +125,17 @@ const Inquiry = () => {
                 <button onClick={() => setIsSubmitted(false)} className="px-8 py-4 bg-brand-orange text-white font-black text-sm uppercase tracking-widest rounded-2xl hover:bg-orange-600 transition-all shadow-lg hover:shadow-brand-orange/30 hover:-translate-y-0.5">Submit Another Inquiry</button>
               </motion.div>
             ) : (
-              <form className="space-y-6" onSubmit={(e) => { e.preventDefault(); setIsSubmitted(true); }}>
+              <form className="space-y-6" onSubmit={handleSubmit}>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Student Name</label>
-                    <input type="text" placeholder="Enter student name" required
+                    <input type="text" name="studentName" value={formData.studentName} onChange={handleChange} placeholder="Enter student name" required
                       className="w-full px-5 py-4 rounded-2xl border border-gray-200 focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20 focus:outline-none transition-all duration-300 font-medium bg-gray-50 focus:bg-white"
                     />
                   </div>
                   <div>
                     <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Parent Name</label>
-                    <input type="text" placeholder="Enter parent name" required
+                    <input type="text" name="parentName" value={formData.parentName} onChange={handleChange} placeholder="Enter parent name" required
                       className="w-full px-5 py-4 rounded-2xl border border-gray-200 focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20 focus:outline-none transition-all duration-300 font-medium bg-gray-50 focus:bg-white"
                     />
                   </div>
@@ -93,13 +143,13 @@ const Inquiry = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Phone Number</label>
-                    <input type="tel" placeholder="+91 XXXXX XXXXX" required
+                    <input type="tel" name="phone" value={formData.phone} onChange={handleChange} placeholder="+91 XXXXX XXXXX" required
                       className="w-full px-5 py-4 rounded-2xl border border-gray-200 focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20 focus:outline-none transition-all duration-300 font-medium bg-gray-50 focus:bg-white"
                     />
                   </div>
                   <div>
                     <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Email Address</label>
-                    <input type="email" placeholder="example@email.com" required
+                    <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="example@email.com" required
                       className="w-full px-5 py-4 rounded-2xl border border-gray-200 focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20 focus:outline-none transition-all duration-300 font-medium bg-gray-50 focus:bg-white"
                     />
                   </div>
@@ -107,27 +157,27 @@ const Inquiry = () => {
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Class Interested</label>
                   <div className="relative">
-                    <select required className="w-full px-5 py-4 rounded-2xl border border-gray-200 focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20 focus:outline-none transition-all duration-300 appearance-none bg-gray-50 focus:bg-white font-medium">
+                    <select name="class" value={formData.class} onChange={handleChange} required className="w-full px-5 py-4 rounded-2xl border border-gray-200 focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20 focus:outline-none transition-all duration-300 appearance-none bg-gray-50 focus:bg-white font-medium">
                       <option value="">Select a class</option>
-                      <option value="playhouse">Playhouse</option>
-                      <option value="kg">KG</option>
-                      <option value="1-5">1 – 5</option>
-                      <option value="6-10">6 – 10</option>
-                      <option value="11-12">11 – 12 Commerce</option>
+                      <option value="Playhouse">Playhouse</option>
+                      <option value="KG">KG</option>
+                      <option value="Class 1-5">1 – 5</option>
+                      <option value="Class 6-10">6 – 10</option>
+                      <option value="Class 11-12 Commerce">11 – 12 Commerce</option>
                     </select>
                     <ChevronDown className="absolute right-5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
                   </div>
                 </div>
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Message</label>
-                  <textarea rows={4} placeholder="Tell us about your requirements..."
+                  <textarea name="message" value={formData.message} onChange={handleChange} rows={4} placeholder="Tell us about your requirements..." required
                     className="w-full px-5 py-4 rounded-2xl border border-gray-200 focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20 focus:outline-none transition-all duration-300 resize-none font-medium bg-gray-50 focus:bg-white"
                   />
                 </div>
-                <button type="submit"
-                  className="w-full py-5 bg-brand-orange text-white font-black text-sm uppercase tracking-widest rounded-2xl hover:bg-orange-600 transition-all duration-300 shadow-lg hover:shadow-brand-orange/30 hover:-translate-y-0.5 active:scale-[0.98] flex items-center justify-center gap-3 group"
+                <button type="submit" disabled={isSubmitting}
+                  className="w-full py-5 bg-brand-orange text-white font-black text-sm uppercase tracking-widest rounded-2xl hover:bg-orange-600 transition-all duration-300 shadow-lg hover:shadow-brand-orange/30 hover:-translate-y-0.5 active:scale-[0.98] flex items-center justify-center gap-3 group disabled:opacity-70"
                 >
-                  Submit Inquiry
+                  {isSubmitting ? 'Submitting...' : 'Submit Inquiry'}
                   <Send className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                 </button>
               </form>

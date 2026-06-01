@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useAuth } from '../context/AuthContext'
+import toast from 'react-hot-toast'
 import { 
   Plus, 
   Search, 
@@ -12,14 +14,30 @@ import {
   Loader2,
   Calendar
 } from 'lucide-react'
-const INITIAL_NOTICES = [
-  { _id: '1', title: 'Summer Vacation 2026', content: 'School will be closed from May 1st to June 5th.', category: 'Holidays', isPinned: true, date: new Date().toISOString().split('T')[0], attachment: null },
-  { _id: '2', title: 'Annual Sports Day', content: 'Sports meet will be held on Feb 20th.', category: 'Events', isPinned: false, date: new Date().toISOString().split('T')[0], attachment: null },
-]
+const INITIAL_NOTICES = [];
 
 export default function NoticesPage() {
+  const { getAuthHeader } = useAuth()
   const [notices, setNotices] = useState(INITIAL_NOTICES)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
+
+  const fetchNotices = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/api/notices');
+      const data = await response.json();
+      if (data.status === 'success') {
+        setNotices(data.data);
+      }
+    } catch (error) {
+      console.error("Error fetching notices:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchNotices();
+  }, []);
   const [showForm, setShowForm] = useState(false)
   const [editingNotice, setEditingNotice] = useState(null)
   const [formData, setFormData] = useState({
@@ -56,22 +74,67 @@ export default function NoticesPage() {
     setShowForm(true)
   }
 
-  const handleSave = (e) => {
+  const handleSave = async (e) => {
     e.preventDefault()
     
     const finalData = { ...formData };
+    setLoading(true);
 
-    if (editingNotice) {
-      setNotices(notices.map(n => n._id === editingNotice._id ? { ...finalData, _id: n._id } : n))
-    } else {
-      setNotices([...notices, { ...finalData, _id: Date.now().toString() }])
+    try {
+      if (editingNotice) {
+        const res = await fetch(`http://localhost:5000/api/notices/${editingNotice._id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', ...getAuthHeader() },
+          body: JSON.stringify(finalData)
+        });
+        if (res.ok) {
+          fetchNotices();
+          toast.success('Notice updated successfully');
+        } else {
+          toast.error('Failed to update notice');
+        }
+      } else {
+        const res = await fetch('http://localhost:5000/api/notices', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', ...getAuthHeader() },
+          body: JSON.stringify(finalData)
+        });
+        if (res.ok) {
+          fetchNotices();
+          toast.success('Notice added successfully');
+        } else {
+          toast.error('Failed to add notice');
+        }
+      }
+    } catch (error) {
+      console.error("Error saving notice:", error);
+      toast.error('An error occurred while saving');
+    } finally {
+      setLoading(false);
+      setShowForm(false);
     }
-    setShowForm(false)
   }
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     if (window.confirm("Delete this notice forever?")) {
-      setNotices(notices.filter(n => n._id !== id))
+      try {
+        setLoading(true);
+        const res = await fetch(`http://localhost:5000/api/notices/${id}`, {
+          method: 'DELETE',
+          headers: getAuthHeader()
+        });
+        if (res.ok) {
+          fetchNotices();
+          toast.success('Notice deleted');
+        } else {
+          toast.error('Failed to delete notice');
+        }
+      } catch (error) {
+        console.error("Error deleting notice:", error);
+        toast.error('Error deleting notice');
+      } finally {
+        setLoading(false);
+      }
     }
   }
 

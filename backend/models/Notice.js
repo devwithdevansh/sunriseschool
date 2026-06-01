@@ -10,7 +10,7 @@ const noticeSchema = new mongoose.Schema({
   category: {
     type: String,
     required: [true, 'Please specify a category'],
-    enum: ['General', 'Exams', 'Events', 'Holidays']
+    enum: ['General', 'Exams', 'Events', 'Academics', 'Holidays']
   },
   content: {
     type: String,
@@ -20,13 +20,13 @@ const noticeSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
-  attachmentUrl: {
-    type: String,
-    default: null
+  attachment: {
+    name: { type: String, default: null },
+    size: { type: String, default: null }
   },
-  publishDate: {
-    type: Date,
-    default: Date.now
+  date: {
+    type: String,
+    required: [true, 'Please specify a date']
   }
 }, {
   timestamps: true

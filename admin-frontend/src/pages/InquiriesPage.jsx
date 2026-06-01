@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useAuth } from '../context/AuthContext'
+import toast from 'react-hot-toast'
 import { 
-  Mail, 
-  Search, 
-  Eye, 
-  Trash2, 
+  Mail,
+  Search,
+  Eye,
+  Trash2,
   Download,
+  RefreshCw,
   User,
   Phone,
   GraduationCap,
@@ -14,22 +17,87 @@ import {
   Calendar,
   MessageSquare
 } from 'lucide-react'
-const INITIAL_INQUIRIES = [
-  { _id: '1', studentName: 'Aarav Mehta', parentName: 'Sanjay Mehta', phone: '+91 98250 12345', email: 'aarav@example.com', class: 'Class 8', createdAt: new Date().toISOString(), status: 'New', message: 'Interested in science stream.' },
-  { _id: '2', studentName: 'Isha Patel', parentName: 'Deepak Patel', phone: '+91 94260 67890', email: 'isha@example.com', class: 'KG', createdAt: new Date().toISOString(), status: 'Replied', message: 'Wanted to know about transport.' },
-]
+const INITIAL_INQUIRIES = [];
 
 export default function InquiriesPage() {
+  const { getAuthHeader } = useAuth()
   const [inquiries, setInquiries] = useState(INITIAL_INQUIRIES)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState('All')
   const [selectedInquiry, setSelectedInquiry] = useState(null)
 
-  const handleDelete = (id) => {
+  const fetchInquiries = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/api/inquiries', {
+        headers: getAuthHeader()
+      });
+      const data = await response.json();
+      if (data.status === 'success') {
+        setInquiries(data.data);
+      }
+    } catch (error) {
+      console.error("Error fetching inquiries:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchInquiries();
+    const interval = setInterval(fetchInquiries, 7200000); // 2 hours
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleDelete = async (id) => {
     if (window.confirm("Remove this inquiry record?")) {
-      setInquiries(inquiries.filter(inq => inq._id !== id))
+      try {
+        setLoading(true);
+        const res = await fetch(`http://localhost:5000/api/inquiries/${id}`, { 
+          method: 'DELETE',
+          headers: getAuthHeader()
+        });
+        if (res.ok) {
+          fetchInquiries();
+          toast.success('Inquiry deleted');
+          if (selectedInquiry && selectedInquiry._id === id) {
+            setSelectedInquiry(null);
+          }
+        } else {
+          toast.error('Failed to delete inquiry');
+        }
+      } catch (error) {
+        console.error("Error deleting inquiry:", error);
+        toast.error('Error deleting inquiry');
+      } finally {
+        setLoading(false);
+      }
     }
   }
+
+  const handleStatusUpdate = async (id, newStatus) => {
+    try {
+      const response = await fetch(`http://localhost:5000/api/inquiries/${id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          ...getAuthHeader()
+        },
+        body: JSON.stringify({ status: newStatus })
+      });
+      if (response.ok) {
+        toast.success(`Marked as ${newStatus}`);
+        fetchInquiries();
+        if (selectedInquiry && selectedInquiry._id === id) {
+          setSelectedInquiry({ ...selectedInquiry, status: newStatus });
+        }
+      } else {
+        toast.error('Failed to update status');
+      }
+    } catch (error) {
+      console.error("Error updating status:", error);
+      toast.error('Error updating status');
+    }
+  };
 
   const filteredInquiries = inquiries.filter(inq => {
     if (filter === 'All') return true
@@ -43,9 +111,14 @@ export default function InquiriesPage() {
           <h2>Admission Inquiries</h2>
           <p>Review and manage prospective student leads from the public website.</p>
         </div>
-        <button className="secondary-button" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <Download size={18} /> Export Data
-        </button>
+        <div style={{ display: 'flex', gap: '12px' }}>
+          <button className="secondary-button" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Download size={18} /> Export
+          </button>
+          <button onClick={fetchInquiries} className="primary-button" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <RefreshCw size={18} /> Refresh
+          </button>
+        </div>
       </div>
 
       <div style={{ display: 'flex', gap: '24px', alignItems: 'center', marginBottom: '40px' }}>
@@ -84,6 +157,7 @@ export default function InquiriesPage() {
                 <th>Student & Parent</th>
                 <th>Contact Info</th>
                 <th>Grade</th>
+                <th>Status</th>
                 <th>Date</th>
                 <th style={{ textAlign: 'right' }}>Actions</th>
               </tr>
@@ -115,6 +189,11 @@ export default function InquiriesPage() {
                   <td>
                     <span className="badge badge-info" style={{ display: 'flex', alignItems: 'center', gap: '6px', width: 'fit-content' }}>
                       <GraduationCap size={14} /> {inq.class}
+                    </span>
+                  </td>
+                  <td>
+                    <span className={`badge ${inq.status === 'New' ? 'badge-error' : inq.status === 'Replied' ? 'badge-warning' : 'badge-success'}`}>
+                      {inq.status || 'New'}
                     </span>
                   </td>
                   <td>
@@ -202,6 +281,26 @@ export default function InquiriesPage() {
                  <p style={{ margin: 0, color: '#334155', lineHeight: 1.6, fontWeight: 500 }}>
                    {selectedInquiry.message || "No additional message provided."}
                  </p>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px', padding: '16px', background: '#f1f5f9', borderRadius: '16px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <span style={{ fontSize: '0.85rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Current Status:</span>
+                  <span className={`badge ${selectedInquiry.status === 'New' ? 'badge-error' : selectedInquiry.status === 'Replied' ? 'badge-warning' : 'badge-success'}`}>
+                    {selectedInquiry.status || 'New'}
+                  </span>
+                </div>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  {selectedInquiry.status !== 'New' && (
+                    <button onClick={() => handleStatusUpdate(selectedInquiry._id, 'New')} className="secondary-button" style={{ padding: '8px 16px', fontSize: '0.85rem' }}>Mark New</button>
+                  )}
+                  {selectedInquiry.status !== 'Replied' && (
+                    <button onClick={() => handleStatusUpdate(selectedInquiry._id, 'Replied')} className="secondary-button" style={{ padding: '8px 16px', fontSize: '0.85rem', background: 'white', color: '#f59e0b', borderColor: '#fcd34d' }}>Mark Replied</button>
+                  )}
+                  {selectedInquiry.status !== 'Closed' && (
+                    <button onClick={() => handleStatusUpdate(selectedInquiry._id, 'Closed')} className="secondary-button" style={{ padding: '8px 16px', fontSize: '0.85rem', background: 'white', color: '#10b981', borderColor: '#6ee7b7' }}>Mark Closed</button>
+                  )}
+                </div>
               </div>
 
               <div style={{ display: 'flex', gap: '16px' }}>

@@ -13,6 +13,7 @@ const pageRoutes = require('./routes/pageRoutes');
 const staffRoutes = require('./routes/staffRoutes');
 const mediaRoutes = require('./routes/mediaRoutes');
 const resultRoutes = require('./routes/resultRoutes');
+const uploadRoutes = require('./routes/uploadRoutes');
 
 // Load environment variables
 dotenv.config();
@@ -36,6 +37,7 @@ app.use('/api/pages', pageRoutes);
 app.use('/api/staff', staffRoutes);
 app.use('/api/media', mediaRoutes);
 app.use('/api/results', resultRoutes);
+app.use('/api/upload', uploadRoutes);
 
 // Health Check Route
 app.get('/api/health', (req, res) => {

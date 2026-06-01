@@ -11,7 +11,7 @@ const inquirySchema = new mongoose.Schema({
     required: [true, 'Parent name is required'],
     trim: true
   },
-  phoneNumber: {
+  phone: {
     type: String,
     required: [true, 'Phone number is required']
   },
@@ -20,9 +20,9 @@ const inquirySchema = new mongoose.Schema({
     required: [true, 'Email is required'],
     match: [/.+\@.+\..+/, 'Please enter a valid email']
   },
-  gradeLevel: {
+  class: {
     type: String,
-    required: [true, 'Grade level is required']
+    required: [true, 'Class/Grade level is required']
   },
   message: {
     type: String,
@@ -30,12 +30,8 @@ const inquirySchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['Pending', 'Followed Up', 'In Discussion', 'Enrolled', 'Closed'],
-    default: 'Pending'
-  },
-  assignedTo: {
-    type: String,
-    default: 'Admissions Office'
+    enum: ['New', 'Replied', 'Closed'],
+    default: 'New'
   }
 }, {
   timestamps: true
