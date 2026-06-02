@@ -20,6 +20,7 @@ export default function NoticesPage() {
   const { getAuthHeader } = useAuth()
   const [notices, setNotices] = useState(INITIAL_NOTICES)
   const [loading, setLoading] = useState(true)
+  const [searchQuery, setSearchQuery] = useState('')
 
   const fetchNotices = async () => {
     try {
@@ -138,6 +139,16 @@ export default function NoticesPage() {
     }
   }
 
+  const filteredNotices = notices.filter(notice => {
+    const query = searchQuery.trim().toLowerCase();
+    if (!query) return true;
+    return (
+      (notice.title || '').toLowerCase().includes(query) ||
+      (notice.content || '').toLowerCase().includes(query) ||
+      (notice.category || '').toLowerCase().includes(query)
+    );
+  });
+
   return (
     <div className="page-container">
       <div className="topbar" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '48px' }}>
@@ -165,6 +176,8 @@ export default function NoticesPage() {
                 placeholder="Search notices..." 
                 className="field-input"
                 style={{ paddingLeft: '40px', paddingTop: '10px', paddingBottom: '10px' }}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
           </div>
@@ -179,7 +192,7 @@ export default function NoticesPage() {
               </tr>
             </thead>
             <tbody>
-              {notices.map((notice) => (
+              {filteredNotices.map((notice) => (
                 <tr key={notice._id}>
                   <td>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>

@@ -247,6 +247,11 @@ h4,
   border: 1px solid var(--border-subtle);
 }
 
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
 .data-table th {
   background: #f8fafc;
   padding: 18px 24px;
