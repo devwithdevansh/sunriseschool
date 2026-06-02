@@ -133,7 +133,7 @@ const NoticeBoard = () => {
               </button>
             </motion.div>
           ) : (
-            <motion.div layout className="space-y-6">
+            <div className="space-y-6">
               <AnimatePresence mode="popLayout">
                 {filteredNotices.map((notice) => {
                   const isExpanded = expandedId === notice.id;
@@ -233,7 +233,7 @@ const NoticeBoard = () => {
                   );
                 })}
               </AnimatePresence>
-            </motion.div>
+            </div>
           )}
         </div>
       </section>
