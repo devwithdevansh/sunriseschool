@@ -19,7 +19,8 @@ const noticeSchema = z.object({
   isPinned: z.boolean().optional(),
   attachment: z.object({
     name: z.string().nullable().optional(),
-    size: z.string().nullable().optional()
+    size: z.string().nullable().optional(),
+    url: z.string().nullable().optional()
   }).nullable().optional(),
   date: z.string()
 });
