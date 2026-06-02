@@ -39,7 +39,7 @@ export default function HomePage() {
         setCounts({
           notices: notices.data?.length || 0,
           results: results.data?.length || 0,
-          inquiries: inquiries.data?.length || 0
+          inquiries: inquiries.data?.filter(inq => !inq.status || inq.status === 'New').length || 0
         });
         
         setLastUpdate(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }))

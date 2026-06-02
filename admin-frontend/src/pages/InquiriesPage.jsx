@@ -25,6 +25,7 @@ export default function InquiriesPage() {
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState('All')
   const [selectedInquiry, setSelectedInquiry] = useState(null)
+  const [searchQuery, setSearchQuery] = useState('')
 
   const fetchInquiries = async () => {
     try {
@@ -99,10 +100,63 @@ export default function InquiriesPage() {
     }
   };
 
+  const handleExport = () => {
+    if (filteredInquiries.length === 0) {
+      toast.error('No inquiries to export');
+      return;
+    }
+
+    // CSV Headers
+    const headers = ['Student Name', 'Parent Name', 'Phone', 'Email', 'Grade/Class', 'Status', 'Date', 'Message/Notes'];
+    
+    // CSV Rows
+    const rows = filteredInquiries.map(inq => [
+      inq.studentName || '',
+      inq.parentName || '',
+      inq.phone || '',
+      inq.email || '',
+      inq.class || '',
+      inq.status || 'New',
+      new Date(inq.createdAt).toLocaleString(),
+      (inq.message || '').replace(/"/g, '""')
+    ]);
+
+    // Combine headers and rows with RFC 4180 escaping
+    const csvContent = [
+      headers.map(h => `"${h}"`).join(','),
+      ...rows.map(row => row.map(val => `"${val}"`).join(','))
+    ].join('\n');
+
+    // Create a Blob and trigger download
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    
+    const timestamp = new Date().toISOString().slice(0, 10);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `sunrise_school_inquiries_${filter.toLowerCase()}_${timestamp}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    toast.success(`Exported ${filteredInquiries.length} inquiries to CSV!`);
+  };
+
   const filteredInquiries = inquiries.filter(inq => {
-    if (filter === 'All') return true
-    return inq.status?.toLowerCase() === filter.toLowerCase()
-  })
+    const matchesTab = filter === 'All' || inq.status?.toLowerCase() === filter.toLowerCase();
+    const query = searchQuery.trim().toLowerCase();
+    if (!query) return matchesTab;
+    
+    const matchesSearch = 
+      (inq.studentName || '').toLowerCase().includes(query) ||
+      (inq.parentName || '').toLowerCase().includes(query) ||
+      (inq.phone || '').toLowerCase().includes(query) ||
+      (inq.email || '').toLowerCase().includes(query) ||
+      (inq.class || '').toLowerCase().includes(query);
+      
+    return matchesTab && matchesSearch;
+  });
 
   return (
     <div className="page-container">
@@ -112,7 +166,7 @@ export default function InquiriesPage() {
           <p>Review and manage prospective student leads from the public website.</p>
         </div>
         <div style={{ display: 'flex', gap: '12px' }}>
-          <button className="secondary-button" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <button onClick={handleExport} className="secondary-button" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <Download size={18} /> Export
           </button>
           <button onClick={fetchInquiries} className="primary-button" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -141,6 +195,8 @@ export default function InquiriesPage() {
             placeholder="Search inquiries..." 
             className="field-input"
             style={{ paddingLeft: '48px' }}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
       </div>
