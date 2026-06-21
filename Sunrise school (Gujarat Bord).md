@@ -78,16 +78,17 @@ Colour scheme - Orange , grey, white \& blue (According to Logo)
 ui elements to fit in website:
 https://uiverse.io/janisar-hyder/dull-lionfish-98
 https://dribbble.com/shots/19868892-Academic-landing-page-header
-------------------------------------------------------------------------------------
-Home -DG
+---
 
-About School- DG
+Home -DG ✅
 
-Management team- DG
+About School- DG ✅
 
-Trustee mess- DG
+Management team- DG ✅
 
-Inquire- DG
+Trustee mess- DG ❌
+
+Inquire- DG ❌
 
 Kg- Dev
 
@@ -95,11 +96,11 @@ Sec- Dev
 
 High- Dev
 
-Cocurricular- DG
+Cocurricular- DG ✅
 
-Compitive Exam-DG
+Compitive Exam-DG ✅
 
-Sports- DG
+Sports- DG ✅
 
 10 Em- Dev
 
@@ -107,20 +108,21 @@ Sports- DG
 
 12 Comm- Dev
 
-Transportation- DG
+Transportation- DG ✅
 
-Stationary- DG
+Stationary- DG ✅
 
 Gallery- Dev
 
 Alumni- Dev
 
-Notice-DG
+Notice-DG ❌
 
-Contact-DG
+Contact-DG ✅
 
 Brochure btn- Dev
 
-Header- DG
+Header- DG ✅
 
-Footer- DG
+Footer- DG ✅
+

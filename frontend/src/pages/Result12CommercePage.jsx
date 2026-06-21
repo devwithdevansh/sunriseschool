@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, X, ArrowRight, Expand } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import heroImage from '../assets/images/Students/IMG_1385.JPG.jpeg';
 
 const RESULT_IMAGES = [];
 
@@ -79,37 +80,59 @@ const Result12CommercePage = () => {
 
   return (
     <div className="min-h-screen bg-[#f8f9fa] text-slate-900 font-sans selection:bg-brand-orange selection:text-white">
-      {/* HERO */}
-      <section className="pt-40 pb-20 px-4 md:px-8 max-w-[100rem] mx-auto">
-        <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}>
-          <div className="flex items-center gap-4 mb-6">
-            <div className="h-[2px] w-12 bg-brand-orange" />
-            <span className="text-[11px] font-black tracking-[0.4em] uppercase text-brand-orange">Hall of Fame</span>
-          </div>
-          <h1 className="text-[clamp(3rem,8vw,9rem)] font-black uppercase tracking-tighter leading-[0.85] mb-8 text-slate-900">
-            Class 12 <span className="text-brand-blue">Commerce</span><br />
-            <span className="text-slate-300">Results</span>
-          </h1>
-          <p className="text-xl md:text-2xl text-slate-500 font-light max-w-2xl leading-relaxed">
-            A visual celebration of academic excellence. Explore the outstanding achievements of our Commerce students through the years.
-          </p>
-        </motion.div>
+      {/* HERO (Exhibition Glassmorphism) */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        {/* Background image */}
+        <div className="absolute inset-0">
+          <img
+            src={heroImage}
+            alt="12 Commerce Results Hero"
+            className="w-full h-full object-cover"
+          />
+          {/* Lighter, brighter overlay for the glass effect */}
+          <div className="absolute inset-0 bg-white/30 backdrop-blur-sm" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#f8f9fa] via-[#f8f9fa]/60 to-transparent" />
+        </div>
+
+        <div className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 text-center">
+          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            className="inline-block px-8 py-14 md:px-16 md:py-20 bg-white/70 backdrop-blur-2xl border border-white/60 rounded-[3rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)]"
+          >
+            <div className="flex items-center justify-center gap-4 mb-6">
+              <div className="h-[2px] w-8 bg-brand-blue/30" />
+              <span className="text-[10px] font-black tracking-[0.6em] uppercase text-brand-blue">Hall of Fame</span>
+              <div className="h-[2px] w-8 bg-brand-blue/30" />
+            </div>
+
+            <h1 className="text-[clamp(2.5rem,6vw,5rem)] font-black uppercase tracking-tighter leading-[0.9] text-slate-900 mb-6">
+              Class 12 <span className="text-brand-orange">Commerce</span><br />
+              <span className="font-light text-slate-400">Results</span>
+            </h1>
+
+            <p className="text-slate-600 text-lg md:text-xl font-light leading-relaxed max-w-2xl mx-auto">
+              A visual celebration of academic excellence. Explore the outstanding achievements of our Commerce students through the years.
+            </p>
+          </motion.div>
+        </div>
       </section>
 
       {/* MASONRY GALLERY */}
       <section className="px-4 md:px-8 pb-32 max-w-[100rem] mx-auto">
-        <div className="flex flex-wrap justify-center gap-3 mb-12">
+        
+        {/* Timeline Selector */}
+        <div className="flex flex-wrap justify-center gap-3 mb-16 relative">
+          <div className="absolute top-1/2 left-4 right-4 h-px bg-slate-200 -z-10 hidden sm:block" />
           {uniqueYears.map(year => (
             <button
               key={year}
               onClick={() => setSelectedYear(year)}
-              className={`px-6 py-2.5 rounded-full font-bold text-sm uppercase tracking-wider transition-all duration-300 ${
+              className={`relative px-8 py-3 bg-white rounded-full font-black text-[11px] uppercase tracking-widest transition-all duration-300 border ${
                 selectedYear === year 
-                  ? 'bg-brand-blue text-white shadow-lg shadow-brand-blue/30' 
-                  : 'bg-white text-slate-500 hover:bg-slate-100 hover:text-slate-900 shadow-sm border border-slate-100'
+                  ? 'border-brand-blue text-brand-blue shadow-[0_8px_30px_rgba(37,99,235,0.15)]' 
+                  : 'border-slate-200 text-slate-400 hover:border-brand-blue/30 hover:text-brand-blue shadow-sm'
               }`}
             >
-              Academic Year {year}
+              Year {year}
             </button>
           ))}
         </div>
@@ -134,19 +157,21 @@ const Result12CommercePage = () => {
                   className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105"
                   loading="lazy"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-slate-900/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                <div className="absolute top-4 right-4 w-12 h-12 bg-white/90 backdrop-blur-md rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0 shadow-xl">
-                  <Expand size={20} className="text-brand-blue" />
+                <div className="absolute inset-0 bg-white/80 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="absolute top-4 right-4 w-12 h-12 bg-brand-blue rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 scale-75 group-hover:scale-100 shadow-xl text-white">
+                  <Expand size={20} />
                 </div>
                 
                 {/* Overlay Text */}
-                <div className="absolute bottom-0 left-0 right-0 p-8 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 flex flex-col items-start">
-                  <span className="px-3 py-1 bg-brand-orange text-white text-[9px] font-black uppercase tracking-widest rounded-full mb-3 shadow-lg">
-                    Year {img.year}
-                  </span>
-                  <h3 className="text-xl md:text-2xl font-bold text-white tracking-tight leading-snug drop-shadow-md">
-                    {img.label}
-                  </h3>
+                <div className="absolute inset-0 p-8 flex flex-col justify-end opacity-0 group-hover:opacity-100 transition-all duration-500">
+                  <div className="translate-y-8 group-hover:translate-y-0 transition-transform duration-500">
+                    <span className="inline-block px-3 py-1 bg-brand-blue/10 text-brand-blue border border-brand-blue/20 text-[9px] font-black uppercase tracking-widest rounded-full mb-3 shadow-sm">
+                      Year {img.year}
+                    </span>
+                    <h3 className="text-xl md:text-2xl font-black text-slate-900 tracking-tight leading-snug">
+                      {img.label}
+                    </h3>
+                  </div>
                 </div>
               </div>
             </motion.div>

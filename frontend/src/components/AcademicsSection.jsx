@@ -2,6 +2,10 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { GraduationCap, BookOpen, School } from 'lucide-react';
 
+import imgKindergarten from '../assets/images/PREP/IMG-20250823-WA0010.jpg';
+import imgSchool from '../assets/images/MATHS DAYS/IMG_0402.JPG';
+import imgHigherSecondary from '../assets/images/SPORTS/IMG_4768.JPG';
+
 const AcademicsSection = () => {
   const academicLevels = [
     {
@@ -9,7 +13,8 @@ const AcademicsSection = () => {
       description: 'Playhouse to HKG',
       details: 'A nurturing environment where little ones begin their journey of discovery and learning through play and structured activities.',
       icon: <GraduationCap className="w-12 h-12 text-gray-900 mb-6" />,
-      delay: 0.1
+      delay: 0.1,
+      image: imgKindergarten
     },
     {
       title: 'School Education',
@@ -17,7 +22,8 @@ const AcademicsSection = () => {
       extra: 'English & Gujarati Medium',
       details: 'Comprehensive curriculum focused on academic excellence, character building, and holistic development for primary and secondary students.',
       icon: <School className="w-12 h-12 text-gray-900 mb-6" />,
-      delay: 0.2
+      delay: 0.2,
+      image: imgSchool
     },
     {
       title: 'Higher Secondary',
@@ -25,7 +31,8 @@ const AcademicsSection = () => {
       extra: 'Commerce Stream',
       details: 'Specialized education preparation for professional careers, emphasizing core concepts and practical understanding in commerce.',
       icon: <BookOpen className="w-12 h-12 text-gray-900 mb-6" />,
-      delay: 0.3
+      delay: 0.3,
+      image: imgHigherSecondary
     }
   ];
 
@@ -64,31 +71,39 @@ const AcademicsSection = () => {
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 1, delay: level.delay, ease: [0.16, 1, 0.3, 1] }}
               whileHover={{ y: -15, scale: 1.03 }}
-              className="bg-white p-10 rounded-[2.5rem] border border-gray-50 shadow-lg hover:shadow-[0_30px_60px_rgba(37,99,235,0.12)] hover:border-brand-blue/20 transition-all duration-500 flex flex-col items-center text-center group"
+              className="bg-white p-10 rounded-[2.5rem] border border-gray-50 shadow-lg hover:shadow-[0_30px_60px_rgba(37,99,235,0.12)] hover:border-brand-blue/20 transition-all duration-500 flex flex-col items-center text-center group relative overflow-hidden"
             >
-              <div className="p-5 bg-brand-blue/5 rounded-2xl group-hover:bg-brand-blue group-hover:shadow-[0_10px_25px_rgba(37,99,235,0.4)] group-hover:-translate-y-2 transition-all duration-500">
-                {React.cloneElement(level.icon, { className: 'w-10 h-10 text-brand-blue group-hover:text-white transition-colors duration-500' })}
+              {/* Image Background on Hover */}
+              <div className="absolute inset-0 z-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700">
+                <img src={level.image} alt={level.title} className="w-full h-full object-cover" />
+                <div className="absolute inset-0 bg-white/85 backdrop-blur-[2px]" />
               </div>
-              
-              <h3 className="text-2xl font-bold text-gray-900 mt-8 mb-2 tracking-tight group-hover:text-brand-blue transition-colors duration-500">
-                {level.title}
-              </h3>
-              
-              <p className="text-lg font-semibold text-gray-900/80 mb-1">
-                {level.description}
-              </p>
-              
-              {level.extra && (
-                <p className="text-sm font-medium text-gray-400 uppercase tracking-widest mb-4">
-                  {level.extra}
+
+              <div className="relative z-10 flex flex-col items-center">
+                <div className="p-5 bg-brand-blue/5 rounded-2xl group-hover:bg-brand-blue group-hover:shadow-[0_10px_25px_rgba(37,99,235,0.4)] group-hover:-translate-y-2 transition-all duration-500">
+                  {React.cloneElement(level.icon, { className: 'w-10 h-10 text-brand-blue group-hover:text-white transition-colors duration-500' })}
+                </div>
+                
+                <h3 className="text-2xl font-bold text-gray-900 mt-8 mb-2 tracking-tight group-hover:text-brand-blue transition-colors duration-500">
+                  {level.title}
+                </h3>
+                
+                <p className="text-lg font-semibold text-gray-900/80 mb-1">
+                  {level.description}
                 </p>
-              )}
-              
-              <div className="w-10 h-1 bg-gray-100 rounded-full my-6 group-hover:w-24 group-hover:bg-brand-orange transition-all duration-500"></div>
-              
-              <p className="text-gray-500 leading-relaxed font-medium text-sm">
-                {level.details}
-              </p>
+                
+                {level.extra && (
+                  <p className="text-sm font-medium text-gray-400 uppercase tracking-widest mb-4">
+                    {level.extra}
+                  </p>
+                )}
+                
+                <div className="w-10 h-1 bg-gray-100 rounded-full my-6 group-hover:w-24 group-hover:bg-brand-orange transition-all duration-500"></div>
+                
+                <p className="text-gray-500 leading-relaxed font-medium text-sm">
+                  {level.details}
+                </p>
+              </div>
             </motion.div>
           ))}
         </div>

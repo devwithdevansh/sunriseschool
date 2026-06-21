@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, ChevronDown } from 'lucide-react';
+import schoolLogo from '../assets/SUNRISE-LOGO-ENG-removebg-preview.png';
 
 const MENU_ITEMS = [
   { name: 'Home', path: '/' },
@@ -224,11 +225,12 @@ const Navbar = () => {
       <div className="w-full flex items-center h-full relative pl-6 pr-4 sm:pr-6 lg:pr-8">
         {/* Left Side: Logo */}
         <div className="flex-shrink-0">
-          <Link to="/" className="flex items-center group py-2" onClick={() => setIsOpen(false)}>
-            <span className="text-2xl font-black tracking-tighter text-brand-blue leading-none group-hover:scale-105 transition-transform duration-300">
-              SUNRISE<br />
-              <span className="text-[10px] tracking-[0.5em] text-brand-orange font-bold uppercase transition-colors">School</span>
-            </span>
+          <Link to="/" className="flex items-center group py-1" onClick={() => setIsOpen(false)}>
+            <img 
+              src={schoolLogo} 
+              alt="Sunrise School" 
+              className={`transition-all duration-300 ${scrolled ? 'h-12 md:h-14' : 'h-14 md:h-[4.5rem]'} w-auto object-contain`}
+            />
           </Link>
         </div>
 
@@ -289,7 +291,7 @@ const Navbar = () => {
             >
               {/* Drawer Header */}
               <div className="flex justify-between items-center p-6 border-b border-gray-50">
-                <span className="text-xl font-black tracking-tighter text-gray-900 uppercase">Menu</span>
+                <img src={schoolLogo} alt="Sunrise School" className="h-10 w-auto object-contain" />
                 <button
                   onClick={() => setIsOpen(false)}
                   className="p-2 text-gray-400 hover:text-gray-900 transition-colors"

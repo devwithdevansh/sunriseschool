@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { ChevronRight } from 'lucide-react';
-import heroRevealImg from '../assets/hero-reveal.png';
+import heroRevealImg from '../assets/images/ANNUAL/DSC05687.JPG';
 import AcademicsSection from '../components/AcademicsSection.jsx';
 import TeachersSection from '../components/TeachersSection.jsx';
 import AboutVisionSection from '../components/AboutVisionSection.jsx';

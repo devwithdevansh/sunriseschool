@@ -2,6 +2,15 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ZoomIn } from 'lucide-react';
 
+import imgClassroom from '../assets/images/PREP/IMG-20250720-WA0021.jpg';
+import imgScienceLab from '../assets/images/ANNUAL/DSC05613.JPG';
+import imgSports from '../assets/images/SPORTS/IMG_4742.JPG';
+import imgCultural from '../assets/images/ANNUAL/0D5A5278.JPG';
+import imgLibrary from '../assets/images/PREP/IMG-20250727-WA0004.jpg';
+import imgArtClass from '../assets/images/SPORTS/IMG_4814.JPG';
+import imgAthletics from '../assets/images/SPORTS/IMG_1222.JPG';
+import imgGroupStudy from '../assets/images/ANNUAL/0D5A5514.JPG';
+
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
@@ -13,14 +22,14 @@ const itemVariants = {
 };
 
 const images = [
-  { src: 'https://images.unsplash.com/photo-1546410531-bb4caa6b424d?auto=format&fit=crop&q=80&w=800', title: 'Classroom Learning', span: 'md:col-span-2 md:row-span-2' },
-  { src: 'https://images.unsplash.com/photo-1577891729319-f4871c6ec217?auto=format&fit=crop&q=80&w=800', title: 'Science Lab' },
-  { src: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&q=80&w=800', title: 'Sports Day' },
-  { src: 'https://images.unsplash.com/photo-1516534775068-ba3e84529fe1?auto=format&fit=crop&q=80&w=800', title: 'Cultural Event', span: 'md:col-span-2' },
-  { src: 'https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?auto=format&fit=crop&q=80&w=800', title: 'Library' },
-  { src: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&q=80&w=800', title: 'Art Class' },
-  { src: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80&w=800', title: 'Athletics', span: 'md:col-span-2' },
-  { src: 'https://images.unsplash.com/photo-1523050335392-9bef86f199ec?auto=format&fit=crop&q=80&w=800', title: 'Group Study' },
+  { src: imgClassroom, title: 'Early Learning', span: 'md:col-span-2 md:row-span-2' },
+  { src: imgScienceLab, title: 'Annual Events' },
+  { src: imgSports, title: 'Sports Day' },
+  { src: imgCultural, title: 'Cultural Performance', span: 'md:col-span-2' },
+  { src: imgLibrary, title: 'Campus Activities' },
+  { src: imgArtClass, title: 'Extracurricular' },
+  { src: imgAthletics, title: 'Athletics', span: 'md:col-span-2' },
+  { src: imgGroupStudy, title: 'Group Study' },
 ];
 
 const GalleryPage = () => {
@@ -29,10 +38,14 @@ const GalleryPage = () => {
   return (
     <div className="min-h-screen bg-white text-gray-900 font-sans overflow-x-hidden selection:bg-brand-blue selection:text-white">
 
-      {/* ── 1. HERO (Orange gradient) ────────────────────────────── */}
-      <section className="relative pt-36 pb-32 md:pt-52 md:pb-44 overflow-hidden bg-gradient-to-br from-brand-blue via-blue-700 to-blue-900 text-white">
-        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:24px_24px]" />
-        <div className="absolute bottom-0 left-0 right-0 h-20 bg-white" style={{ clipPath: 'ellipse(70% 100% at 50% 100%)' }} />
+      {/* ── 1. HERO (Dark Tinted Image) ────────────────────────────── */}
+      <section className="relative pt-36 pb-32 md:pt-52 md:pb-44 overflow-hidden text-white">
+        <div className="absolute inset-0 z-0">
+          <img src={imgCultural} alt="Gallery Hero" className="w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-brand-dark/80 backdrop-blur-sm" />
+          <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:24px_24px]" />
+        </div>
+        <div className="absolute bottom-0 left-0 right-0 h-20 bg-white z-10" style={{ clipPath: 'ellipse(70% 100% at 50% 100%)' }} />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
           <motion.div
             initial={{ opacity: 0, y: 60, filter: 'blur(20px)' }}
@@ -98,9 +111,13 @@ const GalleryPage = () => {
         </div>
       </section>
 
-      {/* ── 3. QUOTE SECTION (Light gray) ─────────────────────── */}
-      <section className="py-24 bg-gray-50 border-y border-gray-100">
-        <div className="max-w-4xl mx-auto px-4 text-center">
+      {/* ── 3. QUOTE SECTION (Light Tinted Image) ─────────────────────── */}
+      <section className="py-24 relative border-y border-gray-100 overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <img src={imgSports} alt="Quote Background" className="w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-white/90 backdrop-blur-md" />
+        </div>
+        <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
             transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}

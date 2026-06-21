@@ -3,6 +3,12 @@ import { motion, AnimatePresence, useInView } from 'framer-motion';
 import { Trophy, Book, Star, Target, GraduationCap, Award, ArrowRight, ShieldCheck, TrendingUp, Medal, ChevronDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
+import imgExam1 from '../assets/images/GYAN SADHANA/IMG_0332.JPG';
+import imgExam2 from '../assets/images/GYAN SADHANA/IMG_0334.JPG';
+import imgExam3 from '../assets/images/MATHS DAYS/IMG_0377.JPG';
+import imgExam4 from '../assets/images/MATHS DAYS/IMG_0387.JPG';
+import imgExam5 from '../assets/images/MATHS DAYS/IMG_0402.JPG';
+
 /* ── Counter ─────────────────────────────────────────────────── */
 const Counter = ({ to, suffix = '+', label }) => {
   const [val, setVal] = useState(0);
@@ -35,31 +41,31 @@ const EXAMS = [
     id: 1, icon: Trophy, title: 'Olympiads', rank: 'National Tier',
     desc: 'Scientific and mathematical challenges at a global level. Students compete on national platforms to earn distinctions that define academic careers.',
     highlights: ['Mathematics', 'Science', 'Reasoning'],
-    img: '/images/exams/olympiads.png',
+    img: imgExam3,
   },
   {
     id: 2, icon: Book, title: 'Hindi Prachar Samiti', rank: 'Institutional Tier',
     desc: 'Linguistic excellence and cultural depth in the national language. A gateway to understanding India\'s rich literary and cultural heritage.',
     highlights: ['Language', 'Literature', 'Culture'],
-    img: '/images/exams/hindi_prachar.png',
+    img: imgExam1,
   },
   {
     id: 3, icon: GraduationCap, title: 'Sanskrit Bharti', rank: 'Legacy Tier',
     desc: 'Connecting students with ancient wisdom and heritage foundations. Sanskrit is the mother of all languages — and mastering it is a mark of excellence.',
     highlights: ['Heritage', 'Grammar', 'Philosophy'],
-    img: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=800',
+    img: imgExam2,
   },
   {
     id: 4, icon: Star, title: 'Humming Bird', rank: 'Academic Tier',
     desc: 'Logical reasoning and technical brilliance for junior scholars. A holistic challenge testing aptitude, creativity, and analytical thinking.',
     highlights: ['Logic', 'Aptitude', 'Creativity'],
-    img: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&q=80&w=800',
+    img: imgExam4,
   },
   {
     id: 5, icon: Target, title: 'Spell Bee', rank: 'Skill Tier',
     desc: 'Building vocabulary and linguistic precision through competitive spelling. Students develop a love for language that benefits every subject.',
     highlights: ['Vocabulary', 'Spelling', 'Pronunciation'],
-    img: 'https://images.unsplash.com/photo-1503676382389-4809596d5290?auto=format&fit=crop&q=80&w=800',
+    img: imgExam5,
   },
 ];
 
@@ -77,25 +83,19 @@ const CompetitiveExams = () => {
   return (
     <div className="min-h-screen bg-white text-gray-900 font-sans overflow-x-hidden">
 
-      {/* ── 1. HERO (Dark with animated ring) ─────────────────────── */}
-      <section className="relative min-h-screen flex flex-col justify-center overflow-hidden bg-gray-950">
-        {/* Animated concentric rings */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          {[400, 600, 800, 1000].map((size, i) => (
-            <motion.div key={i}
-              className="absolute rounded-full border border-white/5"
-              style={{ width: size, height: size }}
-              animate={{ scale: [1, 1.04, 1], opacity: [0.4, 0.8, 0.4] }}
-              transition={{ duration: 4 + i, repeat: Infinity, delay: i * 0.8, ease: 'easeInOut' }}
-            />
-          ))}
-          {/* Center glow */}
-          <div className="absolute w-64 h-64 rounded-full"
-            style={{ background: 'radial-gradient(ellipse, rgba(37,99,235,0.3) 0%, transparent 70%)' }} />
-        </div>
-        <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.03)_1px,transparent_1px)] [background-size:30px_30px]" />
+      {/* ── 1. HERO (Full-bleed image background) ─────────────────────── */}
+      <section className="relative min-h-screen flex items-end overflow-hidden">
+        {/* Background image */}
+        <img
+          src={imgExam2}
+          alt="Competitive Exams Hero"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        {/* Gradient overlays */}
+        <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-950/70 to-gray-950/20" />
+        <div className="absolute inset-0 bg-gradient-to-r from-gray-950/80 to-transparent" />
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32">
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 md:pb-28 pt-40">
           <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.8 }}
             className="text-[10px] font-black tracking-[0.6em] uppercase text-brand-orange mb-8"
           >
@@ -166,10 +166,10 @@ const CompetitiveExams = () => {
         </div>
       </section>
 
-      {/* ── 3. EXAM ACCORDION SELECTOR ────────────────────────────── */}
+      {/* ── 3. EXAMS SHOWCASE (Alternating Layout) ────────────────────────────── */}
       <section className="py-28 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mb-16">
+          <div className="mb-20">
             <motion.span initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
               className="text-[10px] font-black tracking-[0.4em] uppercase text-brand-orange block mb-3"
             >Academic Recognition</motion.span>
@@ -180,81 +180,53 @@ const CompetitiveExams = () => {
             </motion.h2>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
-            {/* Left: Accordion list */}
-            <div className="lg:col-span-2 space-y-3">
-              {EXAMS.map((exam, i) => (
-                <motion.button key={exam.id}
-                  initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
-                  transition={{ delay: i * 0.07 }}
-                  onClick={() => setActiveExam(i)}
-                  className={`w-full text-left p-5 rounded-2xl border transition-all duration-300 flex items-center justify-between group ${
-                    activeExam === i
-                      ? 'bg-brand-blue text-white border-brand-blue shadow-[0_8px_30px_rgba(37,99,235,0.25)]'
-                      : 'bg-white text-gray-700 border-gray-100 hover:border-brand-blue/30 hover:bg-gray-50'
-                  }`}
+          <div className="space-y-16 lg:space-y-32">
+            {EXAMS.map((exam, i) => (
+              <div key={exam.id} className={`flex flex-col ${i % 2 !== 0 ? 'lg:flex-row-reverse' : 'lg:flex-row'} gap-10 lg:gap-20 items-center`}>
+                
+                {/* Image side */}
+                <motion.div initial={{ opacity: 0, x: i % 2 !== 0 ? 30 : -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}
+                  className="w-full lg:w-1/2 relative rounded-[2rem] overflow-hidden group shadow-xl h-[350px] lg:h-[450px]"
                 >
-                  <div className="flex items-center gap-4">
-                    <span className={`text-[10px] font-black uppercase tracking-widest ${activeExam === i ? 'text-blue-200' : 'text-gray-400'}`}>
-                      0{exam.id}
+                  <img src={exam.img} alt={exam.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2s]" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-gray-950/80 via-transparent to-transparent opacity-80" />
+                  <div className="absolute bottom-8 left-8">
+                    <span className="px-4 py-2 bg-brand-orange rounded-full text-[10px] font-black uppercase tracking-widest text-white shadow-lg">
+                      {exam.rank}
                     </span>
-                    <div>
-                      <div className="font-black uppercase tracking-tight text-sm">{exam.title}</div>
-                      <div className={`text-[10px] font-bold uppercase tracking-widest mt-0.5 ${activeExam === i ? 'text-blue-200' : 'text-gray-400'}`}>
-                        {exam.rank}
-                      </div>
-                    </div>
-                  </div>
-                  <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${activeExam === i ? 'rotate-180 text-blue-200' : 'text-gray-300'}`} />
-                </motion.button>
-              ))}
-            </div>
-
-            {/* Right: Detail panel */}
-            <div className="lg:col-span-3 sticky top-28">
-              <AnimatePresence mode="wait">
-                <motion.div key={activeExam}
-                  initial={{ opacity: 0, y: 20, filter: 'blur(8px)' }}
-                  animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                  exit={{ opacity: 0, y: -20, filter: 'blur(8px)' }}
-                  transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                  className="rounded-[2rem] overflow-hidden shadow-2xl"
-                >
-                  {/* Image */}
-                  <div className="relative h-64 overflow-hidden">
-                    <img src={EXAMS[activeExam].img} alt={EXAMS[activeExam].title}
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/40 to-transparent" />
-                    <div className="absolute bottom-6 left-6">
-                      <span className="px-4 py-2 bg-brand-orange rounded-full text-[10px] font-black uppercase tracking-widest text-white">
-                        {EXAMS[activeExam].rank}
-                      </span>
-                    </div>
-                    <div className="absolute top-6 right-6 w-12 h-12 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center text-white">
-                      {React.createElement(EXAMS[activeExam].icon, { className: 'w-6 h-6' })}
-                    </div>
-                  </div>
-
-                  {/* Text */}
-                  <div className="bg-gray-50 p-8 border-x border-b border-gray-100 rounded-b-[2rem]">
-                    <h3 className="text-3xl font-black uppercase tracking-tighter mb-4">{EXAMS[activeExam].title}</h3>
-                    <p className="text-gray-500 text-base font-light leading-relaxed mb-6">{EXAMS[activeExam].desc}</p>
-                    <div className="flex flex-wrap gap-2 mb-8">
-                      {EXAMS[activeExam].highlights.map((h, i) => (
-                        <span key={i} className="px-4 py-1.5 rounded-full bg-brand-blue/10 text-brand-blue text-[11px] font-black uppercase tracking-widest border border-brand-blue/20">
-                          {h}
-                        </span>
-                      ))}
-                    </div>
-                    <Link to="/inquiry" className="inline-flex items-center gap-3 text-brand-orange font-black text-[11px] uppercase tracking-widest hover:text-orange-600 transition-colors group">
-                      Register for this Exam
-                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                    </Link>
                   </div>
                 </motion.div>
-              </AnimatePresence>
-            </div>
+
+                {/* Text side */}
+                <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8, delay: 0.2 }}
+                  className="w-full lg:w-1/2"
+                >
+                  <div className="flex items-center gap-4 mb-6">
+                    <div className="w-14 h-14 rounded-2xl bg-brand-blue/10 flex items-center justify-center text-brand-blue border border-brand-blue/20">
+                      <exam.icon className="w-7 h-7" />
+                    </div>
+                    <span className="text-gray-300 font-black text-4xl">0{exam.id}</span>
+                  </div>
+                  
+                  <h3 className="text-3xl lg:text-4xl font-black uppercase tracking-tighter mb-4 text-gray-900">{exam.title}</h3>
+                  <p className="text-gray-500 text-lg font-light leading-relaxed mb-8">{exam.desc}</p>
+                  
+                  <div className="flex flex-wrap gap-3 mb-8">
+                    {exam.highlights.map((h, j) => (
+                      <span key={j} className="px-4 py-1.5 rounded-full bg-gray-50 text-gray-600 text-[11px] font-black uppercase tracking-widest border border-gray-200">
+                        {h}
+                      </span>
+                    ))}
+                  </div>
+
+                  <Link to="/inquiry" className="inline-flex items-center gap-3 text-brand-orange font-black text-[11px] uppercase tracking-widest hover:text-orange-600 transition-colors group">
+                    Register for this Exam
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                </motion.div>
+
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -303,7 +275,7 @@ const CompetitiveExams = () => {
         <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
           className="relative overflow-hidden min-h-[50vh] lg:min-h-0 group"
         >
-          <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=1000&auto=format&fit=crop"
+          <img src={imgExam1}
             alt="Excellence" className="absolute inset-0 w-full h-full object-cover transition-transform duration-[2000ms] group-hover:scale-105"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-gray-950/90 via-gray-950/40 to-transparent" />

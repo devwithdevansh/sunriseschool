@@ -3,6 +3,13 @@ import { motion, useInView } from 'framer-motion';
 import { Trophy, Medal, Target, Users, Zap, Heart, Award, ArrowRight, ShieldCheck, Dumbbell, Timer, LayoutGrid } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
+import imgSports1 from '../assets/images/SPORTS/IMG_4814.JPG';
+import imgSports2 from '../assets/images/SPORTS/IMG_4742.JPG';
+import imgSports3 from '../assets/images/SPORTS/IMG_4768.JPG';
+import imgSports4 from '../assets/images/SPORTS/IMG_1222.JPG';
+import imgSports5 from '../assets/images/SPORTS/IMG_4848.JPG';
+import imgSports6 from '../assets/images/SPORTS/c43b34b0-2469-4202-b8e4-5cdea9efe4ca.jpeg';
+
 /* ── Counter ─────────────────────────────────────────────────── */
 const Counter = ({ to, suffix = '+', label }) => {
   const [val, setVal] = useState(0);
@@ -31,11 +38,11 @@ const Counter = ({ to, suffix = '+', label }) => {
 
 /* ── Sports data ─────────────────────────────────────────────── */
 const SPORTS = [
-  { title: 'Cricket',      tag: 'Team',     img: 'https://images.unsplash.com/photo-1531415074968-036ba1b575da?q=80&w=900&auto=format&fit=crop', span: 'lg:col-span-2 h-80' },
-  { title: 'Football',     tag: 'Team',     img: 'https://images.unsplash.com/photo-1517466787929-bc90951d0974?q=80&w=600&auto=format&fit=crop', span: 'h-64' },
-  { title: 'Athletics',    tag: 'Track',    img: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?q=80&w=600&auto=format&fit=crop', span: 'h-64' },
-  { title: 'Indoor Games', tag: 'Skill',    img: 'https://images.unsplash.com/photo-1544698310-74ea9d1c8258?q=80&w=900&auto=format&fit=crop', span: 'lg:col-span-2 h-80' },
-  { title: 'Yoga',         tag: 'Wellness', img: 'https://images.unsplash.com/photo-1599901860904-17e6ed7083a0?q=80&w=600&auto=format&fit=crop', span: 'h-64' },
+  { title: 'Cricket',      tag: 'Team',     img: imgSports1, span: 'lg:col-span-2 h-80' },
+  { title: 'Football',     tag: 'Team',     img: imgSports2, span: 'h-64' },
+  { title: 'Athletics',    tag: 'Track',    img: imgSports3, span: 'h-64' },
+  { title: 'Indoor Games', tag: 'Skill',    img: imgSports6, span: 'lg:col-span-2 h-80' },
+  { title: 'Yoga',         tag: 'Wellness', img: imgSports5, span: 'h-64' },
 ];
 
 const BENEFITS = [
@@ -61,7 +68,7 @@ const Sports = () => {
       <section className="relative min-h-screen flex items-end overflow-hidden">
         {/* Background image */}
         <img
-          src="https://images.unsplash.com/photo-1461896836934-ffe607ba8211?q=80&w=1800&auto=format&fit=crop"
+          src={imgSports4}
           alt="Athletics Hero"
           className="absolute inset-0 w-full h-full object-cover"
         />
@@ -305,7 +312,7 @@ const Sports = () => {
         <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
           className="relative overflow-hidden min-h-[50vh] lg:min-h-0 order-1 lg:order-2 group"
         >
-          <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=1000&auto=format&fit=crop"
+          <img src={imgSports1}
             alt="Team" className="absolute inset-0 w-full h-full object-cover transition-transform duration-[2000ms] group-hover:scale-105"
           />
           <div className="absolute inset-0 bg-gradient-to-l from-transparent to-gray-950/30" />

@@ -2,6 +2,22 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Target, Lightbulb, BookOpen, Globe, Users, Languages, Shield, Zap, Trophy, Award, ShieldCheck, Quote, Sun } from 'lucide-react';
+import schoolLogo from '../assets/SUNRISE-LOGO-ENG-removebg-preview.png';
+
+import imgHero from '../assets/images/ANNUAL/DSC05687.JPG';
+import imgWhy1 from '../assets/images/GYAN SADHANA/IMG_0334.JPG';
+import imgWhy2 from '../assets/images/BHARTIYA SANSKRITI/IMG_0326.JPG';
+import imgWhy3 from '../assets/images/BHARTIYA SANSKRITI/IMG_0328.JPG';
+import imgWhy4 from '../assets/images/MATHS DAYS/IMG_0377.JPG';
+import imgWhy5 from '../assets/images/ANNUAL/0D5A5514.JPG';
+import imgWhy6 from '../assets/images/SPORTS/IMG_4814.JPG';
+import imgVis from '../assets/images/GYAN SADHANA/IMG_0332.JPG';
+import imgMis from '../assets/images/MATHS DAYS/IMG_0387.JPG';
+import imgTime1 from '../assets/images/SPORTS/IMG_4768.JPG';
+import imgTime2 from '../assets/images/MATHS DAYS/IMG_0402.JPG';
+import imgTime3 from '../assets/images/ANNUAL/0D5A5278.JPG';
+import imgDual1 from '../assets/images/BHARTIYA SANSKRITI/IMG_0330.JPG';
+import imgDual2 from '../assets/images/ANNUAL/DSC05613.JPG';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -17,30 +33,35 @@ const About = () => {
   return (
     <div className="min-h-screen bg-white text-gray-900 font-sans overflow-x-hidden selection:bg-brand-blue selection:text-white">
 
-      {/* ── 1. HERO (Light + clean with Watermark & Inline Image) ─────────────────────── */}
-      <section className="relative pt-36 pb-32 md:pt-52 md:pb-44 overflow-hidden bg-white">
+      {/* ── 1. HERO (Cinematic Image Infused) ─────────────────────── */}
+      <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden">
+        {/* Background Image */}
+        <img src={imgHero} alt="Sunrise About" className="absolute inset-0 w-full h-full object-cover" />
+        
+        {/* Gradient Overlays */}
+        <div className="absolute inset-0 bg-gradient-to-t from-white via-white/80 to-gray-900/40" />
+        <div className="absolute inset-0 bg-brand-orange/5 mix-blend-multiply" />
+        
         {/* Subtle Watermark using Icon */}
-        <div className="absolute top-0 right-0 -mr-40 -mt-40 text-gray-50 opacity-70 pointer-events-none">
+        <div className="absolute top-0 right-0 -mr-40 -mt-40 text-brand-orange/20 opacity-40 pointer-events-none mix-blend-overlay">
           <Sun className="w-[800px] h-[800px]" strokeWidth={0.5} />
         </div>
-        <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:20px_20px] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_40%,#000_60%,transparent_100%)] opacity-60" />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center mt-20">
           <motion.div
             initial={{ opacity: 0, y: 60 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-            className="text-center"
           >
-            <span className="text-[10px] font-black tracking-[0.5em] uppercase text-brand-orange mb-6 block">Established 2016</span>
+            <span className="text-[12px] font-black tracking-[0.6em] uppercase text-brand-orange mb-6 block drop-shadow-md">Established 2016</span>
 
-            <h1 className="text-[clamp(3rem,8vw,9rem)] font-black tracking-tighter mb-8 uppercase leading-[0.82]">
+            <h1 className="text-[clamp(3.5rem,8vw,10rem)] font-black tracking-tighter mb-8 uppercase leading-[0.85] text-slate-900 drop-shadow-xl">
               About <br />
-              <div className="flex items-center justify-center gap-4 md:gap-8 mt-2">
-                <span className="text-gray-400 font-light">Sunrise</span>
+              <div className="flex items-center justify-center gap-4 md:gap-8 mt-4">
+                <span className="text-gray-400 font-light mix-blend-multiply">Sunrise</span>
               </div>
             </h1>
-            <p className="max-w-xl mx-auto text-lg text-gray-500 font-medium leading-relaxed">
+            <p className="max-w-xl mx-auto text-xl text-gray-700 font-semibold leading-relaxed drop-shadow-md bg-white/30 backdrop-blur-sm p-4 rounded-2xl">
               Excellence in education, discipline, and holistic development — a modern foundation for life.
             </p>
           </motion.div>
@@ -49,11 +70,9 @@ const About = () => {
 
       {/* ── 2. INTRODUCTION (Clean with logo placeholder) ────────────────────────────── */}
       <section className="py-32 bg-gray-50 relative border-y border-gray-100 overflow-hidden">
-        {/* Placeholder for real school logo watermark */}
-        <div className="absolute left-10 top-1/2 -translate-y-1/2 opacity-[0.03] hidden lg:block pointer-events-none">
-          <div className="w-96 h-96 rounded-full border-[16px] border-gray-900 flex items-center justify-center">
-            <span className="font-black text-6xl text-gray-900 tracking-widest">LOGO</span>
-          </div>
+        {/* Watermark of real school logo */}
+        <div className="absolute left-10 top-1/2 -translate-y-1/2 opacity-5 hidden lg:block pointer-events-none">
+          <img src={schoolLogo} alt="Sunrise" className="w-[500px] h-auto grayscale object-contain" />
         </div>
 
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
@@ -80,12 +99,12 @@ const About = () => {
 
           <motion.div variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true }} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
-              { icon: Users, title: 'Experienced Teachers', desc: 'Our faculty brings years of expertise.', img: 'https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=600&auto=format&fit=crop' },
-              { icon: Languages, title: 'Dual Medium', desc: 'English & Gujarati options.', img: 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?q=80&w=600&auto=format&fit=crop' },
-              { icon: Shield, title: 'Discipline', desc: 'Core ethical values instilled.', img: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=600&auto=format&fit=crop' },
-              { icon: Trophy, title: 'Exams', desc: 'Competitive milestone prep.', img: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=600&auto=format&fit=crop' },
-              { icon: Zap, title: 'Holistic Growth', desc: 'Mental and emotional care.', img: 'https://images.unsplash.com/photo-1511629091441-ee46146481b6?q=80&w=600&auto=format&fit=crop' },
-              { icon: Award, title: 'Sports', desc: 'Extracurricular excellence.', img: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?q=80&w=600&auto=format&fit=crop' },
+              { icon: Users, title: 'Experienced Teachers', desc: 'Our faculty brings years of expertise.', img: imgWhy1 },
+              { icon: Languages, title: 'Dual Medium', desc: 'English & Gujarati options.', img: imgWhy2 },
+              { icon: Shield, title: 'Discipline', desc: 'Core ethical values instilled.', img: imgWhy3 },
+              { icon: Trophy, title: 'Exams', desc: 'Competitive milestone prep.', img: imgWhy4 },
+              { icon: Zap, title: 'Holistic Growth', desc: 'Mental and emotional care.', img: imgWhy5 },
+              { icon: Award, title: 'Sports', desc: 'Extracurricular excellence.', img: imgWhy6 },
             ].map((item, index) => (
               <motion.div
                 key={index} variants={itemVariants}
@@ -122,7 +141,7 @@ const About = () => {
             <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
               className="relative p-10 md:p-14 rounded-[2.5rem] shadow-sm hover:shadow-xl transition-all group overflow-hidden h-[400px] flex items-end"
             >
-              <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=1000&auto=format&fit=crop" className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" alt="Vision" />
+              <img src={imgVis} className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" alt="Vision" />
               <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/70 to-transparent opacity-90 transition-opacity duration-500 group-hover:opacity-100" />
               
               <div className="relative z-10 text-white w-full">
@@ -137,7 +156,7 @@ const About = () => {
             <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
               className="relative p-10 md:p-14 rounded-[2.5rem] shadow-sm hover:shadow-xl transition-all group overflow-hidden h-[400px] flex items-end"
             >
-              <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=1000&auto=format&fit=crop" className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" alt="Mission" />
+              <img src={imgMis} className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" alt="Mission" />
               <div className="absolute inset-0 bg-gradient-to-t from-brand-blue via-brand-blue/80 to-transparent opacity-90 transition-opacity duration-500 group-hover:opacity-100" />
               
               <div className="relative z-10 text-white w-full">
@@ -163,9 +182,9 @@ const About = () => {
             <div className="absolute left-8 md:left-1/2 top-0 bottom-0 w-px bg-gray-200 md:-translate-x-1/2" />
             <div className="space-y-24 relative">
               {[
-                { year: '2016', title: 'Inception', desc: 'Sunrise School was founded to deliver value-based education.', img: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=200&auto=format&fit=crop' },
-                { year: '2016', title: 'Divine Start', desc: 'Inauguration by Morari Bapu, setting an eternal standard.', img: 'https://images.unsplash.com/photo-1604085572504-a392ddf0d86a?q=80&w=200&auto=format&fit=crop' },
-                { year: 'Today', title: 'Growing Legacy', desc: 'A thriving educational hub with a community of 1000+ learners.', img: 'https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=200&auto=format&fit=crop' },
+                { year: '2016', title: 'Inception', desc: 'Sunrise School was founded to deliver value-based education.', img: imgTime1 },
+                { year: '2016', title: 'Divine Start', desc: 'Inauguration by Morari Bapu, setting an eternal standard.', img: imgTime2 },
+                { year: 'Today', title: 'Growing Legacy', desc: 'A thriving educational hub with a community of 1000+ learners.', img: imgTime3 },
               ].map((item, index) => (
                 <motion.div
                   key={index}
@@ -224,7 +243,7 @@ const About = () => {
                   {/* Small Polaroid-style image */}
                   <div className="w-28 h-28 md:w-32 md:h-32 bg-white border border-gray-100 rounded-3xl p-2 rotate-6 group-hover:rotate-0 shadow-lg group-hover:shadow-xl transition-all duration-500 shrink-0">
                     <div className="w-full h-full bg-gray-200 rounded-2xl overflow-hidden">
-                      <img src={`https://images.unsplash.com/photo-${index === 0 ? '1456513080510-7bf3a84b82f8' : '1544716278-ca5e3f4abd8c'}?q=80&w=200&auto=format&fit=crop`} className="w-full h-full object-cover" alt="" />
+                      <img src={index === 0 ? imgDual1 : imgDual2} className="w-full h-full object-cover" alt="" />
                     </div>
                   </div>
                 </div>

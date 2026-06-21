@@ -1,34 +1,40 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Award, Briefcase, GraduationCap, Users, Calendar, MapPin, ArrowRight } from 'lucide-react';
+import heroBg from '../assets/images/ANNUAL/0D5A5278.JPG';
+import imgAlum1 from '../assets/images/Students/IMG_1381.JPG.jpeg';
+import imgAlum2 from '../assets/images/Students/IMG_1383.JPG.jpeg';
+import imgAlum3 from '../assets/images/Students/IMG_1385.JPG.jpeg';
+import imgAlum4 from '../assets/images/ANNUAL/0D5A5514.JPG';
+import imgMentorship from '../assets/images/ANNUAL/DSC05613.JPG';
 
 const ALUMNI_DATA = [
   {
     name: "Dr. Aakash Patel",
     batch: "Class of 2012",
     role: "Senior Surgeon, AIIMS",
-    image: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=2070&auto=format&fit=crop",
+    image: imgAlum1,
     quote: "Sunrise School gave me the foundation to pursue my medical dreams."
   },
   {
     name: "Priya Sharma",
     batch: "Class of 2015",
     role: "Software Engineer, Google",
-    image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=1976&auto=format&fit=crop",
+    image: imgAlum2,
     quote: "The emphasis on logical thinking and technology set me on the right path."
   },
   {
     name: "Rahul Desai",
     batch: "Class of 2010",
     role: "Founder & CEO, TechX",
-    image: "https://images.unsplash.com/photo-1556157382-97eda2d62296?q=80&w=2070&auto=format&fit=crop",
+    image: imgAlum3,
     quote: "Leadership skills I learned in school activities are what I use every day now."
   },
   {
     name: "Neha Mehta",
     batch: "Class of 2018",
     role: "Architect, BuildSpace",
-    image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=1961&auto=format&fit=crop",
+    image: imgAlum4,
     quote: "Creative freedom and excellent guidance shaped my career design."
   }
 ];
@@ -43,22 +49,23 @@ const STATS = [
 const AlumniPage = () => {
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900 overflow-hidden font-sans">
-      {/* 1. HERO SECTION */}
-      <section className="relative h-[65vh] md:h-[75vh] flex items-center justify-center bg-gradient-to-tr from-[#0a192f] via-[#112240] to-brand-blue overflow-hidden">
-        <motion.div 
-          animate={{ scale: [1, 1.05, 1], opacity: [0.3, 0.5, 0.3] }}
-          transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-          className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.1)_0%,transparent_60%)]"
-        />
+      {/* 1. HERO SECTION (Cinematic Image Infused) */}
+      <section className="relative h-[75vh] md:h-[85vh] flex items-center justify-center overflow-hidden">
+        {/* Background image */}
+        <img src={heroBg} alt="Sunrise Alumni" className="absolute inset-0 w-full h-full object-cover" />
         
-        <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10 text-center">
+        {/* Cinematic Overlays */}
+        <div className="absolute inset-0 bg-gradient-to-t from-gray-50 via-gray-900/70 to-gray-900/30" />
+        <div className="absolute inset-0 bg-brand-blue/20 mix-blend-multiply" />
+        
+        <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10 text-center mt-20">
           <motion.div
             initial={{ opacity: 0, y: 50, filter: "blur(10px)" }}
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
           >
-            <span className="text-[12px] font-black tracking-[0.4em] uppercase text-brand-orange mb-6 block">Our Legacy</span>
-            <h1 className="text-[clamp(3rem,8vw,8rem)] font-black tracking-tighter mb-6 uppercase text-white leading-tight">
+            <span className="text-[12px] font-black tracking-[0.4em] uppercase text-brand-orange mb-6 block drop-shadow-md">Our Legacy</span>
+            <h1 className="text-[clamp(3rem,8vw,8rem)] font-black tracking-tighter mb-6 uppercase text-white leading-[0.9] drop-shadow-2xl">
               Sunrise <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-brand-orange">Alumni</span>
             </h1>
           </motion.div>
@@ -67,23 +74,11 @@ const AlumniPage = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.5 }}
-            className="text-lg md:text-2xl text-gray-300 max-w-3xl mx-auto font-medium"
+            className="text-lg md:text-2xl text-gray-200 max-w-3xl mx-auto font-light leading-relaxed drop-shadow-md"
           >
             Connecting generations of excellence. Our alumni are shaping the future across the globe, carrying the spirit of Sunrise School in every endeavor.
           </motion.p>
         </div>
-
-        {/* Floating Abstract Shapes */}
-        <motion.div 
-          animate={{ y: [0, -20, 0], rotate: [0, 5, 0] }}
-          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute right-[10%] top-[20%] w-32 h-32 bg-brand-orange/20 rounded-full blur-3xl"
-        />
-        <motion.div 
-          animate={{ y: [0, 30, 0], rotate: [0, -5, 0] }}
-          transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute left-[10%] bottom-[20%] w-48 h-48 bg-blue-500/20 rounded-full blur-3xl"
-        />
       </section>
 
       {/* 2. STATS SECTION */}
@@ -226,7 +221,7 @@ const AlumniPage = () => {
             <div className="lg:w-1/2 relative min-h-[400px]">
               <div className="absolute inset-0 bg-brand-blue/30 mix-blend-multiply z-10"></div>
               <img 
-                src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2070&auto=format&fit=crop" 
+                src={imgMentorship} 
                 alt="Mentorship" 
                 className="absolute inset-0 w-full h-full object-cover"
               />

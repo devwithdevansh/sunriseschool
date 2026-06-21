@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Mail, Phone, MapPin, Facebook, Instagram, Twitter, ArrowUpRight } from 'lucide-react';
+import schoolLogo from '../assets/SUNRISE-LOGO-ENG.jpg';
+import trustLogo from '../assets/Shree-Meenaben-gangubhai-humbal-edu-and-charitable-trust.jpg';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -44,9 +46,13 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-16 mb-20">
           {/* Brand Column */}
           <div className="lg:col-span-2 space-y-6">
-            <div>
-              <h3 className="text-white text-3xl font-black tracking-tighter">SUNRISE</h3>
-              <span className="text-brand-orange text-[10px] font-black tracking-[0.4em] uppercase">School Rajkot</span>
+            <div className="flex items-center gap-5">
+              <div className="bg-white p-1.5 rounded-full w-20 h-20 flex items-center justify-center shrink-0 shadow-xl overflow-hidden">
+                <img src={schoolLogo} alt="Sunrise School" className="w-full h-full object-contain" />
+              </div>
+              <div className="bg-white p-1.5 rounded-full w-20 h-20 flex items-center justify-center shrink-0 shadow-xl overflow-hidden">
+                <img src={trustLogo} alt="Trust Logo" className="w-full h-full object-contain" />
+              </div>
             </div>
             <p className="text-sm leading-relaxed max-w-xs text-gray-500">
               Empowering students to achieve excellence through innovation, character building, and academic success since 2016.

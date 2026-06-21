@@ -3,6 +3,13 @@ import { motion, AnimatePresence, useInView } from 'framer-motion';
 import { Music, Mic, Palette, Theater, Trophy, Sparkles, ArrowRight, Users, Globe, Zap } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
+import imgCoCurricular1 from '../assets/images/ANNUAL/0D5A5278.JPG';
+import imgCoCurricular2 from '../assets/images/ANNUAL/0D5A5514.JPG';
+import imgCoCurricular3 from '../assets/images/ANNUAL/DSC05613.JPG';
+import imgCoCurricular4 from '../assets/images/ANNUAL/DSC05687.JPG';
+import imgCoCurricular5 from '../assets/images/BHARTIYA SANSKRITI/IMG_0326.JPG';
+import imgCoCurricular6 from '../assets/images/BHARTIYA SANSKRITI/IMG_0328.JPG';
+
 /* ── Animated counter ──────────────────────────────────────────── */
 const Counter = ({ to, suffix = '', label }) => {
   const [val, setVal] = useState(0);
@@ -35,12 +42,12 @@ const Counter = ({ to, suffix = '', label }) => {
 const CATEGORIES = ['All', 'Arts', 'Sports', 'Performance'];
 
 const ACTIVITIES = [
-  { id: 1, cat: 'Arts',        icon: Palette,  title: 'Visual Arts',     tag: 'Creative',      desc: 'Colors, shapes, and textures — students define their unique visual language.',       img: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?q=80&w=800&auto=format&fit=crop' },
-  { id: 2, cat: 'Performance', icon: Music,    title: 'Music Academy',   tag: 'Melodic',       desc: 'Vocal and instrumental mastery spanning classical and contemporary genres.',           img: 'https://images.unsplash.com/photo-1511379938547-c1f69419868d?q=80&w=800&auto=format&fit=crop' },
-  { id: 3, cat: 'Sports',      icon: Trophy,   title: 'Athletic Club',   tag: 'Physical',      desc: 'Strength, strategy, and teamwork across multiple sporting disciplines.',               img: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?q=80&w=800&auto=format&fit=crop' },
-  { id: 4, cat: 'Performance', icon: Theater,  title: 'Theater Group',   tag: 'Drama',         desc: 'Confidence, speech, and storytelling through the power of the stage.',                 img: 'https://images.unsplash.com/photo-1524712245354-2c4e5e7121c0?q=80&w=800&auto=format&fit=crop' },
-  { id: 5, cat: 'Performance', icon: Mic,      title: 'Public Speaking', tag: 'Rhetoric',      desc: 'Equipping students with the tools to articulate ideas with precision and poise.',      img: 'https://images.unsplash.com/photo-1475721027785-f74eccf877e2?q=80&w=800&auto=format&fit=crop' },
-  { id: 6, cat: 'Arts',        icon: Sparkles, title: 'Dance & Motion',  tag: 'Expressive',    desc: 'Traditional and modern movement forms that build grace, rhythm, and discipline.',      img: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?q=80&w=800&auto=format&fit=crop' },
+  { id: 1, cat: 'Arts',        icon: Palette,  title: 'Visual Arts',     tag: 'Creative',      desc: 'Colors, shapes, and textures — students define their unique visual language.',       img: imgCoCurricular5 },
+  { id: 2, cat: 'Performance', icon: Music,    title: 'Music Academy',   tag: 'Melodic',       desc: 'Vocal and instrumental mastery spanning classical and contemporary genres.',           img: imgCoCurricular1 },
+  { id: 3, cat: 'Sports',      icon: Trophy,   title: 'Athletic Club',   tag: 'Physical',      desc: 'Strength, strategy, and teamwork across multiple sporting disciplines.',               img: imgCoCurricular2 },
+  { id: 4, cat: 'Performance', icon: Theater,  title: 'Theater Group',   tag: 'Drama',         desc: 'Confidence, speech, and storytelling through the power of the stage.',                 img: imgCoCurricular3 },
+  { id: 5, cat: 'Performance', icon: Mic,      title: 'Public Speaking', tag: 'Rhetoric',      desc: 'Equipping students with the tools to articulate ideas with precision and poise.',      img: imgCoCurricular4 },
+  { id: 6, cat: 'Arts',        icon: Sparkles, title: 'Dance & Motion',  tag: 'Expressive',    desc: 'Traditional and modern movement forms that build grace, rhythm, and discipline.',      img: imgCoCurricular6 },
 ];
 
 const PILLS = ['Music', 'Dance', 'Visual Arts', 'Theater', 'Public Speaking', 'Athletics', 'Debate', 'Craft'];
@@ -53,27 +60,19 @@ const CoCurricular = () => {
   return (
     <div className="min-h-screen bg-white text-gray-900 font-sans overflow-x-hidden">
 
-      {/* ── 1. HERO (Dark, immersive) ──────────────────────────────── */}
-      <section className="relative min-h-screen flex flex-col justify-center overflow-hidden bg-gray-950">
-
-        {/* Animated glowing orb */}
-        <motion.div
-          className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full pointer-events-none"
-          style={{ background: 'radial-gradient(ellipse, rgba(234,88,12,0.25) 0%, rgba(234,88,12,0.05) 50%, transparent 70%)' }}
-          animate={{ scale: [1, 1.15, 1], opacity: [0.7, 1, 0.7] }}
-          transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+      {/* ── 1. HERO (Full-bleed image background) ──────────────────────────────── */}
+      <section className="relative min-h-screen flex items-end overflow-hidden">
+        {/* Background image */}
+        <img
+          src={imgCoCurricular2}
+          alt="Co-Curricular Hero"
+          className="absolute inset-0 w-full h-full object-cover"
         />
-        {/* Second orb (blue) */}
-        <motion.div
-          className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full pointer-events-none"
-          style={{ background: 'radial-gradient(ellipse, rgba(37,99,235,0.2) 0%, transparent 70%)' }}
-          animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0.8, 0.5] }}
-          transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
-        />
-        {/* Dot texture */}
-        <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.04)_1px,transparent_1px)] [background-size:28px_28px] pointer-events-none" />
+        {/* Gradient overlays */}
+        <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-950/70 to-gray-950/20" />
+        <div className="absolute inset-0 bg-gradient-to-r from-gray-950/80 to-transparent" />
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32">
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 md:pb-28 pt-40">
           {/* Eyebrow */}
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -217,38 +216,33 @@ const CoCurricular = () => {
                 <motion.div
                   key={item.id}
                   layout
-                  initial={{ opacity: 0, scale: 0.85, filter: 'blur(8px)' }}
-                  animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
-                  exit={{ opacity: 0, scale: 0.85, filter: 'blur(8px)' }}
-                  transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                  whileHover={{ y: -8 }}
-                  className="relative overflow-hidden rounded-[2rem] h-80 group cursor-pointer shadow-sm hover:shadow-2xl transition-shadow duration-500"
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ duration: 0.3 }}
+                  className="relative overflow-hidden rounded-[2rem] h-[26rem] group cursor-pointer shadow-md hover:shadow-2xl transition-all duration-500"
                 >
                   {/* Background image */}
                   <img src={item.img} alt={item.title}
-                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
-                  {/* Default overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-900/50 to-transparent" />
-                  {/* Hover reveal overlay */}
-                  <div className="absolute inset-0 bg-brand-blue/80 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  {/* Overlay for readability */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-900/30 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-300" />
 
                   {/* Content */}
                   <div className="absolute inset-0 p-8 flex flex-col justify-end z-10">
-                    {/* Tag */}
-                    <span className="text-[9px] font-black uppercase tracking-[0.35em] text-brand-orange mb-3 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0">
-                      {item.tag}
-                    </span>
-                    {/* Icon */}
-                    <div className="w-11 h-11 rounded-xl bg-white/15 backdrop-blur-md flex items-center justify-center mb-4 transition-all duration-300 group-hover:bg-white group-hover:text-brand-blue text-white">
-                      <item.icon className="w-5 h-5" />
+                    <div className="translate-y-8 group-hover:translate-y-0 transition-transform duration-500 ease-out">
+                      {/* Icon */}
+                      <div className="w-12 h-12 rounded-2xl bg-brand-orange flex items-center justify-center mb-5 text-white shadow-lg">
+                        <item.icon className="w-6 h-6" />
+                      </div>
+                      {/* Title */}
+                      <h3 className="text-2xl font-black uppercase tracking-tight text-white mb-3">{item.title}</h3>
+                      {/* Desc — reveals on hover */}
+                      <p className="text-sm text-gray-200 font-light leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
+                        {item.desc}
+                      </p>
                     </div>
-                    {/* Title */}
-                    <h3 className="text-xl font-black uppercase tracking-tight text-white mb-2">{item.title}</h3>
-                    {/* Desc — reveals on hover */}
-                    <p className="text-sm text-white/70 font-light leading-relaxed max-h-0 overflow-hidden group-hover:max-h-20 transition-all duration-500">
-                      {item.desc}
-                    </p>
                   </div>
                 </motion.div>
               ))}
@@ -257,41 +251,40 @@ const CoCurricular = () => {
         </div>
       </section>
 
-      {/* ── 4. HORIZONTAL SCROLL STRIP ────────────────────────────── */}
-      <section className="py-20 bg-gray-50 border-y border-gray-100 overflow-hidden">
-        <div className="mb-12 px-4 sm:px-8 max-w-7xl mx-auto">
-          <span className="text-[10px] font-black tracking-[0.4em] uppercase text-brand-orange block mb-3">Signature Programs</span>
-          <h2 className="text-4xl font-black uppercase tracking-tighter">Featured <span className="text-gray-300">Experiences</span></h2>
-        </div>
+      {/* ── 4. FEATURED EXPERIENCES ────────────────────────────── */}
+      <section className="py-20 bg-gray-50 border-y border-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mb-12">
+            <span className="text-[10px] font-black tracking-[0.4em] uppercase text-brand-orange block mb-3">Signature Programs</span>
+            <h2 className="text-4xl font-black uppercase tracking-tighter">Featured <span className="text-gray-300">Experiences</span></h2>
+          </div>
 
-        <div className="flex gap-6 px-4 sm:px-8 overflow-x-auto pb-6 scrollbar-hide snap-x snap-mandatory">
-          {ACTIVITIES.map((item, i) => (
-            <motion.div
-              key={item.id}
-              initial={{ opacity: 0, x: 60 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: '-50px' }}
-              transition={{ duration: 0.7, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
-              className="relative shrink-0 w-[300px] h-[420px] rounded-[2rem] overflow-hidden shadow-lg group snap-start cursor-pointer"
-            >
-              <img src={item.img} alt={item.title}
-                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-900/40 to-transparent" />
-              <div className="absolute inset-0 p-7 flex flex-col justify-between z-10">
-                <div className="self-end px-3 py-1 bg-white/10 backdrop-blur-md rounded-full text-[9px] font-black uppercase tracking-widest text-white border border-white/15">
-                  {item.cat}
-                </div>
-                <div>
-                  <div className="w-10 h-10 rounded-xl bg-brand-orange flex items-center justify-center mb-4">
-                    <item.icon className="w-5 h-5 text-white" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {ACTIVITIES.slice(0, 4).map((item, i) => (
+              <motion.div
+                key={item.id}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: i * 0.1 }}
+                className="relative h-80 rounded-[2rem] overflow-hidden shadow-lg group cursor-pointer"
+              >
+                <img src={item.img} alt={item.title}
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-900/40 to-transparent" />
+                <div className="absolute inset-0 p-6 flex flex-col justify-between z-10">
+                  <div className="self-end px-3 py-1 bg-white/10 backdrop-blur-md rounded-full text-[9px] font-black uppercase tracking-widest text-white border border-white/15">
+                    {item.cat}
                   </div>
-                  <h3 className="text-2xl font-black uppercase tracking-tight text-white mb-2">{item.title}</h3>
-                  <p className="text-gray-300 text-xs font-light leading-relaxed line-clamp-2">{item.desc}</p>
+                  <div>
+                    <h3 className="text-xl font-black uppercase tracking-tight text-white mb-1">{item.title}</h3>
+                    <p className="text-gray-300 text-xs font-light leading-relaxed line-clamp-2">{item.desc}</p>
+                  </div>
                 </div>
-              </div>
-            </motion.div>
-          ))}
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -304,7 +297,7 @@ const CoCurricular = () => {
           className="lg:col-span-3 relative overflow-hidden min-h-[50vh] lg:min-h-0 group"
         >
           <img
-            src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=1400&auto=format&fit=crop"
+            src={imgCoCurricular1}
             alt="Collaboration"
             className="absolute inset-0 w-full h-full object-cover transition-transform duration-[2000ms] group-hover:scale-105"
           />

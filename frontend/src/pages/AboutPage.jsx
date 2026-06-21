@@ -1,6 +1,8 @@
 import React from 'react';
 import Section from '../components/Section.jsx';
 import { motion } from 'framer-motion';
+import schoolLogo from '../assets/SUNRISE-LOGO-ENG-removebg-preview.png';
+import trustLogo from '../assets/Shree-Meenaben-gangubhai-humbal-edu-and-charitable-trust-removebg-preview.png';
 
 const AboutPage = () => {
   return (
@@ -20,6 +22,12 @@ const AboutPage = () => {
             animate={{ opacity: 1, scale: 1, filter: "blur(0px)", y: 0 }}
             transition={{ duration: 1.6, ease: [0.16, 1, 0.3, 1] }}
           >
+            {/* Logos */}
+            <div className="flex items-center justify-center gap-4 md:gap-6 mb-8">
+              <img src={schoolLogo} alt="Sunrise School" className="h-16 md:h-20 w-auto object-contain drop-shadow-lg" />
+              <div className="w-px h-12 bg-white/20" />
+              <img src={trustLogo} alt="Trust" className="h-14 md:h-18 w-auto object-contain drop-shadow-lg opacity-90" />
+            </div>
             <span className="text-[10px] font-black tracking-[0.5em] uppercase text-blue-200/60 mb-6 block">Our Heritage</span>
             <h1 className="text-[clamp(3.75rem,8vw,8rem)] font-black tracking-tighter mb-8 uppercase text-white leading-tight">
               Our <span className="text-blue-300/40">Story</span>

@@ -3,6 +3,11 @@ import { motion } from 'framer-motion';
 import { BookOpen, Trophy, Users, Monitor, ChevronRight, Globe, Microscope, Library } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
+import imgOverview from '../assets/images/Classroom_Benches/IMG_1370.JPG.jpeg';
+import imgGallery1 from '../assets/images/Students/IMG_1381.JPG.jpeg';
+import imgGallery2 from '../assets/images/Teacher_doing_boardwork/IMG_1376.JPG.jpeg';
+import imgGallery3 from '../assets/images/Single_student_focused_studing_photos/IMG_1382.JPG.jpeg';
+
 const PrimaryPage = () => {
   const fadeIn = {
     hidden: { opacity: 0, y: 30 },
@@ -81,7 +86,7 @@ const PrimaryPage = () => {
             className="w-full md:w-1/2"
           >
             <div className="aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl relative">
-              <img src="https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?q=80&w=1200&auto=format&fit=crop" alt="Students studying" className="object-cover w-full h-full" />
+              <img src={imgOverview} alt="Students studying" className="object-cover w-full h-full" />
               <div className="absolute inset-0 bg-blue-900/10"></div>
             </div>
           </motion.div>
@@ -118,9 +123,13 @@ const PrimaryPage = () => {
         </div>
       </section>
 
-      {/* 3. KEY FEATURES */}
-      <section className="py-24 bg-slate-50 border-y border-slate-100">
-        <div className="max-w-7xl mx-auto px-6 md:px-12">
+      {/* 3. KEY FEATURES (Glassmorphic) */}
+      <section className="py-24 relative overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <img src={imgOverview} alt="Background" className="w-full h-full object-cover opacity-60 mix-blend-overlay" />
+          <div className="absolute inset-0 bg-slate-900/90 backdrop-blur-sm" />
+        </div>
+        <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
           <motion.div 
             initial="hidden"
             whileInView="visible"
@@ -128,8 +137,8 @@ const PrimaryPage = () => {
             variants={fadeIn}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl font-black text-gray-900 mb-4">Academic Excellence</h2>
-            <p className="text-gray-500 text-lg">Our core pillars for comprehensive student development.</p>
+            <h2 className="text-4xl font-black text-white mb-4">Academic Excellence</h2>
+            <p className="text-slate-300 text-lg">Our core pillars for comprehensive student development.</p>
           </motion.div>
 
           <motion.div 
@@ -143,13 +152,13 @@ const PrimaryPage = () => {
               <motion.div 
                 key={idx}
                 variants={fadeIn}
-                className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 hover:shadow-xl transition-all duration-300 group"
+                className="bg-white/10 backdrop-blur-md p-8 rounded-2xl border border-white/10 hover:bg-white/20 transition-all duration-300 group"
               >
-                <div className={`mb-6 p-4 rounded-xl inline-block bg-slate-50 group-hover:bg-slate-100 transition-colors ${item.color}`}>
+                <div className={`mb-6 p-4 rounded-xl inline-block bg-slate-800 group-hover:bg-slate-700 transition-colors ${item.color}`}>
                   {item.icon}
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">{item.title}</h3>
-                <p className="text-gray-500 text-sm leading-relaxed">{item.desc}</p>
+                <h3 className="text-xl font-bold text-white mb-2">{item.title}</h3>
+                <p className="text-slate-300 text-sm leading-relaxed">{item.desc}</p>
               </motion.div>
             ))}
           </motion.div>
@@ -157,39 +166,45 @@ const PrimaryPage = () => {
       </section>
 
       {/* 4. FACILITIES/HIGHLIGHTS */}
-      <section className="py-24 px-6 md:px-12 max-w-7xl mx-auto">
-        <motion.div 
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          variants={fadeIn}
-          className="mb-16"
-        >
-          <h2 className="text-4xl font-black text-gray-900 mb-4">World-Class Facilities</h2>
-          <div className="w-20 h-1 bg-indigo-500 rounded-full"></div>
-        </motion.div>
+      <section className="py-24 relative">
+        <div className="absolute inset-0 z-0">
+          <img src={imgGallery3} alt="Facilities Background" className="w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-white/90 backdrop-blur-md" />
+        </div>
+        <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
+          <motion.div 
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={fadeIn}
+            className="mb-16 text-center"
+          >
+            <h2 className="text-4xl font-black text-gray-900 mb-4">World-Class Facilities</h2>
+            <div className="w-20 h-1 bg-indigo-500 rounded-full mx-auto"></div>
+          </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {[
-            { tag: "Science Labs", icon: <Microscope size={40} className="text-blue-500" />, desc: "Fully equipped Physics, Chemistry, and Biology labs for practical learning." },
-            { tag: "Digital Library", icon: <Library size={40} className="text-indigo-500" />, desc: "Vast collection of books, journals, and e-resources to foster reading habits." },
-            { tag: "Computer Center", icon: <Globe size={40} className="text-teal-500" />, desc: "Modern computer labs to build coding and digital literacy skills early on." }
-          ].map((facility, i) => (
-            <motion.div 
-              key={i}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.15 }}
-              className="bg-gray-50 rounded-3xl p-10 hover:bg-gray-100 transition-colors"
-            >
-              <div className="mb-6 bg-white w-20 h-20 rounded-2xl flex items-center justify-center shadow-md">
-                {facility.icon}
-              </div>
-              <h3 className="text-2xl font-black text-gray-900 mb-4">{facility.tag}</h3>
-              <p className="text-gray-600 leading-relaxed">{facility.desc}</p>
-            </motion.div>
-          ))}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              { tag: "Science Labs", icon: <Microscope size={40} className="text-blue-600" />, desc: "Fully equipped Physics, Chemistry, and Biology labs for practical learning." },
+              { tag: "Digital Library", icon: <Library size={40} className="text-indigo-600" />, desc: "Vast collection of books, journals, and e-resources to foster reading habits." },
+              { tag: "Computer Center", icon: <Globe size={40} className="text-teal-600" />, desc: "Modern computer labs to build coding and digital literacy skills early on." }
+            ].map((facility, i) => (
+              <motion.div 
+                key={i}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.15 }}
+                className="bg-white/60 backdrop-blur-lg rounded-3xl p-10 hover:bg-white/90 transition-all shadow-xl border border-white/40"
+              >
+                <div className="mb-6 bg-white w-20 h-20 rounded-2xl flex items-center justify-center shadow-lg">
+                  {facility.icon}
+                </div>
+                <h3 className="text-2xl font-black text-gray-900 mb-4">{facility.tag}</h3>
+                <p className="text-gray-700 font-medium leading-relaxed">{facility.desc}</p>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -215,7 +230,7 @@ const PrimaryPage = () => {
               viewport={{ once: true }} 
               className="rounded-3xl overflow-hidden aspect-[4/3] shadow-md group relative"
             >
-              <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=600&auto=format&fit=crop" alt="Students learning" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+              <img src={imgGallery1} alt="Students learning" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
             </motion.div>
             <motion.div 
               initial={{ opacity: 0, y: 30 }} 
@@ -224,7 +239,7 @@ const PrimaryPage = () => {
               transition={{ delay: 0.1 }} 
               className="rounded-3xl overflow-hidden aspect-[4/3] shadow-md group relative"
             >
-              <img src="https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=600&auto=format&fit=crop" alt="Classroom activity" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+              <img src={imgGallery2} alt="Classroom activity" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
             </motion.div>
             <motion.div 
               initial={{ opacity: 0, y: 30 }} 
@@ -233,7 +248,7 @@ const PrimaryPage = () => {
               transition={{ delay: 0.2 }} 
               className="rounded-3xl overflow-hidden aspect-[4/3] shadow-md group relative sm:col-span-2 md:col-span-1"
             >
-              <img src="https://images.unsplash.com/photo-1497633762265-9d179a990aa6?q=80&w=600&auto=format&fit=crop" alt="Library study" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+              <img src={imgGallery3} alt="Library study" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
             </motion.div>
           </div>
         </div>
