@@ -17,8 +17,15 @@ const Stationary = () => {
   return (
     <div className="min-h-screen bg-white text-gray-900 font-sans overflow-x-hidden selection:bg-brand-blue selection:text-white">
 
-      {/* ── 1. HERO (Orange gradient) ────────────────────────────── */}
-      <section className="relative pt-36 pb-32 md:pt-52 md:pb-44 overflow-hidden bg-gradient-to-br from-brand-orange via-orange-600 to-orange-700 text-white">
+      {/* ── 1. HERO (Photo background) ───────────────────────────── */}
+      <section className="relative pt-36 pb-32 md:pt-52 md:pb-44 overflow-hidden text-white">
+        {/* Background photo */}
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: `url('https://res.cloudinary.com/diymbygae/image/upload/v1782303562/sunrise-school/gallery/sunrise-school/gallery/WhatsApp_Image_2026-06-24_at_16.04.22.jpg')` }}
+        />
+        {/* Orange overlay for text readability */}
+        <div className="absolute inset-0 bg-gradient-to-br from-orange-900/85 via-orange-700/80 to-orange-800/90" />
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:24px_24px]" />
         <div className="absolute bottom-0 left-0 right-0 h-20 bg-white" style={{ clipPath: 'ellipse(70% 100% at 50% 100%)' }} />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
