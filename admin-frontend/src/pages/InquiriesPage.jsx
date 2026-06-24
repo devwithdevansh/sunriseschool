@@ -29,15 +29,24 @@ export default function InquiriesPage() {
 
   const fetchInquiries = async () => {
     try {
+      setLoading(true);
+      const currentToken = localStorage.getItem('admin_token');
       const response = await fetch('http://localhost:5000/api/inquiries', {
-        headers: getAuthHeader()
+        headers: {
+          'Authorization': `Bearer ${currentToken}`,
+          'Content-Type': 'application/json'
+        }
       });
       const data = await response.json();
-      if (data.status === 'success') {
+      if (response.ok && data.status === 'success') {
         setInquiries(data.data);
+      } else {
+        toast.error('Fetch failed: ' + (data.message || 'Unknown error'));
+        console.error("Fetch failed:", data);
       }
     } catch (error) {
       console.error("Error fetching inquiries:", error);
+      toast.error('Network error fetching inquiries');
     } finally {
       setLoading(false);
     }
@@ -144,7 +153,10 @@ export default function InquiriesPage() {
   };
 
   const filteredInquiries = inquiries.filter(inq => {
-    const matchesTab = filter === 'All' || inq.status?.toLowerCase() === filter.toLowerCase();
+    const statusMatch = (inq.status || 'New').toLowerCase();
+    const filterLower = filter.toLowerCase();
+    const matchesTab = filter === 'All' || statusMatch === filterLower;
+    
     const query = searchQuery.trim().toLowerCase();
     if (!query) return matchesTab;
     

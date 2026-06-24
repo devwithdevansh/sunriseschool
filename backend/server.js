@@ -14,6 +14,7 @@ const staffRoutes = require('./routes/staffRoutes');
 const mediaRoutes = require('./routes/mediaRoutes');
 const resultRoutes = require('./routes/resultRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
+const academicYearRoutes = require('./routes/academicYearRoutes');
 
 // Load environment variables
 dotenv.config();
@@ -38,6 +39,7 @@ app.use('/api/staff', staffRoutes);
 app.use('/api/media', mediaRoutes);
 app.use('/api/results', resultRoutes);
 app.use('/api/upload', uploadRoutes);
+app.use('/api/academic-years', academicYearRoutes);
 
 // Health Check Route
 app.get('/api/health', (req, res) => {

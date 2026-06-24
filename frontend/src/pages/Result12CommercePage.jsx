@@ -54,28 +54,44 @@ const Result12CommercePage = () => {
   const [lightboxIndex, setLightboxIndex] = useState(null);
   const [resultImages, setResultImages] = useState([]);
   const [selectedYear, setSelectedYear] = useState('');
+  const [academicYears, setAcademicYears] = useState([]);
   
   useEffect(() => {
-    const fetchResults = async () => {
+    const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/results');
-        const data = await response.json();
-        if (data.status === 'success') {
-          const formatted = data.data
+        const [resResults, resYears] = await Promise.all([
+          fetch('http://localhost:5000/api/results'),
+          fetch('http://localhost:5000/api/academic-years')
+        ]);
+        const dataResults = await resResults.json();
+        const dataYears = await resYears.json();
+
+        let fetchedYears = [];
+        if (dataYears.status === 'success') {
+          fetchedYears = dataYears.data.map(y => y.year);
+          setAcademicYears(fetchedYears);
+          if (fetchedYears.length > 0) setSelectedYear(fetchedYears[0]);
+        }
+
+        if (dataResults.status === 'success') {
+          const formatted = dataResults.data
             .filter(r => r.classLevel === '12 Commerce')
             .map(r => ({ src: r.imageSrc, label: r.title, year: r.academicYear }));
           setResultImages(formatted);
-          const uniqueYears = [...new Set(formatted.map(img => img.year))].sort().reverse();
-          if (uniqueYears.length > 0) setSelectedYear(uniqueYears[0]);
+          
+          if (fetchedYears.length === 0) {
+             const fallbackYears = [...new Set(formatted.map(img => img.year))].sort().reverse();
+             setAcademicYears(fallbackYears);
+             if (fallbackYears.length > 0) setSelectedYear(fallbackYears[0]);
+          }
         }
       } catch (error) {
-        console.error("Failed to fetch results:", error);
+        console.error("Failed to fetch data:", error);
       }
     };
-    fetchResults();
+    fetchData();
   }, []);
 
-  const uniqueYears = [...new Set(resultImages.map(img => img.year))].sort().reverse();
   const filteredImages = resultImages.filter(img => img.year === selectedYear);
 
   return (
@@ -122,7 +138,7 @@ const Result12CommercePage = () => {
         {/* Timeline Selector */}
         <div className="flex flex-wrap justify-center gap-3 mb-16 relative">
           <div className="absolute top-1/2 left-4 right-4 h-px bg-slate-200 -z-10 hidden sm:block" />
-          {uniqueYears.map(year => (
+          {academicYears.map(year => (
             <button
               key={year}
               onClick={() => setSelectedYear(year)}
