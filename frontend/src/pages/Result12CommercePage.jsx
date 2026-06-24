@@ -60,8 +60,8 @@ const Result12CommercePage = () => {
     const fetchData = async () => {
       try {
         const [resResults, resYears] = await Promise.all([
-          fetch('http://localhost:5000/api/results'),
-          fetch('http://localhost:5000/api/academic-years')
+          fetch('https://sunriseschool.onrender.com/api/results'),
+          fetch('https://sunriseschool.onrender.com/api/academic-years')
         ]);
         const dataResults = await resResults.json();
         const dataYears = await resYears.json();

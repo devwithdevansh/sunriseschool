@@ -25,9 +25,9 @@ export default function HomePage() {
     const fetchDashboardData = async () => {
       try {
         const [noticesRes, resultsRes, inquiriesRes] = await Promise.all([
-          fetch('http://localhost:5000/api/notices'),
-          fetch('http://localhost:5000/api/results'),
-          fetch('http://localhost:5000/api/inquiries', { headers: getAuthHeader() })
+          fetch('https://sunriseschool.onrender.com/api/notices'),
+          fetch('https://sunriseschool.onrender.com/api/results'),
+          fetch('https://sunriseschool.onrender.com/api/inquiries', { headers: getAuthHeader() })
         ]);
 
         const [notices, results, inquiries] = await Promise.all([

@@ -41,6 +41,19 @@ app.use('/api/results', resultRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/academic-years', academicYearRoutes);
 
+// Root Route (for quick browser checks)
+app.get('/', (req, res) => {
+  res.status(200).send(`
+    <html>
+      <body style="font-family: Arial, sans-serif; text-align: center; padding-top: 50px;">
+        <h1 style="color: #2563eb;">🚀 Sunrise School API is Live!</h1>
+        <p>Your backend is successfully deployed and running.</p>
+        <p>Try visiting <a href="/api/health">/api/health</a> for detailed API status.</p>
+      </body>
+    </html>
+  `);
+});
+
 // Health Check Route
 app.get('/api/health', (req, res) => {
   res.status(200).json({
