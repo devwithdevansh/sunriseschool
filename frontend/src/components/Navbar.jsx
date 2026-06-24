@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, ChevronDown } from 'lucide-react';
@@ -171,15 +172,39 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Mobile Drawer Effect: Lock Body Scroll
+  // Mobile Drawer Effect: Lock Body Scroll (fix for mid-page open)
   useEffect(() => {
     if (isOpen) {
+      // Save current scroll position and fix body to prevent background scroll
+      const scrollY = window.scrollY;
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.left = '0';
+      document.body.style.right = '0';
       document.body.style.overflow = 'hidden';
     } else {
-      document.body.style.overflow = 'unset';
+      // Restore scroll position when drawer closes
+      const scrollY = document.body.style.top;
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      document.body.style.overflow = '';
+      if (scrollY) {
+        window.scrollTo(0, parseInt(scrollY || '0', 10) * -1);
+      }
     }
     return () => {
-      document.body.style.overflow = 'unset';
+      // Cleanup on unmount
+      const scrollY = document.body.style.top;
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      document.body.style.overflow = '';
+      if (scrollY) {
+        window.scrollTo(0, parseInt(scrollY || '0', 10) * -1);
+      }
     };
   }, [isOpen]);
 
@@ -268,113 +293,118 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Nav Side Drawer */}
-      <AnimatePresence>
-        {isOpen && (
-          <>
-            {/* Overlay */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setIsOpen(false)}
-              className="fixed inset-0 bg-white/40 z-[60] backdrop-blur-sm lg:hidden"
-            />
+      {/* Mobile Nav Side Drawer — rendered via Portal to escape fixed nav stacking context */}
+      {createPortal(
+        <AnimatePresence>
+          {isOpen && (
+            <>
+              {/* Overlay */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setIsOpen(false)}
+                className="fixed inset-0 bg-black/40 z-[9998] backdrop-blur-sm lg:hidden"
+                style={{ top: 0, left: 0, right: 0, bottom: 0 }}
+              />
 
-            {/* Drawer */}
-            <motion.div
-              initial={{ x: '100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '100%' }}
-              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed top-0 right-0 w-[80%] max-w-sm h-full bg-white z-[70] shadow-2xl overflow-y-auto lg:hidden flex flex-col"
-            >
-              {/* Drawer Header */}
-              <div className="flex justify-between items-center p-6 border-b border-gray-50">
-                <img src={schoolLogo} alt="Sunrise School" className="h-10 w-auto object-contain" />
-                <button
-                  onClick={() => setIsOpen(false)}
-                  className="p-2 text-gray-400 hover:text-gray-900 transition-colors"
-                >
-                  <X size={24} />
-                </button>
-              </div>
+              {/* Drawer */}
+              <motion.div
+                initial={{ x: '100%' }}
+                animate={{ x: 0 }}
+                exit={{ x: '100%' }}
+                transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+                className="fixed top-0 right-0 w-[80%] max-w-sm bg-white shadow-2xl overflow-y-auto lg:hidden flex flex-col z-[9999]"
+                style={{ top: 0, bottom: 0, height: '100%' }}
+              >
+                {/* Drawer Header */}
+                <div className="flex justify-between items-center p-6 border-b border-gray-50">
+                  <img src={schoolLogo} alt="Sunrise School" className="h-10 w-auto object-contain" />
+                  <button
+                    onClick={() => setIsOpen(false)}
+                    className="p-2 text-gray-400 hover:text-gray-900 transition-colors"
+                  >
+                    <X size={24} />
+                  </button>
+                </div>
 
-              {/* Drawer Links */}
-              <div className="flex flex-col p-6 space-y-1">
-                {MENU_ITEMS.map((item, idx) => {
-                  const isActive = item.path !== '#' && (
-                    location.pathname === item.path ||
-                    (item.dropdown && item.dropdown.some(d => location.pathname === d.path))
-                  );
+                {/* Drawer Links */}
+                <div className="flex flex-col p-6 space-y-1">
+                  {MENU_ITEMS.map((item, idx) => {
+                    const isActive = item.path !== '#' && (
+                      location.pathname === item.path ||
+                      (item.dropdown && item.dropdown.some(d => location.pathname === d.path))
+                    );
 
-                  return (
-                    <div key={idx} className="flex flex-col">
-                      <div className="flex justify-between items-center py-2">
-                        <Link
-                          to={item.dropdown && item.dropdown.length > 0 ? item.dropdown[0].path : item.path}
-                          className={`flex-grow py-3 text-lg font-black uppercase tracking-tight transition-colors ${isActive ? 'text-brand-blue' : 'text-gray-900'
-                            }`}
-                          onClick={() => setIsOpen(false)}
-                        >
-                          {item.name}
-                        </Link>
-                        {item.dropdown && (
-                          <button
-                            onClick={() => setActiveMobileDropdown(activeMobileDropdown === idx ? null : idx)}
-                            className="p-3 text-gray-400 hover:text-gray-900 transition-colors bg-gray-50 rounded-lg"
+                    return (
+                      <div key={idx} className="flex flex-col">
+                        <div className="flex justify-between items-center py-2">
+                          <Link
+                            to={item.dropdown && item.dropdown.length > 0 ? item.dropdown[0].path : item.path}
+                            className={`flex-grow py-3 text-lg font-black uppercase tracking-tight transition-colors ${isActive ? 'text-brand-blue' : 'text-gray-900'
+                              }`}
+                            onClick={() => setIsOpen(false)}
                           >
-                            <ChevronDown
-                              size={18}
-                              className={`transition-transform duration-300 ${activeMobileDropdown === idx ? 'rotate-180' : ''}`}
-                            />
-                          </button>
+                            {item.name}
+                          </Link>
+                          {item.dropdown && (
+                            <button
+                              onClick={() => setActiveMobileDropdown(activeMobileDropdown === idx ? null : idx)}
+                              className="p-3 text-gray-400 hover:text-gray-900 transition-colors bg-gray-50 rounded-lg"
+                            >
+                              <ChevronDown
+                                size={18}
+                                className={`transition-transform duration-300 ${activeMobileDropdown === idx ? 'rotate-180' : ''}`}
+                              />
+                            </button>
+                          )}
+                        </div>
+
+                        {item.dropdown && (activeMobileDropdown === idx) && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            className="overflow-hidden bg-gray-50/50 rounded-xl mb-2 ml-2"
+                          >
+                            <div className="py-2 flex flex-col border-l-2 border-gray-100 ml-2">
+                              {item.dropdown.map((sub, sIdx) => {
+                                const isSubActive = location.pathname === sub.path;
+                                return (
+                                  <Link
+                                    key={sIdx}
+                                    to={sub.path}
+                                    className={`px-6 py-3 text-[11px] font-bold uppercase tracking-widest transition-colors ${isSubActive ? 'text-brand-blue' : 'text-gray-500 hover:text-gray-900'
+                                      }`}
+                                    onClick={() => setIsOpen(false)}
+                                  >
+                                    {sub.name}
+                                  </Link>
+                                );
+                              })}
+                            </div>
+                          </motion.div>
                         )}
                       </div>
+                    );
+                  })}
 
-                      {item.dropdown && (activeMobileDropdown === idx) && (
-                        <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: 'auto', opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          className="overflow-hidden bg-gray-50/50 rounded-xl mb-2 ml-2"
-                        >
-                          <div className="py-2 flex flex-col border-l-2 border-gray-100 ml-2">
-                            {item.dropdown.map((sub, sIdx) => {
-                              const isSubActive = location.pathname === sub.path;
-                              return (
-                                <Link
-                                  key={sIdx}
-                                  to={sub.path}
-                                  className={`px-6 py-3 text-[11px] font-bold uppercase tracking-widest transition-colors ${isSubActive ? 'text-brand-blue' : 'text-gray-500 hover:text-gray-900'
-                                    }`}
-                                  onClick={() => setIsOpen(false)}
-                                >
-                                  {sub.name}
-                                </Link>
-                              );
-                            })}
-                          </div>
-                        </motion.div>
-                      )}
-                    </div>
-                  );
-                })}
-
-                <div className="pt-8 pb-6 flex flex-col space-y-3 px-2">
-                  <span className="text-[10px] font-black uppercase text-gray-400 tracking-[0.3em] mb-1">Download Brochure</span>
-                  <a href="/lab_1.pdf" download="English_Brochure.pdf" className="btn-premium w-full py-4 text-[11px] font-bold uppercase tracking-widest shadow-md flex justify-center text-center">
-                    English Mode
-                  </a>
-                  <a href="/lab_1.pdf" download="Gujarati_Brochure.pdf" className="w-full py-4 text-[11px] font-bold uppercase tracking-widest shadow-sm border border-gray-200 text-gray-600 hover:text-brand-orange hover:bg-gray-50 flex justify-center text-center rounded-lg transition-colors">
-                    Gujarati Mode
-                  </a>
+                  <div className="pt-8 pb-6 flex flex-col space-y-3 px-2">
+                    <span className="text-[10px] font-black uppercase text-gray-400 tracking-[0.3em] mb-1">Download Brochure</span>
+                    <a href="/lab_1.pdf" download="English_Brochure.pdf" className="btn-premium w-full py-4 text-[11px] font-bold uppercase tracking-widest shadow-md flex justify-center text-center">
+                      English Mode
+                    </a>
+                    <a href="/lab_1.pdf" download="Gujarati_Brochure.pdf" className="w-full py-4 text-[11px] font-bold uppercase tracking-widest shadow-sm border border-gray-200 text-gray-600 hover:text-brand-orange hover:bg-gray-50 flex justify-center text-center rounded-lg transition-colors">
+                      Gujarati Mode
+                    </a>
+                  </div>
                 </div>
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
     </nav>
   );
 };
