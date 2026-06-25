@@ -90,11 +90,11 @@ export default function SettingsPage() {
                 </div>
                 <div className="field-group">
                   <label className="field-label">Official Email</label>
-                  <input type="email" className="field-input" defaultValue="info@sunriseschool.com" />
+                  <input type="email" className="field-input" defaultValue="sunriseschool8261@gmail.com" />
                 </div>
                 <div className="field-group">
                   <label className="field-label">Phone Number</label>
-                  <input type="text" className="field-input" defaultValue="+91 99799 00000" />
+                  <input type="text" className="field-input" defaultValue="8799140051" />
                 </div>
                 <div className="field-group">
                   <label className="field-label">Office Hours</label>

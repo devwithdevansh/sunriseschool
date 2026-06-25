@@ -55,9 +55,9 @@ const Contact = () => {
   };
 
   const contactMethods = [
-    { id: 'phone', icon: Phone, title: 'Call Us', value: '+91 98765 43210', sub: 'Mon-Sat, 8am to 4pm', link: 'tel:+919876543210', color: 'bg-brand-blue' },
-    { id: 'email', icon: Mail, title: 'Email Us', value: 'hello@sunriseschool.edu', sub: 'Online support 24/7', link: 'mailto:hello@sunriseschool.edu', color: 'bg-brand-orange' },
-    { id: 'whatsapp', icon: MessageCircle, title: 'WhatsApp', value: 'Quick Chat', sub: 'Instant replies', link: 'https://wa.me/919876543210', color: 'bg-green-500' }
+    { id: 'phone', icon: Phone, title: 'Call Us', value: '8799140051', sub: 'Mon-Sat, 8am to 4pm', link: 'tel:8799140051', color: 'bg-brand-blue' },
+    { id: 'email', icon: Mail, title: 'Email Us', value: 'sunriseschool8261@gmail.com', sub: 'Online support 24/7', link: 'mailto:sunriseschool8261@gmail.com', color: 'bg-brand-orange' },
+    { id: 'whatsapp', icon: MessageCircle, title: 'WhatsApp', value: 'Quick Chat', sub: 'Instant replies', link: '#', color: 'bg-green-500' }
   ];
 
   return (
@@ -97,7 +97,7 @@ const Contact = () => {
                 <div className="flex flex-col gap-2">
                   <span className="text-gray-500 uppercase tracking-widest text-[10px] font-bold">Global Presence</span>
                   <div className="flex items-center gap-2 text-gray-300 font-medium">
-                    <Globe size={18} className="text-brand-blue" /> Rajkot, Gujarat
+                    <Globe size={18} className="text-brand-blue" /> Sadhuvasvani Kunj road, near railnagar, rajkot
                   </div>
                 </div>
               </div>
@@ -114,6 +114,12 @@ const Contact = () => {
                   transition={{ duration: 0.8, delay: 0.2 + index * 0.1, ease: [0.16, 1, 0.3, 1] }}
                   onMouseEnter={() => setActiveCard(method.id)}
                   onMouseLeave={() => setActiveCard(null)}
+                  onClick={(e) => {
+                    if (method.id === 'whatsapp') {
+                      e.preventDefault();
+                      alert('WhatsApp messaging coming soon temporarily.');
+                    }
+                  }}
                   className={`absolute p-8 rounded-3xl border border-white/5 backdrop-blur-xl shadow-2xl transition-all duration-500 flex flex-col justify-between group
                     ${index === 0 ? 'top-0 right-10 w-72 h-48 bg-white/5 z-20' : ''}
                     ${index === 1 ? 'top-32 left-0 w-80 h-52 bg-white/10 z-30' : ''}
@@ -137,7 +143,17 @@ const Contact = () => {
             {/* Mobile Contact Cards Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:hidden">
               {contactMethods.map((method, index) => (
-                <a href={method.link} key={index} className="bg-white/5 border border-white/10 p-6 rounded-2xl flex items-center gap-4 active:bg-white/10">
+                <a 
+                  href={method.link} 
+                  key={index} 
+                  onClick={(e) => {
+                    if (method.id === 'whatsapp') {
+                      e.preventDefault();
+                      alert('WhatsApp messaging coming soon temporarily.');
+                    }
+                  }}
+                  className="bg-white/5 border border-white/10 p-6 rounded-2xl flex items-center gap-4 active:bg-white/10"
+                >
                   <div className={`w-12 h-12 rounded-full ${method.color} flex items-center justify-center shrink-0`}>
                     <method.icon size={20} className="text-white" />
                   </div>
@@ -243,7 +259,7 @@ const Contact = () => {
                 <MapPin size={24} />
               </div>
               <h3 className="text-xl font-black uppercase tracking-tight mb-2">Sunrise School</h3>
-              <p className="text-gray-600 font-medium leading-relaxed mb-6">123 Knowledge Lane,<br/>Education City, Rajkot<br/>Gujarat, India 360005</p>
+              <p className="text-gray-600 font-medium leading-relaxed mb-6">Sadhuvasvani Kunj road,<br/>near railnagar, rajkot</p>
               <a href="https://maps.google.com/?q=Sunrise+School+Rajkot" target="_blank" rel="noreferrer" className="text-[10px] font-black uppercase tracking-[0.2em] text-brand-orange hover:text-brand-blue transition-colors flex items-center gap-2">
                 Open in Google Maps <ArrowRight size={14} />
               </a>

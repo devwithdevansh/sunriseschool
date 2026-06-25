@@ -107,9 +107,9 @@ const PAGE_SECTION_DATA = {
       id: 'primary',
       label: 'Primary Contact Info',
       fields: [
-        { id: 'c_phone', label: 'Display Phone Number', type: 'text', value: '+91 99799 00000' },
-        { id: 'c_email', label: 'Official Email Address', type: 'text', value: 'info@sunriseraikot.com' },
-        { id: 'c_address', label: 'Physical Address', type: 'textarea', value: 'Main Campus, Mavdi Main Road, Rajkot, Gujarat 360004' }
+        { id: 'c_phone', label: 'Display Phone Number', type: 'text', value: '8799140051' },
+        { id: 'c_email', label: 'Official Email Address', type: 'text', value: 'sunriseschool8261@gmail.com' },
+        { id: 'c_address', label: 'Physical Address', type: 'textarea', value: 'Sadhuvasvani Kunj road, near railnagar, rajkot' }
       ]
     }
   ]

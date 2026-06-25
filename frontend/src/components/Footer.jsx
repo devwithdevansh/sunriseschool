@@ -72,17 +72,17 @@ const Footer = () => {
             </div>
             {/* Contact pills */}
             <div className="space-y-3 pt-2">
-              <a href="tel:+919876543210" className="flex items-center gap-3 text-sm text-gray-500 hover:text-brand-orange transition-colors group">
+              <a href="tel:8799140051" className="flex items-center gap-3 text-sm text-gray-500 hover:text-brand-orange transition-colors group">
                 <Phone size={14} className="text-brand-orange shrink-0" />
-                +91 98765 43210
+                8799140051
               </a>
-              <a href="mailto:info@sunriseschool.edu" className="flex items-center gap-3 text-sm text-gray-500 hover:text-brand-orange transition-colors group">
+              <a href="mailto:sunriseschool8261@gmail.com" className="flex items-center gap-3 text-sm text-gray-500 hover:text-brand-orange transition-colors group">
                 <Mail size={14} className="text-brand-orange shrink-0" />
-                info@sunriseschool.edu
+                sunriseschool8261@gmail.com
               </a>
               <div className="flex items-start gap-3 text-sm text-gray-500">
                 <MapPin size={14} className="text-brand-orange shrink-0 mt-0.5" />
-                123 Knowledge Lane, Rajkot, Gujarat
+                Sadhuvasvani Kunj road, near railnagar, rajkot
               </div>
             </div>
           </div>

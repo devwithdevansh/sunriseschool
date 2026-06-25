@@ -59,9 +59,9 @@ const ContactPage = () => {
 
               <div className="space-y-8">
                 {[
-                  { icon: Phone, label: "Call Us", value: "+91 98765 43210", color: "bg-orange-50 text-brand-orange" },
-                  { icon: Mail, label: "Email Us", value: "admissions@sunriseschool.edu", color: "bg-blue-50 text-brand-blue" },
-                  { icon: MapPin, label: "Visit Us", value: "123 Knowledge Lane, Education City, Rajkot", color: "bg-gray-100 text-gray-700" }
+                  { icon: Phone, label: "Call Us", value: "8799140051", color: "bg-orange-50 text-brand-orange" },
+                  { icon: Mail, label: "Email Us", value: "sunriseschool8261@gmail.com", color: "bg-blue-50 text-brand-blue" },
+                  { icon: MapPin, label: "Visit Us", value: "Sadhuvasvani Kunj road, near railnagar, rajkot", color: "bg-gray-100 text-gray-700" }
                 ].map((item, i) => (
                   <motion.div 
                     key={i}
