@@ -15,7 +15,7 @@ const NoticeBoard = () => {
   useEffect(() => {
     const fetchNotices = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/notices');
+        const response = await fetch('https://sunriseschool.onrender.com/api/notices');
         const data = await response.json();
         if (data.status === 'success') {
           // Format the date strings to match UI expectation (e.g., "May 04, 2026")

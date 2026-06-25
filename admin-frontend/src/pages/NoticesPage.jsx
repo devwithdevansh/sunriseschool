@@ -24,7 +24,7 @@ export default function NoticesPage() {
 
   const fetchNotices = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/notices');
+      const response = await fetch('https://sunriseschool.onrender.com/api/notices');
       const data = await response.json();
       if (data.status === 'success') {
         setNotices(data.data);
@@ -83,7 +83,7 @@ export default function NoticesPage() {
 
     try {
       if (editingNotice) {
-        const res = await fetch(`http://localhost:5000/api/notices/${editingNotice._id}`, {
+        const res = await fetch(`https://sunriseschool.onrender.com/api/notices/${editingNotice._id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json', ...getAuthHeader() },
           body: JSON.stringify(finalData)
@@ -95,7 +95,7 @@ export default function NoticesPage() {
           toast.error('Failed to update notice');
         }
       } else {
-        const res = await fetch('http://localhost:5000/api/notices', {
+        const res = await fetch('https://sunriseschool.onrender.com/api/notices', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', ...getAuthHeader() },
           body: JSON.stringify(finalData)
@@ -120,7 +120,7 @@ export default function NoticesPage() {
     if (window.confirm("Delete this notice forever?")) {
       try {
         setLoading(true);
-        const res = await fetch(`http://localhost:5000/api/notices/${id}`, {
+        const res = await fetch(`https://sunriseschool.onrender.com/api/notices/${id}`, {
           method: 'DELETE',
           headers: getAuthHeader()
         });

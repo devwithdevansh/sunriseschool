@@ -22,11 +22,12 @@ import {
 const INITIAL_RESULTS = [];
 
 const CATEGORIES = ['10 EM', '10 GM', '12 Commerce']
-const YEARS = ['2025-26', '2024-25', '2023-24', '2022-23']
 
 export default function ResultsPage() {
   const { getAuthHeader, token } = useAuth()
   const [results, setResults] = useState(INITIAL_RESULTS)
+  const [academicYears, setAcademicYears] = useState([])
+  const [newYearInput, setNewYearInput] = useState('')
   const [loading, setLoading] = useState(true)
   const [showForm, setShowForm] = useState(false)
   const [editingResult, setEditingResult] = useState(null)
@@ -37,7 +38,7 @@ export default function ResultsPage() {
 
   const fetchResults = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/results');
+      const response = await fetch('https://sunriseschool.onrender.com/api/results');
       const data = await response.json();
       if (data.status === 'success') {
         setResults(data.data);
@@ -49,13 +50,66 @@ export default function ResultsPage() {
     }
   };
 
+  const fetchAcademicYears = async () => {
+    try {
+      const response = await fetch('https://sunriseschool.onrender.com/api/academic-years');
+      const data = await response.json();
+      if (data.status === 'success') {
+        setAcademicYears(data.data);
+      }
+    } catch (error) {
+      console.error("Error fetching academic years:", error);
+    }
+  };
+
   useEffect(() => {
     fetchResults();
+    fetchAcademicYears();
   }, []);
+
+  const handleAddYear = async () => {
+    if (!newYearInput.trim()) return;
+    try {
+      const res = await fetch('https://sunriseschool.onrender.com/api/academic-years', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', ...getAuthHeader() },
+        body: JSON.stringify({ year: newYearInput.trim() })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        toast.success('Academic year added');
+        setNewYearInput('');
+        fetchAcademicYears();
+      } else {
+        toast.error(data.message || 'Failed to add academic year');
+      }
+    } catch (error) {
+      toast.error('Error adding academic year');
+    }
+  };
+
+  const handleDeleteYear = async (id) => {
+    if (window.confirm("Delete this academic year?")) {
+      try {
+        const res = await fetch(`https://sunriseschool.onrender.com/api/academic-years/${id}`, {
+          method: 'DELETE',
+          headers: getAuthHeader()
+        });
+        if (res.ok) {
+          toast.success('Academic year deleted');
+          fetchAcademicYears();
+        } else {
+          toast.error('Failed to delete academic year');
+        }
+      } catch (error) {
+        toast.error('Error deleting academic year');
+      }
+    }
+  };
 
   const [formData, setFormData] = useState({
     title: '',
-    academicYear: '2024-25',
+    academicYear: '',
     classLevel: '10 EM',
     imageSrc: ''
   })
@@ -81,7 +135,7 @@ export default function ResultsPage() {
       setEditingResult(null)
       setFormData({
         title: '',
-        academicYear: '2024-25',
+        academicYear: academicYears.length > 0 ? academicYears[0].year : '',
         classLevel: '10 EM',
         imageSrc: ''
       })
@@ -98,7 +152,7 @@ export default function ResultsPage() {
     form.append('image', file);
 
     try {
-      const res = await fetch('http://localhost:5000/api/upload', {
+      const res = await fetch('https://sunriseschool.onrender.com/api/upload', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -126,7 +180,7 @@ export default function ResultsPage() {
 
     try {
       if (editingResult) {
-        const res = await fetch(`http://localhost:5000/api/results/${editingResult._id}`, {
+        const res = await fetch(`https://sunriseschool.onrender.com/api/results/${editingResult._id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json', ...getAuthHeader() },
           body: JSON.stringify(formData)
@@ -138,7 +192,7 @@ export default function ResultsPage() {
           toast.error('Failed to update result');
         }
       } else {
-        const res = await fetch('http://localhost:5000/api/results', {
+        const res = await fetch('https://sunriseschool.onrender.com/api/results', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', ...getAuthHeader() },
           body: JSON.stringify(formData)
@@ -163,7 +217,7 @@ export default function ResultsPage() {
     if (window.confirm("Are you sure you want to delete this result?")) {
       try {
         setLoading(true);
-        const res = await fetch(`http://localhost:5000/api/results/${id}`, { 
+        const res = await fetch(`https://sunriseschool.onrender.com/api/results/${id}`, { 
           method: 'DELETE',
           headers: getAuthHeader()
         });
@@ -200,13 +254,27 @@ export default function ResultsPage() {
                 Curate and organize student achievements. These records will be directly reflected on the main website's Hall of Fame.
               </p>
             </div>
-            <button
-              onClick={() => handleOpenForm()}
-              className="flex items-center gap-2 bg-[#2563eb] text-white px-8 py-4 rounded-2xl font-bold hover:bg-[#1d4ed8] transition-all hover:-translate-y-1 shadow-lg shadow-blue-600/20 whitespace-nowrap"
-            >
-              <Plus size={20} strokeWidth={3} />
-              Add New Record
-            </button>
+            <div className="flex flex-col gap-4 items-end">
+              <button
+                onClick={() => handleOpenForm()}
+                className="flex items-center gap-2 bg-[#2563eb] text-white px-8 py-4 rounded-2xl font-bold hover:bg-[#1d4ed8] transition-all hover:-translate-y-1 shadow-lg shadow-blue-600/20 whitespace-nowrap"
+              >
+                <Plus size={20} strokeWidth={3} />
+                Add New Record
+              </button>
+              <div className="flex items-center gap-2 bg-slate-50 p-2 rounded-xl border border-slate-200">
+                 <input 
+                   type="text" 
+                   value={newYearInput}
+                   onChange={e => setNewYearInput(e.target.value)}
+                   placeholder="Add year (e.g. 2026-27)"
+                   className="px-3 py-2.5 rounded-lg text-sm outline-none border border-slate-200 w-48 font-medium text-slate-700"
+                 />
+                 <button onClick={handleAddYear} className="bg-slate-800 text-white px-4 py-2.5 rounded-lg text-sm font-bold hover:bg-slate-700 whitespace-nowrap transition-colors">
+                   Add Year
+                 </button>
+              </div>
+            </div>
           </div>
 
           {/* Filters Bar */}
@@ -222,21 +290,29 @@ export default function ResultsPage() {
               />
             </div>
 
-            <div className="flex items-center gap-2 bg-white p-1 rounded-xl border border-slate-200">
+            <div className="flex items-center gap-2 bg-white p-1 rounded-xl border border-slate-200 flex-wrap">
               <button
                 onClick={() => setSelectedYear('All')}
                 className={`px-4 py-2.5 rounded-lg text-sm font-bold transition-all ${selectedYear === 'All' ? 'bg-[#0f172a] text-white' : 'text-slate-500 hover:bg-slate-50'}`}
               >
                 All Years
               </button>
-              {YEARS.map(year => (
-                <button
-                  key={year}
-                  onClick={() => setSelectedYear(year)}
-                  className={`px-4 py-2.5 rounded-lg text-sm font-bold transition-all ${selectedYear === year ? 'bg-[#2563eb] text-white' : 'text-slate-500 hover:bg-slate-50'}`}
-                >
-                  {year}
-                </button>
+              {academicYears.map(ay => (
+                <div key={ay._id} className="flex items-center relative group">
+                  <button
+                    onClick={() => setSelectedYear(ay.year)}
+                    className={`px-4 py-2.5 rounded-lg text-sm font-bold transition-all pr-8 ${selectedYear === ay.year ? 'bg-[#2563eb] text-white' : 'text-slate-500 hover:bg-slate-50'}`}
+                  >
+                    {ay.year}
+                  </button>
+                  <button 
+                    onClick={() => handleDeleteYear(ay._id)}
+                    className="absolute right-1.5 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center rounded-md bg-red-100 text-red-600 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-200"
+                    title="Delete Year"
+                  >
+                    <X size={14} strokeWidth={3} />
+                  </button>
+                </div>
               ))}
             </div>
 
@@ -397,7 +473,7 @@ export default function ResultsPage() {
                         value={formData.academicYear}
                         onChange={(e) => setFormData({ ...formData, academicYear: e.target.value })}
                       >
-                        {YEARS.map(year => <option key={year} value={year}>{year}</option>)}
+                        {academicYears.map(ay => <option key={ay._id} value={ay.year}>{ay.year}</option>)}
                       </select>
                     </div>
                     <div className="space-y-3">
