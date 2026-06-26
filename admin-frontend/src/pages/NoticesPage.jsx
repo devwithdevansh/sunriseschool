@@ -79,6 +79,9 @@ export default function NoticesPage() {
     e.preventDefault()
     
     const finalData = { ...formData };
+    if (!finalData.attachment) {
+      delete finalData.attachment;
+    }
     setLoading(true);
 
     try {
