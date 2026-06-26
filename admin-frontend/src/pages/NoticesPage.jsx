@@ -95,7 +95,8 @@ export default function NoticesPage() {
           fetchNotices();
           toast.success('Notice updated successfully');
         } else {
-          toast.error('Failed to update notice');
+          const errData = await res.json().catch(() => ({}));
+          toast.error(errData.errors?.[0]?.message || errData.message || 'Failed to update notice');
         }
       } else {
         const res = await fetch('https://sunriseschool.onrender.com/api/notices', {
@@ -107,7 +108,8 @@ export default function NoticesPage() {
           fetchNotices();
           toast.success('Notice added successfully');
         } else {
-          toast.error('Failed to add notice');
+          const errData = await res.json().catch(() => ({}));
+          toast.error(errData.errors?.[0]?.message || errData.message || 'Failed to add notice');
         }
       }
     } catch (error) {
@@ -263,6 +265,7 @@ export default function NoticesPage() {
                       value={formData.title}
                       onChange={(e) => setFormData({...formData, title: e.target.value})}
                       required
+                      minLength={5}
                     />
                   </div>
 
@@ -302,6 +305,7 @@ export default function NoticesPage() {
                       value={formData.content}
                       onChange={(e) => setFormData({...formData, content: e.target.value})}
                       required
+                      minLength={10}
                     />
                   </div>
 
