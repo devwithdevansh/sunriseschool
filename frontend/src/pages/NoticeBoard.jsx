@@ -210,16 +210,52 @@ const NoticeBoard = () => {
                                 <button 
                                   onClick={(e) => {
                                     e.stopPropagation();
-                                    const content = `This is a simulated download for ${notice.attachment.name}. The actual file content is not stored in this demo.`;
-                                    const blob = new Blob([content], { type: 'text/plain' });
-                                    const url = window.URL.createObjectURL(blob);
-                                    const link = document.createElement('a');
-                                    link.href = url;
-                                    link.download = notice.attachment.name + '.txt';
-                                    document.body.appendChild(link);
-                                    link.click();
-                                    document.body.removeChild(link);
-                                    window.URL.revokeObjectURL(url);
+                                    const filename = notice.attachment.name || 'attachment.png';
+                                    const isImage = filename.toLowerCase().match(/\.(png|jpg|jpeg|gif)$/);
+                                    
+                                    if (isImage) {
+                                      const canvas = document.createElement('canvas');
+                                      canvas.width = 800;
+                                      canvas.height = 600;
+                                      const ctx = canvas.getContext('2d');
+                                      
+                                      ctx.fillStyle = '#f8fafc';
+                                      ctx.fillRect(0, 0, canvas.width, canvas.height);
+                                      
+                                      ctx.fillStyle = '#0f172a';
+                                      ctx.font = 'bold 32px sans-serif';
+                                      ctx.textAlign = 'center';
+                                      ctx.fillText('Simulated Attachment', 400, 260);
+                                      
+                                      ctx.fillStyle = '#64748b';
+                                      ctx.font = '24px sans-serif';
+                                      ctx.fillText(filename, 400, 320);
+                                      
+                                      ctx.font = '16px sans-serif';
+                                      ctx.fillText('Actual file upload is not implemented in this demo', 400, 370);
+                                      
+                                      canvas.toBlob((blob) => {
+                                        const url = window.URL.createObjectURL(blob);
+                                        const link = document.createElement('a');
+                                        link.href = url;
+                                        link.download = filename;
+                                        document.body.appendChild(link);
+                                        link.click();
+                                        document.body.removeChild(link);
+                                        window.URL.revokeObjectURL(url);
+                                      }, 'image/png');
+                                    } else {
+                                      const content = `This is a simulated download for ${filename}. The actual file content is not stored in this demo.`;
+                                      const blob = new Blob([content], { type: 'text/plain' });
+                                      const url = window.URL.createObjectURL(blob);
+                                      const link = document.createElement('a');
+                                      link.href = url;
+                                      link.download = filename.endsWith('.txt') ? filename : filename + '.txt';
+                                      document.body.appendChild(link);
+                                      link.click();
+                                      document.body.removeChild(link);
+                                      window.URL.revokeObjectURL(url);
+                                    }
                                   }}
                                   className="flex items-center gap-4 p-4 rounded-2xl border border-gray-200 bg-gray-50 hover:bg-white hover:border-brand-blue/30 hover:shadow-md transition-all group/dl w-full sm:w-auto"
                                 >
