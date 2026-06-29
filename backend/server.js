@@ -28,6 +28,8 @@ const app = express();
 app.use(helmet()); // Security headers
 app.use(cors({
   origin: [
+    'https://www.sunriseschoolrajkot.com',
+    'https://sunriseschoolrajkot.com',
     'https://sunriseschool-adminscreen.vercel.app',
     'https://sunriseschool.vercel.app',
     'http://localhost:5173',
