@@ -19,20 +19,28 @@ router.post('/', protect, upload.single('image'), (req, res) => {
   }
 });
 
-router.post('/attachment', protect, uploadAttachment.single('file'), (req, res) => {
-  try {
+router.post('/attachment', protect, (req, res) => {
+  uploadAttachment.single('file')(req, res, (err) => {
+    if (err) {
+      // Multer or Cloudinary error
+      console.error('Upload error:', err);
+      return res.status(400).json({ 
+        status: 'fail', 
+        message: err.message || 'File upload failed',
+        details: err.code || ''
+      });
+    }
+
     if (!req.file) {
-      return res.status(400).json({ status: 'fail', message: 'No file uploaded' });
+      return res.status(400).json({ status: 'fail', message: 'No file uploaded. Make sure the field name is "file".' });
     }
     
     res.status(200).json({
       status: 'success',
-      url: req.file.path, // This is the secure Cloudinary URL
-      public_id: req.file.filename // Cloudinary stores public_id in filename property of req.file
+      url: req.file.path,
+      public_id: req.file.filename
     });
-  } catch (error) {
-    res.status(500).json({ status: 'error', message: error.message });
-  }
+  });
 });
 
 module.exports = router;

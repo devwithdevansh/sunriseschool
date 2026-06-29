@@ -5,11 +5,12 @@ const cloudinary = require('../config/cloudinary');
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: async (req, file) => {
-    const isPdf = file.mimetype === 'application/pdf';
+    const isPdf = file.mimetype === 'application/pdf' || 
+                  file.mimetype === 'application/msword' ||
+                  file.mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
     return {
       folder: 'sunrise_school_notices',
-      resource_type: isPdf ? 'raw' : 'image',
-      allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'pdf', 'doc', 'docx']
+      resource_type: isPdf ? 'raw' : 'image'
     };
   }
 });
@@ -22,3 +23,4 @@ const uploadAttachment = multer({
 });
 
 module.exports = uploadAttachment;
+
