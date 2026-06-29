@@ -210,6 +210,12 @@ const NoticeBoard = () => {
                                 <button 
                                   onClick={(e) => {
                                     e.stopPropagation();
+                                    
+                                    if (notice.attachment.url) {
+                                      window.open(notice.attachment.url, '_blank');
+                                      return;
+                                    }
+
                                     const filename = notice.attachment.name || 'attachment.png';
                                     const isImage = filename.toLowerCase().match(/\.(png|jpg|jpeg|gif)$/);
                                     

@@ -22,7 +22,9 @@ const noticeSchema = new mongoose.Schema({
   },
   attachment: {
     name: { type: String, default: null },
-    size: { type: String, default: null }
+    size: { type: String, default: null },
+    url: { type: String, default: null },
+    public_id: { type: String, default: null }
   },
   date: {
     type: String,

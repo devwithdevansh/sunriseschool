@@ -41,6 +41,7 @@ export default function NoticesPage() {
   }, []);
   const [showForm, setShowForm] = useState(false)
   const [editingNotice, setEditingNotice] = useState(null)
+  const [attachmentFile, setAttachmentFile] = useState(null)
   const [formData, setFormData] = useState({
     title: '',
     date: new Date().toISOString().split('T')[0],
@@ -51,6 +52,7 @@ export default function NoticesPage() {
   })
 
   const handleOpenForm = (notice = null) => {
+    setAttachmentFile(null)
     if (notice) {
       setEditingNotice(notice)
       setFormData({
@@ -78,13 +80,38 @@ export default function NoticesPage() {
   const handleSave = async (e) => {
     e.preventDefault()
     
-    const finalData = { ...formData };
-    if (!finalData.attachment) {
-      delete finalData.attachment;
-    }
+    let finalData = { ...formData };
     setLoading(true);
 
     try {
+      // Upload attachment if a new file was selected
+      if (attachmentFile) {
+        const uploadData = new FormData();
+        uploadData.append('file', attachmentFile);
+        const uploadRes = await fetch('https://sunriseschool.onrender.com/api/upload/attachment', {
+          method: 'POST',
+          headers: getAuthHeader(),
+          body: uploadData
+        });
+        
+        if (uploadRes.ok) {
+          const uploadResult = await uploadRes.json();
+          finalData.attachment = {
+            ...finalData.attachment,
+            url: uploadResult.url,
+            public_id: uploadResult.public_id
+          };
+        } else {
+          toast.error('Failed to upload attachment');
+          setLoading(false);
+          return;
+        }
+      }
+
+      if (!finalData.attachment) {
+        delete finalData.attachment;
+      }
+
       if (editingNotice) {
         const res = await fetch(`https://sunriseschool.onrender.com/api/notices/${editingNotice._id}`, {
           method: 'PUT',
@@ -320,8 +347,10 @@ export default function NoticesPage() {
                         if (file) {
                           let sizeMB = (file.size / 1024 / 1024).toFixed(2);
                           let sizeStr = sizeMB > 1 ? `${sizeMB} MB` : `${(file.size / 1024).toFixed(0)} KB`;
+                          setAttachmentFile(file);
                           setFormData({...formData, attachment: { name: file.name, size: sizeStr }})
                         } else {
+                          setAttachmentFile(null);
                           setFormData({...formData, attachment: null})
                         }
                       }}
