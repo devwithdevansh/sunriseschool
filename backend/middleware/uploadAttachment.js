@@ -11,6 +11,11 @@ const storage = new CloudinaryStorage({
   }
 });
 
-const uploadAttachment = multer({ storage: storage });
+const uploadAttachment = multer({ 
+  storage: storage,
+  limits: {
+    fileSize: 20 * 1024 * 1024 // 20 MB max file size
+  }
+});
 
 module.exports = uploadAttachment;
