@@ -4,10 +4,13 @@ const cloudinary = require('../config/cloudinary');
 
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
-  params: {
-    folder: 'sunrise_school_notices', // Folder name in Cloudinary
-    resource_type: 'auto', // Important: allows non-image files like PDFs
-    allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'pdf', 'doc', 'docx']
+  params: async (req, file) => {
+    const isPdf = file.mimetype === 'application/pdf';
+    return {
+      folder: 'sunrise_school_notices',
+      resource_type: isPdf ? 'raw' : 'image',
+      allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'pdf', 'doc', 'docx']
+    };
   }
 });
 

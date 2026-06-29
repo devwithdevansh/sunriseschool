@@ -26,7 +26,17 @@ const app = express();
 
 // Middleware
 app.use(helmet()); // Security headers
-app.use(cors()); // Enable CORS
+app.use(cors({
+  origin: [
+    'https://sunriseschool-adminscreen.vercel.app',
+    'https://sunriseschool.vercel.app',
+    'http://localhost:5173',
+    'http://localhost:5174'
+  ],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+})); // Enable CORS
 app.use(express.json({ limit: '50mb' })); // Body parser with increased limit
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(morgan('dev')); // Logger
