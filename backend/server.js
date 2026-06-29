@@ -27,7 +27,8 @@ const app = express();
 // Middleware
 app.use(helmet()); // Security headers
 app.use(cors()); // Enable CORS
-app.use(express.json()); // Body parser
+app.use(express.json({ limit: '50mb' })); // Body parser with increased limit
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(morgan('dev')); // Logger
 
 // Mount Routes
