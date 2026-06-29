@@ -208,7 +208,19 @@ const NoticeBoard = () => {
                               {/* Attachment Box */}
                               {notice.attachment && (
                                 <button 
-                                  onClick={(e) => e.stopPropagation()} // Prevent closing accordion when clicking download
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    const content = `This is a simulated download for ${notice.attachment.name}. The actual file content is not stored in this demo.`;
+                                    const blob = new Blob([content], { type: 'text/plain' });
+                                    const url = window.URL.createObjectURL(blob);
+                                    const link = document.createElement('a');
+                                    link.href = url;
+                                    link.download = notice.attachment.name;
+                                    document.body.appendChild(link);
+                                    link.click();
+                                    document.body.removeChild(link);
+                                    window.URL.revokeObjectURL(url);
+                                  }}
                                   className="flex items-center gap-4 p-4 rounded-2xl border border-gray-200 bg-gray-50 hover:bg-white hover:border-brand-blue/30 hover:shadow-md transition-all group/dl w-full sm:w-auto"
                                 >
                                   <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-sm border border-gray-100 text-red-500 group-hover/dl:bg-red-50 transition-colors">
