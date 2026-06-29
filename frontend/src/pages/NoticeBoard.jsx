@@ -215,7 +215,7 @@ const NoticeBoard = () => {
                                     const url = window.URL.createObjectURL(blob);
                                     const link = document.createElement('a');
                                     link.href = url;
-                                    link.download = notice.attachment.name;
+                                    link.download = notice.attachment.name + '.txt';
                                     document.body.appendChild(link);
                                     link.click();
                                     document.body.removeChild(link);
