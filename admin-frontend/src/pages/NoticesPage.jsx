@@ -80,17 +80,20 @@ export default function NoticesPage() {
   const handleSave = async (e) => {
     e.preventDefault()
     
-    let finalData = { ...formData };
     setLoading(true);
+    let finalData = { ...formData };
 
     try {
       // Upload attachment if a new file was selected
       if (attachmentFile) {
         const uploadData = new FormData();
         uploadData.append('file', attachmentFile);
+        
+        const { 'Content-Type': _, ...uploadHeaders } = getAuthHeader();
+        
         const uploadRes = await fetch('https://sunriseschool.onrender.com/api/upload/attachment', {
           method: 'POST',
-          headers: getAuthHeader(),
+          headers: uploadHeaders,
           body: uploadData
         });
         
@@ -102,13 +105,14 @@ export default function NoticesPage() {
             public_id: uploadResult.public_id
           };
         } else {
-          toast.error('Failed to upload attachment');
+          const errData = await uploadRes.json().catch(() => ({}));
+          toast.error(errData.message || 'Failed to upload attachment');
           setLoading(false);
           return;
         }
       }
 
-      if (!finalData.attachment) {
+      if (!finalData.attachment || !finalData.attachment.name) {
         delete finalData.attachment;
       }
 
@@ -234,7 +238,13 @@ export default function NoticesPage() {
                       <div>
                         <p style={{ margin: 0, fontWeight: 600, fontSize: '0.95rem' }}>{notice.title}</p>
                         <p style={{ margin: 0, fontSize: '0.8rem', color: '#64748b', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                          <Calendar size={12} /> {notice.date} {notice.attachment ? '📎 (Attached)' : ''}
+                          <Calendar size={12} /> {notice.date} {notice.attachment ? (
+                            notice.attachment.url ? (
+                              <a href={notice.attachment.url} target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb', textDecoration: 'underline' }}>📎 (Attached)</a>
+                            ) : (
+                              '📎 (Attached)'
+                            )
+                          ) : ''}
                         </p>
                       </div>
                     </div>
@@ -348,7 +358,7 @@ export default function NoticesPage() {
                           let sizeMB = (file.size / 1024 / 1024).toFixed(2);
                           let sizeStr = sizeMB > 1 ? `${sizeMB} MB` : `${(file.size / 1024).toFixed(0)} KB`;
                           setAttachmentFile(file);
-                          setFormData({...formData, attachment: { name: file.name, size: sizeStr }})
+                          setFormData({...formData, attachment: { name: file.name, size: sizeStr, url: formData.attachment?.url || '' }})
                         } else {
                           setAttachmentFile(null);
                           setFormData({...formData, attachment: null})
