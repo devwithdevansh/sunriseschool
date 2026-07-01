@@ -27,14 +27,23 @@ const app = express();
 // Middleware
 app.use(helmet()); // Security headers
 app.use(cors({
-  origin: [
-    'https://www.sunriseschoolrajkot.com',
-    'https://sunriseschoolrajkot.com',
-    'https://sunriseschool-adminscreen.vercel.app',
-    'https://sunriseschool.vercel.app',
-    'http://localhost:5173',
-    'http://localhost:5174'
-  ],
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+    
+    const allowedOrigins = [
+      'https://www.sunriseschoolrajkot.com',
+      'https://sunriseschoolrajkot.com',
+      'http://localhost:5173',
+      'http://localhost:5174'
+    ];
+    
+    // Allow exact matches OR any Vercel preview URL for the project
+    if (allowedOrigins.indexOf(origin) !== -1 || origin.match(/^https:\/\/sunriseschool(-adminscreen)?(-[a-zA-Z0-9-]+)?\.vercel\.app$/)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
