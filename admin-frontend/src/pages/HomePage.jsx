@@ -25,9 +25,9 @@ export default function HomePage() {
     const fetchDashboardData = async () => {
       try {
         const [noticesRes, resultsRes, inquiriesRes] = await Promise.all([
-          fetch('https://sunriseschool.onrender.com/api/notices'),
-          fetch('https://sunriseschool.onrender.com/api/results'),
-          fetch('https://sunriseschool.onrender.com/api/inquiries', { headers: getAuthHeader() })
+          fetch('https://papayawhip-bison-234211.hostingersite.com/api/notices'),
+          fetch('https://papayawhip-bison-234211.hostingersite.com/api/results'),
+          fetch('https://papayawhip-bison-234211.hostingersite.com/api/inquiries', { headers: getAuthHeader() })
         ]);
 
         const [notices, results, inquiries] = await Promise.all([

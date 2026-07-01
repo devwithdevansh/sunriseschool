@@ -38,7 +38,7 @@ export default function ResultsPage() {
 
   const fetchResults = async () => {
     try {
-      const response = await fetch('https://sunriseschool.onrender.com/api/results');
+      const response = await fetch('https://papayawhip-bison-234211.hostingersite.com/api/results');
       const data = await response.json();
       if (data.status === 'success') {
         setResults(data.data);
@@ -52,7 +52,7 @@ export default function ResultsPage() {
 
   const fetchAcademicYears = async () => {
     try {
-      const response = await fetch('https://sunriseschool.onrender.com/api/academic-years');
+      const response = await fetch('https://papayawhip-bison-234211.hostingersite.com/api/academic-years');
       const data = await response.json();
       if (data.status === 'success') {
         setAcademicYears(data.data);
@@ -70,7 +70,7 @@ export default function ResultsPage() {
   const handleAddYear = async () => {
     if (!newYearInput.trim()) return;
     try {
-      const res = await fetch('https://sunriseschool.onrender.com/api/academic-years', {
+      const res = await fetch('https://papayawhip-bison-234211.hostingersite.com/api/academic-years', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', ...getAuthHeader() },
         body: JSON.stringify({ year: newYearInput.trim() })
@@ -91,7 +91,7 @@ export default function ResultsPage() {
   const handleDeleteYear = async (id) => {
     if (window.confirm("Delete this academic year?")) {
       try {
-        const res = await fetch(`https://sunriseschool.onrender.com/api/academic-years/${id}`, {
+        const res = await fetch(`https://papayawhip-bison-234211.hostingersite.com/api/academic-years/${id}`, {
           method: 'DELETE',
           headers: getAuthHeader()
         });
@@ -152,7 +152,7 @@ export default function ResultsPage() {
     form.append('image', file);
 
     try {
-      const res = await fetch('https://sunriseschool.onrender.com/api/upload', {
+      const res = await fetch('https://papayawhip-bison-234211.hostingersite.com/api/upload', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -180,7 +180,7 @@ export default function ResultsPage() {
 
     try {
       if (editingResult) {
-        const res = await fetch(`https://sunriseschool.onrender.com/api/results/${editingResult._id}`, {
+        const res = await fetch(`https://papayawhip-bison-234211.hostingersite.com/api/results/${editingResult._id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json', ...getAuthHeader() },
           body: JSON.stringify(formData)
@@ -192,7 +192,7 @@ export default function ResultsPage() {
           toast.error('Failed to update result');
         }
       } else {
-        const res = await fetch('https://sunriseschool.onrender.com/api/results', {
+        const res = await fetch('https://papayawhip-bison-234211.hostingersite.com/api/results', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', ...getAuthHeader() },
           body: JSON.stringify(formData)
@@ -217,7 +217,7 @@ export default function ResultsPage() {
     if (window.confirm("Are you sure you want to delete this result?")) {
       try {
         setLoading(true);
-        const res = await fetch(`https://sunriseschool.onrender.com/api/results/${id}`, { 
+        const res = await fetch(`https://papayawhip-bison-234211.hostingersite.com/api/results/${id}`, { 
           method: 'DELETE',
           headers: getAuthHeader()
         });

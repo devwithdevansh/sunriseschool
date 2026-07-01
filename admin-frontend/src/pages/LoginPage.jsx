@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Lock, Eye, EyeOff, Loader2, ShieldCheck, AlertCircle } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 
-const API_URL = 'https://sunriseschool.onrender.com/api'
+const API_URL = 'https://papayawhip-bison-234211.hostingersite.com/api'
 
 export default function LoginPage() {
   const [password, setPassword] = useState('')

@@ -31,7 +31,7 @@ export default function InquiriesPage() {
     try {
       setLoading(true);
       const currentToken = localStorage.getItem('admin_token');
-      const response = await fetch('https://sunriseschool.onrender.com/api/inquiries', {
+      const response = await fetch('https://papayawhip-bison-234211.hostingersite.com/api/inquiries', {
         headers: {
           'Authorization': `Bearer ${currentToken}`,
           'Content-Type': 'application/json'
@@ -62,7 +62,7 @@ export default function InquiriesPage() {
     if (window.confirm("Remove this inquiry record?")) {
       try {
         setLoading(true);
-        const res = await fetch(`https://sunriseschool.onrender.com/api/inquiries/${id}`, { 
+        const res = await fetch(`https://papayawhip-bison-234211.hostingersite.com/api/inquiries/${id}`, { 
           method: 'DELETE',
           headers: getAuthHeader()
         });
@@ -86,7 +86,7 @@ export default function InquiriesPage() {
 
   const handleStatusUpdate = async (id, newStatus) => {
     try {
-      const response = await fetch(`https://sunriseschool.onrender.com/api/inquiries/${id}`, {
+      const response = await fetch(`https://papayawhip-bison-234211.hostingersite.com/api/inquiries/${id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

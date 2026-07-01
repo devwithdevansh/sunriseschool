@@ -24,7 +24,7 @@ export default function NoticesPage() {
 
   const fetchNotices = async () => {
     try {
-      const response = await fetch('https://sunriseschool.onrender.com/api/notices');
+      const response = await fetch('https://papayawhip-bison-234211.hostingersite.com/api/notices');
       const data = await response.json();
       if (data.status === 'success') {
         setNotices(data.data);
@@ -91,7 +91,7 @@ export default function NoticesPage() {
         
         const { 'Content-Type': _, ...uploadHeaders } = getAuthHeader();
         
-        const uploadRes = await fetch('https://sunriseschool.onrender.com/api/upload/attachment', {
+        const uploadRes = await fetch('https://papayawhip-bison-234211.hostingersite.com/api/upload/attachment', {
           method: 'POST',
           headers: uploadHeaders,
           body: uploadData
@@ -106,6 +106,7 @@ export default function NoticesPage() {
           };
         } else {
           const errData = await uploadRes.json().catch(() => ({}));
+          console.error("UPLOAD FAILED - Backend response:", errData);
           toast.error(errData.message || 'Failed to upload attachment');
           setLoading(false);
           return;
@@ -117,7 +118,7 @@ export default function NoticesPage() {
       }
 
       if (editingNotice) {
-        const res = await fetch(`https://sunriseschool.onrender.com/api/notices/${editingNotice._id}`, {
+        const res = await fetch(`https://papayawhip-bison-234211.hostingersite.com/api/notices/${editingNotice._id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json', ...getAuthHeader() },
           body: JSON.stringify(finalData)
@@ -130,7 +131,7 @@ export default function NoticesPage() {
           toast.error(errData.errors?.[0]?.message || errData.message || 'Failed to update notice');
         }
       } else {
-        const res = await fetch('https://sunriseschool.onrender.com/api/notices', {
+        const res = await fetch('https://papayawhip-bison-234211.hostingersite.com/api/notices', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', ...getAuthHeader() },
           body: JSON.stringify(finalData)
@@ -156,7 +157,7 @@ export default function NoticesPage() {
     if (window.confirm("Delete this notice forever?")) {
       try {
         setLoading(true);
-        const res = await fetch(`https://sunriseschool.onrender.com/api/notices/${id}`, {
+        const res = await fetch(`https://papayawhip-bison-234211.hostingersite.com/api/notices/${id}`, {
           method: 'DELETE',
           headers: getAuthHeader()
         });
