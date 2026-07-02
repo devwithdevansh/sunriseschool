@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Phone, MessageSquare, MapPin } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const AdmissionCTA = () => {
   return (
@@ -24,32 +25,40 @@ const AdmissionCTA = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
-            <motion.button 
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="bg-white text-gray-900 px-10 py-4 rounded-full font-black text-lg transition-all hover:bg-gray-200 shadow-xl flex items-center gap-2"
-            >
-              <Phone size={20} />
-              Contact Admissions
-            </motion.button>
+            <Link to="/inquiry">
+              <motion.div 
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="bg-white text-gray-900 px-10 py-4 rounded-full font-black text-lg transition-all hover:bg-gray-200 shadow-xl flex items-center gap-2"
+              >
+                <Phone size={20} />
+                Contact Admissions
+              </motion.div>
+            </Link>
             
-            <motion.button 
+            <motion.a 
+              href="https://wa.me/918799140051"
+              target="_blank"
+              rel="noreferrer"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="border-2 border-white/20 text-white px-10 py-4 rounded-full font-black text-lg transition-all hover:bg-white/10 flex items-center gap-2"
             >
               <MessageSquare size={20} />
               WhatsApp Us
-            </motion.button>
+            </motion.a>
             
-            <motion.button 
+            <motion.a 
+              href="https://maps.google.com/?q=Sunrise+School+Rajkot"
+              target="_blank"
+              rel="noreferrer"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="text-white/60 hover:text-white px-10 py-4 font-bold transition-all flex items-center gap-2"
             >
               <MapPin size={20} />
               Visit Campus
-            </motion.button>
+            </motion.a>
           </div>
         </motion.div>
       </div>

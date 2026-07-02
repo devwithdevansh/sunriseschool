@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
 const heroRevealImg = "https://res.cloudinary.com/diymbygae/image/upload/v1782372931/sunrise-school/gallery/dashboard_bg_compressed.jpg";
 import AcademicsSection from '../components/AcademicsSection.jsx';
@@ -121,13 +122,13 @@ const HomePage = () => {
               transition={{ duration: 1.2, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
               className="flex flex-col sm:flex-row justify-center items-center gap-6"
             >
-              <button className="btn-premium group flex items-center">
+              <Link to="/gallery" className="btn-premium group flex items-center">
                 Explore Our Campus <ChevronRight className="ml-2 group-hover:translate-x-1 transition-transform" size={20} />
-              </button>
+              </Link>
 
-              <button className="btn-outline">
+              <Link to="/inquiry" className="btn-outline">
                 Contact Admissions
-              </button>
+              </Link>
             </motion.div>
           </div>
         </div>
