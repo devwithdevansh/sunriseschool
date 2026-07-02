@@ -42,33 +42,41 @@ const Contact = () => {
         });
       } else {
         const errorData = await response.json();
-        let errorMessage = errorData.message || 'Unknown error occurred.';
         
-        // Attempt to parse stringified JSON array from Zod
-        try {
-          const parsed = JSON.parse(errorMessage);
-          if (Array.isArray(parsed)) {
-            errorMessage = parsed.map(err => {
-              const field = err.path && err.path.length > 0 ? err.path[0] : 'Input';
-              return `${field.charAt(0).toUpperCase() + field.slice(1)}: ${err.message || 'Invalid format'}`;
-            }).join('\n');
-          }
-        } catch (e) {
-          // If it's not a JSON string, fallback to checking errorData.errors
-          if (errorData.errors) {
-            if (Array.isArray(errorData.errors)) {
-              errorMessage = errorData.errors.map(err => {
-                if (err.message && err.path) return `${err.path}: ${err.message}`;
-                if (err.message) return err.message;
-                if (typeof err === 'string') return err;
-                return 'Invalid input provided.';
+        const tryParseZodJSON = (str) => {
+          try {
+            const parsed = JSON.parse(str);
+            if (Array.isArray(parsed)) {
+              return parsed.map(err => {
+                const field = err.path && err.path.length > 0 ? err.path[err.path.length - 1] : 'Input';
+                return `• ${String(field).charAt(0).toUpperCase() + String(field).slice(1)}: ${err.message || 'Invalid format'}`;
               }).join('\n');
-            } else if (typeof errorData.errors === 'object') {
-              errorMessage = 'Please check your inputs and try again.';
             }
-          }
+          } catch (e) {}
+          return null;
+        };
+
+        let finalMessage = errorData.message || 'Unknown error occurred. Please try again.';
+
+        if (errorData.errors && Array.isArray(errorData.errors)) {
+          finalMessage = errorData.errors.map(err => {
+            if (err.message) {
+              const parsed = tryParseZodJSON(err.message);
+              if (parsed) return parsed;
+              return `• ${err.path && err.path !== 'unknown' ? err.path + ': ' : ''}${err.message}`;
+            }
+            if (typeof err === 'string') {
+              const parsed = tryParseZodJSON(err);
+              return parsed || `• ${err}`;
+            }
+            return '• Invalid input provided.';
+          }).join('\n');
+        } else if (errorData.message) {
+          const parsed = tryParseZodJSON(errorData.message);
+          if (parsed) finalMessage = parsed;
         }
-        setSubmitError(errorMessage);
+
+        setSubmitError(finalMessage);
       }
     } catch (error) {
       console.error("Error submitting contact form:", error);
@@ -318,8 +326,8 @@ const Contact = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-black text-gray-900 mb-2 uppercase tracking-tight text-center">Action Required</h3>
-              <div className="text-gray-500 mb-8 whitespace-pre-wrap text-center font-medium text-sm leading-relaxed">
+              <h3 className="text-xl font-black text-gray-900 mb-4 uppercase tracking-tight text-center">Action Required</h3>
+              <div className="text-gray-600 mb-8 whitespace-pre-wrap font-semibold text-sm leading-relaxed text-left w-full bg-red-50/50 p-4 rounded-xl border border-red-100">
                 {submitError}
               </div>
               <button 
