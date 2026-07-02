@@ -55,9 +55,9 @@ const Contact = () => {
   };
 
   const contactMethods = [
-    { id: 'phone', icon: Phone, title: 'Call Us', value: '8799140051', sub: 'Mon-Sat, 8am to 4pm', link: 'tel:8799140051', color: 'bg-brand-blue' },
-    { id: 'email', icon: Mail, title: 'Email Us', value: 'sunriseschool8261@gmail.com', sub: 'Online support 24/7', link: 'mailto:sunriseschool8261@gmail.com', color: 'bg-brand-orange' },
-    { id: 'whatsapp', icon: MessageCircle, title: 'WhatsApp', value: 'Quick Chat', sub: 'Instant replies', link: '#', color: 'bg-green-500' }
+    { id: 'phone', icon: Phone, title: 'Call Us', value: '9723655151 / 9574800051', sub: 'Mon-Sat, 8am to 4pm', link: 'tel:9723655151', color: 'bg-brand-blue' },
+    { id: 'email', icon: Mail, title: 'Email Us', value: 'info@sunriseschoolrajkot.com', sub: 'Online support 24/7', link: 'mailto:info@sunriseschoolrajkot.com', color: 'bg-brand-orange' },
+    { id: 'whatsapp', icon: MessageCircle, title: 'WhatsApp', value: 'Quick Chat', sub: 'Instant replies', link: 'https://wa.me/919723655151', color: 'bg-green-500' }
   ];
 
   return (

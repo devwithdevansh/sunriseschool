@@ -195,8 +195,8 @@ const Inquiry = () => {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
-              { icon: Phone, label: 'Call Us', value: '8799140051', color: 'bg-brand-blue' },
-              { icon: Mail, label: 'Email Us', value: 'sunriseschool8261@gmail.com', color: 'bg-brand-orange' },
+              { icon: Phone, label: 'Call Us', value: '9723655151 / 9574800051', color: 'bg-brand-blue' },
+              { icon: Mail, label: 'Email Us', value: 'info@sunriseschoolrajkot.com', color: 'bg-brand-orange' },
               { icon: MapPin, label: 'Visit Us', value: 'Sadhuvasvani Kunj road, near railnagar, rajkot', color: 'bg-brand-blue' },
             ].map((info, index) => (
               <motion.div key={index}
