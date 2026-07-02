@@ -44,17 +44,28 @@ const Contact = () => {
         const errorData = await response.json();
         let errorMessage = errorData.message || 'Unknown error occurred.';
         
-        // Handle various error formats from different backend versions
-        if (errorData.errors) {
-          if (Array.isArray(errorData.errors)) {
-            errorMessage = errorData.errors.map(err => {
-              if (err.message && err.path) return `${err.path}: ${err.message}`;
-              if (err.message) return err.message;
-              if (typeof err === 'string') return err;
-              return 'Invalid input provided.';
-            }).join(' | ');
-          } else if (typeof errorData.errors === 'object') {
-            errorMessage = 'Please check your inputs and try again.';
+        // Attempt to parse stringified JSON array from Zod
+        try {
+          const parsed = JSON.parse(errorMessage);
+          if (Array.isArray(parsed)) {
+            errorMessage = parsed.map(err => {
+              const field = err.path && err.path.length > 0 ? err.path[0] : 'Input';
+              return `${field.charAt(0).toUpperCase() + field.slice(1)}: ${err.message || 'Invalid format'}`;
+            }).join('\n');
+          }
+        } catch (e) {
+          // If it's not a JSON string, fallback to checking errorData.errors
+          if (errorData.errors) {
+            if (Array.isArray(errorData.errors)) {
+              errorMessage = errorData.errors.map(err => {
+                if (err.message && err.path) return `${err.path}: ${err.message}`;
+                if (err.message) return err.message;
+                if (typeof err === 'string') return err;
+                return 'Invalid input provided.';
+              }).join('\n');
+            } else if (typeof errorData.errors === 'object') {
+              errorMessage = 'Please check your inputs and try again.';
+            }
           }
         }
         setSubmitError(errorMessage);
@@ -204,12 +215,6 @@ const Contact = () => {
                   </motion.div>
                 ) : (
                   <motion.form key="form" onSubmit={handleSubmit} className="space-y-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                    {submitError && (
-                      <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="p-4 bg-red-50 border border-red-100 rounded-2xl text-red-600 text-sm font-medium flex items-start gap-3">
-                        <svg className="w-5 h-5 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                        <span>{submitError}</span>
-                      </motion.div>
-                    )}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
                         <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Student Name</label>
@@ -294,6 +299,39 @@ const Contact = () => {
 
         </div>
       </section>
+
+      {/* Error Modal */}
+      <AnimatePresence>
+        {submitError && (
+          <motion.div 
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-sm"
+            onClick={() => setSubmitError(null)}
+          >
+            <motion.div 
+              initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.9, y: 20 }}
+              className="bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl relative overflow-hidden flex flex-col items-center"
+              onClick={e => e.stopPropagation()}
+            >
+              <div className="w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center mb-6">
+                <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-black text-gray-900 mb-2 uppercase tracking-tight text-center">Action Required</h3>
+              <div className="text-gray-500 mb-8 whitespace-pre-wrap text-center font-medium text-sm leading-relaxed">
+                {submitError}
+              </div>
+              <button 
+                onClick={() => setSubmitError(null)}
+                className="w-full py-4 bg-brand-orange text-white rounded-xl font-black text-sm uppercase tracking-widest hover:bg-orange-600 transition-all active:scale-95 shadow-lg shadow-brand-orange/20"
+              >
+                Got it
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
     </div>
   );
