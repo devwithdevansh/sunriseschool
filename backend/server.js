@@ -80,6 +80,9 @@ app.get('/', (req, res) => {
 app.get('/api/health', (req, res) => {
   res.status(200).json({
     status: 'success',
+    version: '1.0.2',
+    hasMongoUri: !!process.env.MONGO_URI,
+    mongoUriPrefix: process.env.MONGO_URI ? process.env.MONGO_URI.substring(0, 15) : 'undefined',
     message: 'Sunrise School API is healthy and running',
     timestamp: new Date().toISOString()
   });
