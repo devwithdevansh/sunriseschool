@@ -212,7 +212,19 @@ const NoticeBoard = () => {
                                     e.stopPropagation();
                                     
                                     if (notice.attachment.url) {
-                                      window.open(notice.attachment.url, '_blank');
+                                      let downloadUrl = notice.attachment.url;
+                                      // If it's a Cloudinary URL, inject fl_attachment to force download natively
+                                      if (downloadUrl.includes('res.cloudinary.com') && downloadUrl.includes('/upload/')) {
+                                          downloadUrl = downloadUrl.replace('/upload/', '/upload/fl_attachment/');
+                                      }
+                                      
+                                      const link = document.createElement('a');
+                                      link.href = downloadUrl;
+                                      link.download = notice.attachment.name || 'download';
+                                      link.target = '_blank'; // Fallback
+                                      document.body.appendChild(link);
+                                      link.click();
+                                      document.body.removeChild(link);
                                       return;
                                     }
 
