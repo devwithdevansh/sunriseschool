@@ -5,6 +5,7 @@ import { Phone, Mail, MapPin, MessageCircle, ArrowRight, Send, Globe, Clock, Che
 const Contact = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
   const [activeCard, setActiveCard] = useState(null);
   const [formData, setFormData] = useState({
     studentName: '',
@@ -22,6 +23,7 @@ const Contact = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setSubmitError(null);
     try {
       const response = await fetch('https://sunriseschool.onrender.com/api/inquiries', {
         method: 'POST',
@@ -40,15 +42,26 @@ const Contact = () => {
         });
       } else {
         const errorData = await response.json();
-        let errorMessage = errorData.message || 'Unknown error';
-        if (errorData.errors && errorData.errors.length > 0) {
-          errorMessage = errorData.errors.map(err => `${err.path}: ${err.message}`).join(', ');
+        let errorMessage = errorData.message || 'Unknown error occurred.';
+        
+        // Handle various error formats from different backend versions
+        if (errorData.errors) {
+          if (Array.isArray(errorData.errors)) {
+            errorMessage = errorData.errors.map(err => {
+              if (err.message && err.path) return `${err.path}: ${err.message}`;
+              if (err.message) return err.message;
+              if (typeof err === 'string') return err;
+              return 'Invalid input provided.';
+            }).join(' | ');
+          } else if (typeof errorData.errors === 'object') {
+            errorMessage = 'Please check your inputs and try again.';
+          }
         }
-        alert("Failed to send message:\n" + errorMessage);
+        setSubmitError(errorMessage);
       }
     } catch (error) {
       console.error("Error submitting contact form:", error);
-      alert("Error sending message. Please check your connection.");
+      setSubmitError("Error connecting to server. Please check your connection.");
     } finally {
       setIsSubmitting(false);
     }
@@ -191,6 +204,12 @@ const Contact = () => {
                   </motion.div>
                 ) : (
                   <motion.form key="form" onSubmit={handleSubmit} className="space-y-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                    {submitError && (
+                      <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="p-4 bg-red-50 border border-red-100 rounded-2xl text-red-600 text-sm font-medium flex items-start gap-3">
+                        <svg className="w-5 h-5 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        <span>{submitError}</span>
+                      </motion.div>
+                    )}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
                         <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Student Name</label>

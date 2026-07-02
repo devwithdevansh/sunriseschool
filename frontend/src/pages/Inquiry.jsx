@@ -16,6 +16,7 @@ const itemVariants = {
 const Inquiry = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
   const [formData, setFormData] = useState({
     studentName: '',
     parentName: '',
@@ -32,6 +33,7 @@ const Inquiry = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setSubmitError(null);
     try {
       const response = await fetch('https://sunriseschool.onrender.com/api/inquiries', {
         method: 'POST',
@@ -51,16 +53,26 @@ const Inquiry = () => {
       } else {
         const errorData = await response.json();
         console.error("Submission failed:", errorData);
-        // Handle Zod validation errors format
-        let errorMessage = errorData.message || 'Unknown error';
-        if (errorData.errors && errorData.errors.length > 0) {
-          errorMessage = errorData.errors.map(e => `${e.path}: ${e.message}`).join(', ');
+        
+        let errorMessage = errorData.message || 'Unknown error occurred.';
+        // Handle various error formats
+        if (errorData.errors) {
+          if (Array.isArray(errorData.errors)) {
+            errorMessage = errorData.errors.map(err => {
+              if (err.message && err.path) return `${err.path}: ${err.message}`;
+              if (err.message) return err.message;
+              if (typeof err === 'string') return err;
+              return 'Invalid input provided.';
+            }).join(' | ');
+          } else if (typeof errorData.errors === 'object') {
+            errorMessage = 'Please check your inputs and try again.';
+          }
         }
-        alert("Failed to submit inquiry:\n" + errorMessage);
+        setSubmitError(errorMessage);
       }
     } catch (error) {
       console.error("Error submitting inquiry:", error);
-      alert("Error submitting inquiry. Please check your connection to the backend.");
+      setSubmitError("Error connecting to server. Please check your connection.");
     } finally {
       setIsSubmitting(false);
     }
@@ -125,8 +137,14 @@ const Inquiry = () => {
                 <button onClick={() => setIsSubmitted(false)} className="px-8 py-4 bg-brand-orange text-white font-black text-sm uppercase tracking-widest rounded-2xl hover:bg-orange-600 transition-all shadow-lg hover:shadow-brand-orange/30 hover:-translate-y-0.5">Submit Another Inquiry</button>
               </motion.div>
             ) : (
-              <form className="space-y-6" onSubmit={handleSubmit}>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <motion.form key="form" onSubmit={handleSubmit} className="space-y-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                    {submitError && (
+                      <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="p-4 bg-red-50 border border-red-100 rounded-2xl text-red-600 text-sm font-medium flex items-start gap-3">
+                        <svg className="w-5 h-5 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        <span>{submitError}</span>
+                      </motion.div>
+                    )}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Student Name</label>
                     <input type="text" name="studentName" value={formData.studentName} onChange={handleChange} placeholder="Enter student name" required
@@ -180,7 +198,7 @@ const Inquiry = () => {
                   {isSubmitting ? 'Submitting...' : 'Submit Inquiry'}
                   <Send className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                 </button>
-              </form>
+              </motion.form>
             )}
           </motion.div>
         </div>
