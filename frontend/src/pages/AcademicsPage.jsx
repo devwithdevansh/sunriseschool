@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import Section from '../components/Section.jsx';
 import Card from '../components/Card.jsx';
 import { BookOpen, FlaskConical, Languages, Calculator, Music, Dumbbell } from 'lucide-react';

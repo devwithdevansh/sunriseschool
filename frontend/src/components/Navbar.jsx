@@ -294,7 +294,7 @@ const Navbar = () => {
       </div>
 
       {/* Mobile Nav Side Drawer — rendered via Portal to escape fixed nav stacking context */}
-      {createPortal(
+      {typeof document !== 'undefined' && createPortal(
         <AnimatePresence>
           {isOpen && (
             <>
