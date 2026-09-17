@@ -121,7 +121,7 @@ const Result10GMPage = () => {
             </div>
 
             <h1 className="text-[clamp(2.5rem,6vw,5rem)] font-black leading-[1.2] text-slate-900 mb-6">
-              ધોરણ ૧૦ <span className="text-brand-orange">ગુજરાતી માધ્યમ</span><br />
+              ધોરણ ૧૦ <span className="text-brand-orange">ગુજરાતી માધ્યમ</span> <br />
               <span className="font-light text-slate-400">બોર્ડ પરિણામ</span>
             </h1>
 

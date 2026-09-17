@@ -13,7 +13,7 @@ const itemVariants = {
   visible: { y: 0, opacity: 1, filter: 'blur(0px)', transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] } }
 };
 
-const Stationary = () => {
+const Stationery = () => {
   return (
     <div className="min-h-screen bg-white text-gray-900 font-sans overflow-x-hidden selection:bg-brand-blue selection:text-white">
 
@@ -36,7 +36,7 @@ const Stationary = () => {
           >
             <span className="text-[10px] font-black tracking-[0.5em] uppercase text-orange-200 mb-6 block">Student Essentials</span>
             <h1 className="text-[clamp(3rem,8vw,9rem)] font-black tracking-tighter mb-8 uppercase leading-[0.82]">
-              Stationary & <br /><span className="text-orange-200 font-light">Uniform</span>
+              Stationery & <br /><span className="text-orange-200 font-light">Uniform</span>
             </h1>
             <p className="max-w-2xl mx-auto text-lg md:text-xl text-orange-100 font-medium leading-relaxed">
               Everything students need for a smooth academic journey and professional look.
@@ -173,4 +173,4 @@ const Stationary = () => {
   );
 };
 
-export default Stationary;
+export default Stationery;

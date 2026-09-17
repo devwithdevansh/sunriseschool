@@ -100,8 +100,8 @@ const HomePage = () => {
               transition={{ duration: 1.6, ease: [0.16, 1, 0.3, 1] }}
             >
               <h1 className="text-[clamp(4.5rem,10vw,8rem)] font-black text-brand-dark tracking-tighter leading-none mb-8 drop-shadow-sm">
-                SUNRISE<br />
-                <span className="text-brand-blue bg-clip-text text-transparent bg-gradient-to-r from-brand-blue to-brand-orange animate-gradient-xy">SCHOOL</span><br />
+                SUNRISE<span className="sr-only"> </span><br />
+                <span className="text-brand-blue bg-clip-text text-transparent bg-gradient-to-r from-brand-blue to-brand-orange animate-gradient-xy">SCHOOL</span><span className="sr-only"> </span><br />
                 RAJKOT
               </h1>
             </motion.div>

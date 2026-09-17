@@ -24,32 +24,39 @@ const AdmissionCTA = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
-            <motion.button 
+            <motion.a
+              href="tel:+918799140051"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="bg-white text-gray-900 px-10 py-4 rounded-full font-black text-lg transition-all hover:bg-gray-200 shadow-xl flex items-center gap-2"
             >
               <Phone size={20} />
               Contact Admissions
-            </motion.button>
-            
-            <motion.button 
+            </motion.a>
+
+            <motion.a
+              href="https://wa.me/918799140051"
+              target="_blank"
+              rel="noopener noreferrer"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="border-2 border-white/20 text-white px-10 py-4 rounded-full font-black text-lg transition-all hover:bg-white/10 flex items-center gap-2"
             >
               <MessageSquare size={20} />
               WhatsApp Us
-            </motion.button>
-            
-            <motion.button 
+            </motion.a>
+
+            <motion.a
+              href="https://www.google.com/maps/search/?api=1&query=Sunrise+School+Rajkot+Sadhuvasvani+Kunj+Road+Near+Railnagar"
+              target="_blank"
+              rel="noopener noreferrer"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="text-white/60 hover:text-white px-10 py-4 font-bold transition-all flex items-center gap-2"
             >
               <MapPin size={20} />
               Visit Campus
-            </motion.button>
+            </motion.a>
           </div>
         </motion.div>
       </div>

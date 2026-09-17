@@ -55,9 +55,9 @@ const Contact = () => {
   };
 
   const contactMethods = [
-    { id: 'phone', icon: Phone, title: 'Call Us', value: '8799140051', sub: 'Mon-Sat, 8am to 4pm', link: 'tel:8799140051', color: 'bg-brand-blue' },
+    { id: 'phone', icon: Phone, title: 'Call Us', value: '+91 87991 40051', sub: 'Mon-Sat, 8am to 4pm', link: 'tel:+918799140051', color: 'bg-brand-blue' },
     { id: 'email', icon: Mail, title: 'Email Us', value: 'sunriseschool8261@gmail.com', sub: 'Online support 24/7', link: 'mailto:sunriseschool8261@gmail.com', color: 'bg-brand-orange' },
-    { id: 'whatsapp', icon: MessageCircle, title: 'WhatsApp', value: 'Quick Chat', sub: 'Instant replies', link: '#', color: 'bg-green-500' }
+    { id: 'whatsapp', icon: MessageCircle, title: 'WhatsApp', value: 'Quick Chat', sub: 'Instant replies', link: 'https://wa.me/918799140051', color: 'bg-green-500' }
   ];
 
   return (
@@ -95,9 +95,9 @@ const Contact = () => {
                 </div>
                 <div className="w-px bg-gray-800" />
                 <div className="flex flex-col gap-2">
-                  <span className="text-gray-500 uppercase tracking-widest text-[10px] font-bold">Global Presence</span>
+                  <span className="text-gray-500 uppercase tracking-widest text-[10px] font-bold">Campus Address</span>
                   <div className="flex items-center gap-2 text-gray-300 font-medium">
-                    <Globe size={18} className="text-brand-blue" /> Sadhuvasvani Kunj road, near railnagar, rajkot
+                    <Globe size={18} className="text-brand-blue" /> Sadhuvasvani Kunj Road, Near Railnagar, Rajkot, Gujarat
                   </div>
                 </div>
               </div>
@@ -112,14 +112,10 @@ const Contact = () => {
                   initial={{ opacity: 0, y: 50 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.2 + index * 0.1, ease: [0.16, 1, 0.3, 1] }}
+                  target={method.id === 'whatsapp' ? '_blank' : undefined}
+                  rel={method.id === 'whatsapp' ? 'noopener noreferrer' : undefined}
                   onMouseEnter={() => setActiveCard(method.id)}
                   onMouseLeave={() => setActiveCard(null)}
-                  onClick={(e) => {
-                    if (method.id === 'whatsapp') {
-                      e.preventDefault();
-                      alert('WhatsApp messaging coming soon temporarily.');
-                    }
-                  }}
                   className={`absolute p-8 rounded-3xl border border-white/5 backdrop-blur-xl shadow-2xl transition-all duration-500 flex flex-col justify-between group
                     ${index === 0 ? 'top-0 right-10 w-72 h-48 bg-white/5 z-20' : ''}
                     ${index === 1 ? 'top-32 left-0 w-80 h-52 bg-white/10 z-30' : ''}
@@ -143,15 +139,11 @@ const Contact = () => {
             {/* Mobile Contact Cards Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:hidden">
               {contactMethods.map((method, index) => (
-                <a 
-                  href={method.link} 
-                  key={index} 
-                  onClick={(e) => {
-                    if (method.id === 'whatsapp') {
-                      e.preventDefault();
-                      alert('WhatsApp messaging coming soon temporarily.');
-                    }
-                  }}
+                <a
+                  href={method.link}
+                  key={index}
+                  target={method.id === 'whatsapp' ? '_blank' : undefined}
+                  rel={method.id === 'whatsapp' ? 'noopener noreferrer' : undefined}
                   className="bg-white/5 border border-white/10 p-6 rounded-2xl flex items-center gap-4 active:bg-white/10"
                 >
                   <div className={`w-12 h-12 rounded-full ${method.color} flex items-center justify-center shrink-0`}>

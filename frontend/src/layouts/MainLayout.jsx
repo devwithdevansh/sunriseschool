@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import Navbar from '../components/Navbar.jsx';
 import Footer from '../components/Footer.jsx';
+import Seo from '../components/Seo.jsx';
 
 // Scrolls to top on every route change
 const ScrollToTop = () => {
@@ -15,6 +16,7 @@ const ScrollToTop = () => {
 const MainLayout = () => {
   return (
     <div className="min-h-screen flex flex-col font-sans">
+      <Seo />
       <ScrollToTop />
       <Navbar />
 

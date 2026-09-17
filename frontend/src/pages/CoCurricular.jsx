@@ -84,27 +84,30 @@ const CoCurricular = () => {
           </motion.p>
 
           {/* Hero heading */}
-          <div className="overflow-hidden mb-6">
-            <motion.h1
-              initial={{ y: '100%' }}
-              animate={{ y: 0 }}
-              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
-              className="text-[clamp(3rem,10vw,8rem)] font-black uppercase tracking-tighter leading-[0.85] text-white"
-            >
-              Co-Curricular
-            </motion.h1>
-          </div>
-          <div className="overflow-hidden mb-12">
-            <motion.h1
-              initial={{ y: '100%' }}
-              animate={{ y: 0 }}
-              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.45 }}
-              className="text-[clamp(3rem,10vw,8rem)] font-black uppercase tracking-tighter leading-[0.85] text-transparent"
-              style={{ WebkitTextStroke: '1px rgba(255,255,255,0.25)' }}
-            >
-              Excellence
-            </motion.h1>
-          </div>
+          <h1 className="mb-12">
+            <div className="overflow-hidden mb-6">
+              <motion.span
+                initial={{ y: '100%' }}
+                animate={{ y: 0 }}
+                transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
+                className="block text-[clamp(3rem,10vw,8rem)] font-black uppercase tracking-tighter leading-[0.85] text-white"
+              >
+                Co-Curricular
+              </motion.span>
+            </div>
+            <span className="sr-only"> </span>
+            <div className="overflow-hidden">
+              <motion.span
+                initial={{ y: '100%' }}
+                animate={{ y: 0 }}
+                transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.45 }}
+                className="block text-[clamp(3rem,10vw,8rem)] font-black uppercase tracking-tighter leading-[0.85] text-transparent"
+                style={{ WebkitTextStroke: '1px rgba(255,255,255,0.25)' }}
+              >
+                Excellence
+              </motion.span>
+            </div>
+          </h1>
 
           {/* Subtext + CTA */}
           <motion.div

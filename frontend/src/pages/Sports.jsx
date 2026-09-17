@@ -96,21 +96,24 @@ const Sports = () => {
             Sunrise School · The Athletic Spirit
           </motion.p>
 
-          <div className="overflow-hidden mb-3">
-            <motion.h1 initial={{ y: '100%' }} animate={{ y: 0 }} transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.35 }}
-              className="text-[clamp(4rem,10vw,9rem)] font-black uppercase tracking-tighter leading-[0.85] text-white"
-            >
-              Sports &
-            </motion.h1>
-          </div>
-          <div className="overflow-hidden mb-12">
-            <motion.h1 initial={{ y: '100%' }} animate={{ y: 0 }} transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
-              className="text-[clamp(4rem,10vw,9rem)] font-black uppercase tracking-tighter leading-[0.85] text-transparent"
-              style={{ WebkitTextStroke: '2px rgba(255,255,255,0.3)' }}
-            >
-              Athletics
-            </motion.h1>
-          </div>
+          <h1 className="mb-12">
+            <div className="overflow-hidden mb-3">
+              <motion.span initial={{ y: '100%' }} animate={{ y: 0 }} transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.35 }}
+                className="block text-[clamp(4rem,10vw,9rem)] font-black uppercase tracking-tighter leading-[0.85] text-white"
+              >
+                Sports &
+              </motion.span>
+            </div>
+            <span className="sr-only"> </span>
+            <div className="overflow-hidden">
+              <motion.span initial={{ y: '100%' }} animate={{ y: 0 }} transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
+                className="block text-[clamp(4rem,10vw,9rem)] font-black uppercase tracking-tighter leading-[0.85] text-transparent"
+                style={{ WebkitTextStroke: '2px rgba(255,255,255,0.3)' }}
+              >
+                Athletics
+              </motion.span>
+            </div>
+          </h1>
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }}
             className="flex flex-col sm:flex-row gap-6 items-start"

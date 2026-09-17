@@ -64,8 +64,8 @@ const HigherSecondaryPage = () => {
               transition={{ duration: 1.2, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
               className="text-[clamp(3rem,7vw,5.5rem)] font-black text-white leading-[0.95] tracking-tight mb-8"
             >
-              Higher<br />
-              Secondary<br />
+              Higher <br />
+              Secondary <br />
               <span className="bg-gradient-to-r from-indigo-400 to-violet-400 bg-clip-text text-transparent">Commerce.</span>
             </motion.h1>
 
@@ -149,9 +149,9 @@ const HigherSecondaryPage = () => {
 
             <div className="pt-4 grid grid-cols-3 gap-6">
               {[
-                { val: '100%', label: 'Board Pass Rate' },
+                { val: 'GSEB', label: 'Board Affiliated' },
                 { val: 'CA/CS', label: 'Prep Included' },
-                { val: '15+', label: 'Years Legacy' }
+                { val: '10+', label: 'Years Legacy' }
               ].map((stat, i) => (
                 <div key={i} className="text-center">
                   <span className="text-3xl font-black text-slate-900">{stat.val}</span>

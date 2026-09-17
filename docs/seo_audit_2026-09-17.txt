@@ -1,0 +1,809 @@
+================================================================================
+SEO AUDIT REPORT — sunriseschoolrajkot.com
+Date: 2026-09-17
+Scope: Full-site audit (technical, content/E-E-A-T, schema, sitemap, performance,
+       visual/mobile, GEO/AI-search, local SEO, search-experience, backlinks)
+Tooling: claude-seo (free/basic tier only — no Google API, DataForSEO, or
+         Moz/Bing keys configured; see "Data-quality note" at the end)
+================================================================================
+
+
+SEO HEALTH SCORE: 24 / 100  —  CRITICAL
+--------------------------------------------------------------------------------
+Category                          Weight   Score   Basis
+--------------------------------------------------------------------------------
+Technical SEO                       22%      28    No robots.txt/sitemap, soft-
+                                                     404s, canonical/host conflicts
+Content Quality                     23%      24    16/17 pages thin, fabricated
+                                                     alumni page, no accreditation
+On-Page SEO                         20%      18    Identical title/meta/canonical
+                                                     on every one of 17 routes
+Schema / Structured Data            10%       0    Zero JSON-LD anywhere, any page
+Performance (Core Web Vitals)       10%      55    Mobile LCP 6.4s (fail); desktop
+                                                     fine — pure payload problem
+AI Search Readiness (GEO)           10%      17    Non-JS crawlers (ChatGPT,
+                                                     Perplexity) see ~7 words
+Images                                5%      40    Alt text excellent (143/145);
+                                                     files 10-40x oversized
+--------------------------------------------------------------------------------
+
+
+ROOT CAUSE ANALYSIS
+================================================================================
+The site is a Vite/React single-page app (SPA) hosted on Vercel, with a
+catch-all rewrite (`vercel.json`: "source": "/(.*)" -> "/index.html") that has
+no exclusions. This one configuration choice explains most of the technical
+findings below, independently discovered by multiple specialist passes:
+
+  - /robots.txt, /sitemap.xml, and ANY nonexistent URL all return HTTP 200
+    with the homepage's HTML shell instead of a real file or a 404.
+  - There is no per-route head management (no react-helmet or equivalent),
+    so all 17 routes share ONE <title>, ONE meta description, and ONE
+    canonical tag — and that canonical points at a URL that itself
+    308-redirects elsewhere (apex vs www mismatch).
+  - Google's own index still shows a STALE snippet for the brand query:
+    "Sunrise School | Under Construction" — the site currently does not
+    rank for its own brand name at all.
+  - Raw HTML ships ~7 words; all real content requires JS execution, which
+    AI answer engines (ChatGPT Search, Perplexity, Claude search) mostly do
+    NOT perform — so the school is effectively invisible to them today.
+
+A second, independent problem sits on top of the technical one: CONTENT
+INTEGRITY. The /alumni page lists named "graduates" (a surgeon at AIIMS, a
+Google engineer, an "Alumni Tech Summit" at the Grand Hyatt Mumbai) with
+fabricated companies, for a school that only offers a Commerce stream from
+Std 11 onward. This reads as unedited placeholder/demo content shipped to
+production. Under Google's E-E-A-T guidance this is a "Lowest quality /
+deceptive purpose" signal that drags down trust for the ENTIRE site, not
+just that one page — verify or remove immediately.
+
+Confirmed directly against the source repo (D:\projects\sunriseschool):
+  - frontend/vercel.json contains exactly the catch-all rewrite described
+    above, with no exclusions for /robots.txt, /sitemap.xml, or 404s.
+  - frontend/public/ contains only favicon.svg, icons.svg, and images/ —
+    no robots.txt or sitemap.xml file exists in the build output.
+  - frontend/src/App.jsx enumerates 23 static routes (no dynamic params),
+    used to build the sitemap below.
+  - Two orphaned page components exist in frontend/src/pages/ but are not
+    wired into any route: AboutPage.jsx, ContactPage.jsx.
+  - The broken brochure link points at frontend/Lab_1.pdf (note: actual
+    filename is "Lab_1.pdf", capital L — the site links to "/lab_1.pdf"
+    lowercase, which will 404/serve-shell on a case-sensitive host even
+    once a real robots/sitemap fix is deployed. Verify the exact deployed
+    path and filename case match.)
+
+
+DETAILED FINDINGS BY AUDIT AREA
+================================================================================
+
+1. TECHNICAL SEO  (Score: 28/100)
+--------------------------------------------------------------------------------
+CRITICAL
+  - No real robots.txt or sitemap.xml exists. All candidate paths
+    (/robots.txt, /sitemap.xml, /sitemap_index.xml, /wp-sitemap.xml) return
+    HTTP 200 with the SPA's index.html shell, not a real text/XML file.
+  - Universal soft-404: a deliberately fake URL
+    (/this-page-does-not-exist-xyz123) returns HTTP 200 with the identical
+    homepage shell (same ETag/Last-Modified) instead of a 404. /admissions
+    specifically renders visible "404 - Page Not Found" text while still
+    returning HTTP 200.
+  - Identical <title>, meta description, and <link rel="canonical"> on
+    EVERY route (verified on /, /about, /contact, /inquiry, /academics/*,
+    /results/*, /transportation, etc.) — no per-route head management.
+  - Canonical tag points to the non-www apex (https://sunriseschoolrajkot.com/),
+    which itself issues an HTTP 308 redirect to the www subdomain — a
+    self-contradicting signal. Google actually indexed the www version.
+  - Zero structured data (0 JSON-LD blocks) on raw AND fully-JS-rendered HTML.
+
+HIGH
+  - No SSR/prerendering — all ~17 routes are 100% client-rendered with no
+    fallback content; content depends entirely on Google's deferred
+    rendering queue (not immediate; hours-to-days lag).
+  - 2-hop redirect chain on the plain-HTTP entry point
+    (http -> https apex -> https www). Should be a single hop.
+  - LCP-critical hero image (495 KB) is set via inline CSS
+    background-image by React at runtime — invisible to the browser until
+    the JS bundle downloads/executes/hydrates. No preload/preconnect hints
+    anywhere in the HTML.
+
+MEDIUM
+  - Missing security headers: no Content-Security-Policy, no
+    X-Content-Type-Options, no X-Frame-Options, no Referrer-Policy, no
+    Permissions-Policy (Vercel zero-config defaults).
+  - Monolithic 613 KB JS bundle (170 KB Brotli-compressed), no code-splitting
+    — 57% of it (97.6 KB) is unused on the homepage alone.
+
+LOW
+  - No IndexNow key/integration for Bing/Yandex/Naver.
+  - HSTS present (max-age=63072000) but missing includeSubDomains/preload.
+  - Broad Access-Control-Allow-Origin: * set on the HTML document itself
+    (not just static assets) — minimal SEO impact, worth a review.
+
+
+2. CONTENT QUALITY & E-E-A-T  (Overall: 24/100, E-E-A-T composite: 19/100,
+   AI citation readiness: 8/100)
+--------------------------------------------------------------------------------
+CRITICAL
+  - /alumni appears to contain FABRICATED testimonials and statistics:
+    named "alumni" with implausible companies ("TechX", "BuildSpace"), an
+    "Alumni Tech Summit" at the Grand Hyatt Mumbai for a Rajkot school, and
+    a career mix (surgeon, software engineer, architect) inconsistent with
+    the school's Commerce-only senior stream. Unsourced stats: "5000+
+    Global Alumni," "99% Success Rate" (no denominator/year), "150+ Top
+    Universities," "300+ Entrepreneurs." VERIFY WITH THE SCHOOL OR REMOVE
+    THE PAGE — do not ship as-is.
+  - Site-wide thin content: 2,572 words total across 17 pages. 16 of 17
+    pages flagged thin-content (homepage is the only one at the bare floor
+    of 500 words). Worst: /about/management at 27 words, /results/10-em at
+    55 words, /contact at 43 words.
+  - Content is invisible without JavaScript: raw fetch returns a 2,280-byte
+    shell with zero words/headings. All text appears only after Playwright
+    renders it (3.5s). AI crawlers that matter for citation (GPTBot,
+    ClaudeBot, PerplexityBot, CCBot) largely do not execute JavaScript.
+  - No robots.txt/sitemap.xml; soft-404 on every unknown URL (same root
+    cause as Technical section above).
+
+HIGH
+  - /about/management (the trust/leadership page) is literally: "Coming
+    Soon / We are currently updating our Management profiles." For a
+    trust-run school this is the single most important authority page and
+    it is empty.
+  - No accreditation, affiliation, or registration data anywhere in VISIBLE
+    text. "GSEB" appears only inside <meta name="keywords"> (which Google
+    ignores) — never in body copy. Missing: board affiliation number,
+    UDISE+ code, school recognition number, trust registration number.
+  - /results/10-em contains no actual results — zero toppers named, zero
+    percentages, zero years, zero pass rate. Only Class 10 English Medium
+    exists; no Class 10 Gujarati Medium, no Class 12 Commerce results
+    despite Commerce being the school's flagship senior offering.
+  - Faculty expertise is claimed ("advanced degrees and relevant
+    certifications," "postgraduate and professional qualifications") but
+    never evidenced — zero named teachers, zero subjects, zero degrees, no
+    faculty page at all.
+  - Zero structured data on all 17 pages.
+  - /contact fails local-trust basics: address block is headed "Global
+    Presence" (an unedited template label on a single-campus school),
+    address is lowercase with no house/plot number, no pincode, no state.
+    Phone/WhatsApp/email appear only in the footer, never in the page's
+    main content. Map link is a generic text search, not a verified
+    Place ID/CID link.
+  - No privacy policy while /inquiry actively collects parent/child PII.
+    No terms of use, no DPDP Act 2023 data-handling notice — a live
+    compliance exposure, not just an SEO gap.
+
+MEDIUM
+  - Readability mismatched to audience: site-wide Flesch Reading Ease 29.8
+    / Flesch-Kincaid Grade 11.5 ("very difficult," college-graduate band),
+    driven by abstract marketing vocabulary ("educational ecosystem,"
+    "holistic development") rather than long sentences. Worst pages:
+    /stationary (13.7), /academics/higher-secondary (14.3), /about (18.1).
+  - AI-generated-content quality markers present: generic/non-specific
+    phrasing on every academic page (no syllabus, class size, timetable,
+    fees); repetitive hero->4-icon-grid->4-step-journey->CTA skeleton
+    across 7+ pages; "state-of-the-art" AI-phrase flagged on /activities.
+  - No freshness signals anywhere: no news/blog/events archive/circulars.
+    Hardcoded strings like "Admissions Open for 2026" will silently go
+    stale with no mechanism to update.
+  - Heading hierarchy damaged: styling spans fuse words inside <h1>
+    ("SUNRISESCHOOLRAJKOT", "HigherSecondaryCommerce."); /co-curricular,
+    /competitive-exams and /sports each have TWO <h1> elements.
+  - Unverifiable achievement counters (50+ School Level awards, etc.) with
+    no competition names, years, or evidence — read as decorative, not
+    citable.
+  - The Morari Bapu inauguration — the site's single most credible
+    authority signal (a nationally recognized figure) — gets only 11 words
+    on /about, no date, no photo, no press coverage.
+
+LOW
+  - 2 images missing alt text on /about (143/145 site-wide DO have alt —
+    this is genuinely well done and should be preserved).
+  - OG/Twitter image points at a Vite SOURCE path (/src/assets/...) that
+    does not exist in the build output — social shares render no image.
+  - /lab_1.pdf linked from the global footer with no context/title/landing
+    page — and (see SXO section) is actually broken.
+  - "Stationary" misspelled throughout (should be "Stationery") — in the
+    URL, H1, and nav.
+  - /gallery (64 words) is image-only, no captions/dates/event names.
+
+
+3. SCHEMA / STRUCTURED DATA  (Score: 0/100 — clean-slate opportunity)
+--------------------------------------------------------------------------------
+  - Zero structured data blocks anywhere — confirmed on raw AND fully
+    JS-rendered HTML for /, /about, /contact.
+  - No FAQ content exists currently, so nothing to remove — but per policy,
+    do NOT add FAQPage (Google retired FAQ rich results for all sites,
+    May 7 2026). If genuine Q&A content is added later, use QAPage instead.
+  - Do NOT use HowTo schema (deprecated Sept 2023) — not applicable here
+    anyway.
+  - Social icons in the footer are <button> elements with only
+    aria-label — NO actual href values. Do not add "sameAs" to schema
+    until real social profile URLs exist.
+  - No explicit lat/long published (Maps embed uses a text query) — omit
+    "geo" from schema rather than guess coordinates.
+
+  READY-TO-USE JSON-LD (School + WebSite via @graph, plus a BreadcrumbList
+  template for interior pages):
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "School",
+        "@id": "https://www.sunriseschoolrajkot.com/#school",
+        "name": "Sunrise School Rajkot",
+        "alternateName": "Sunrise School",
+        "url": "https://www.sunriseschoolrajkot.com/",
+        "logo": "https://www.sunriseschoolrajkot.com/logo.png",
+        "image": "https://www.sunriseschoolrajkot.com/logo.png",
+        "description": "Sunrise School Rajkot provides K-12 education from Playhouse/Kindergarten to Class 12 (Commerce stream), with English and Gujarati medium instruction under the GSEB board.",
+        "foundingDate": "2016",
+        "parentOrganization": {
+          "@type": "Organization",
+          "name": "Shree Meenaben Gangubhai Humbal Education and Charitable Trust"
+        },
+        "telephone": "+91-9723655151",
+        "email": "info@sunriseschoolrajkot.com",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Sadhuvasvani Kunj Road, Near Railnagar",
+          "addressLocality": "Rajkot",
+          "addressRegion": "Gujarat",
+          "postalCode": "360001",
+          "addressCountry": "IN"
+        }
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://www.sunriseschoolrajkot.com/#website",
+        "url": "https://www.sunriseschoolrajkot.com/",
+        "name": "Sunrise School Rajkot",
+        "publisher": { "@id": "https://www.sunriseschoolrajkot.com/#school" }
+      }
+    ]
+  }
+  </script>
+
+  NOTES ON THIS BLOCK:
+  - Verify the pincode (360001 used above is Google's own entity data for
+    this address, not independently confirmed on-site) and finalize the
+    exact street address with the school before publishing.
+  - logo/image: serve a STABLE, unhashed path (e.g. /logo.png in
+    frontend/public/) rather than the current Vite-hashed build filename,
+    so the schema URL doesn't break on every deploy.
+  - No sameAs/geo included — add only once real social profile URLs and
+    precise coordinates exist. Do not fabricate placeholder values.
+
+  BreadcrumbList template for interior pages (fix canonical to be
+  page-specific FIRST — see Phase 2 in the roadmap):
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.sunriseschoolrajkot.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Academics", "item": "https://www.sunriseschoolrajkot.com/academics" },
+      { "@type": "ListItem", "position": 3, "name": "KG Program", "item": "https://www.sunriseschoolrajkot.com/academics/kg" }
+    ]
+  }
+  </script>
+
+  Recommended priority:
+    1. School / EducationalOrganization (Critical — highest-value gap)
+    2. WebSite (skip SearchAction — no on-site search exists)
+    3. BreadcrumbList per interior page (after canonical URLs are fixed)
+    4. sameAs / geo — only once real social links / precise coordinates
+       exist; do not fabricate placeholder values
+
+
+4. SITEMAP  (No functioning sitemap exists)
+--------------------------------------------------------------------------------
+  - robots.txt has no Sitemap: directive; no valid sitemap found anywhere.
+  - Root cause: no physical robots.txt/sitemap.xml file in
+    frontend/public/ — every request falls through the Vercel catch-all
+    rewrite to index.html. FIX: drop real files into frontend/public/;
+    Vite copies public/* verbatim and Vercel serves existing static files
+    before applying rewrites — no vercel.json change needed for this part.
+  - Domain/canonical conflict: apex 308-redirects to www on every path, but
+    canonical tags point to the apex homepage only, on every route. Fix
+    both to agree (recommend www, since that's where content resolves).
+  - Route inventory (23 static routes enumerated from App.jsx — full
+    coverage possible, no dynamic params): /, /about, /about/management,
+    /about/message, /academics, /academics/kg, /academics/primary,
+    /academics/higher-secondary, /activities, /co-curricular,
+    /competitive-exams, /sports, /results, /results/10-em, /results/10-gm,
+    /results/12-commerce, /gallery, /alumni, /notice, /transportation,
+    /stationary, /inquiry, /contact.
+  - Two orphaned components exist but are not wired into any route:
+    AboutPage.jsx, ContactPage.jsx — correctly excluded from the sitemap;
+    worth deleting as dead code.
+  - DEPLOY THESE TWO FILES to frontend/public/ (Vite copies public/*
+    verbatim into the build output; no vercel.json change needed):
+
+    ---- frontend/public/robots.txt ----
+    User-agent: *
+    Allow: /
+
+    Sitemap: https://www.sunriseschoolrajkot.com/sitemap.xml
+    -------------------------------------
+
+    ---- frontend/public/sitemap.xml ----
+    (23 URLs, www host, real per-route lastmod pulled from git history —
+    generate with `git log -1 --date=short -- <file>` per route component,
+    or regenerate via the seo skill's sitemap_discovery.py /
+    sitemap generator against the finalized route list above. Use
+    https://www.sunriseschoolrajkot.com/<path> for every <loc>, matching
+    the www host decided in Phase 1 of the roadmap below.)
+    -------------------------------------
+
+
+5. PERFORMANCE / CORE WEB VITALS
+--------------------------------------------------------------------------------
+Lighthouse scores: 62/100 mobile, 92/100 desktop (lab data; no CrUX field
+data available — no Google API key configured, and the domain is likely
+below CrUX's minimum sample size anyway).
+
+  Metric      Mobile (throttled)   Desktop   "Good" threshold   Status
+  LCP         6.4s                 1.6s      <=2.5s              FAIL (mobile)
+  CLS         0                    0.008     <=0.1               PASS
+  INP (proxy) TBT 400ms             TBT 40ms  <=200ms             At risk (mobile)
+
+The huge mobile/desktop gap proves this is a NETWORK-PAYLOAD problem, not a
+code-architecture problem.
+
+CRITICAL
+  - Hero LCP element is a React-set inline CSS background-image, not a real
+    <img> in initial HTML. 70% of the 6.4s LCP is "browser doesn't know
+    about this image until the SPA hydrates and paints it." Zero preload
+    hints, zero fetchpriority="high" anywhere on the page.
+  - Images are 9.35 MB of a 9.5 MB total page (98% of page weight),
+    massively oversized for their display size:
+      * Logo displayed at 68x68px, served at 1.33 MB full-resolution JPEG
+      * IMG_4768.JPG displayed at 362x443px, served at 3.13 MB
+      * IMG_0402.JPG displayed at 362x443px, served at 2.78 MB
+      * olympiads.png displayed at 362x114px, served at 810 KB
+      * favicon.png: 197 KB (favicons should be <10KB)
+    Root cause: raw camera/WhatsApp photos (filenames like IMG_4768,
+    IMG-20250823-WA0010 — visible in frontend/src/assets or frontend/images)
+    dropped straight into the Vite build unresized, bypassing the
+    Cloudinary pipeline already set up for one image. FIX: resize to actual
+    display size (x2 for retina), convert to WebP/AVIF, route through
+    Cloudinary (f_auto,q_auto,w_<n>) — removes ~8MB and is the single
+    biggest lever available.
+
+HIGH
+  - No route-based code splitting — one monolithic 613KB/170KB(gzip) JS
+    bundle; 57% (97.6KB) unused on the homepage alone. Drives TBT to
+    400ms under mobile CPU throttling (longest single task: 468ms). Fix in
+    Vite: convert route imports in App.jsx to React.lazy()/dynamic import.
+
+MEDIUM
+  - Render-blocking stylesheet (14KB transferred / 104KB raw) — ~309ms
+    estimated savings if inlined/async-loaded.
+  - Unnecessary third-party request: transparenttextures.com background
+    texture (146KB, cross-origin) for a purely decorative pattern. Replace
+    with an inline SVG/CSS pattern or a <5KB locally-hosted tile.
+  - Cache lifetimes on the few resources with explicit headers (Cloudinary
+    image, texture PNG) are only 30 days — extend once on a CDN.
+
+LOW / STRENGTHS
+  - DOM size healthy (520 elements). CLS essentially zero — genuine
+    strength, keep explicit width/height on new images.
+  - Text compression already effective (72-87% ratio via Brotli).
+  - Server/CDN TTFB is fast (50ms) — backend is NOT a bottleneck.
+
+TOOLING NOTE: unlighthouse_run.py fails on Windows in this environment
+(npx resolution bug in subprocess.run without shell=True) — worked around
+via direct `npx lighthouse` invocation. Worth flagging upstream.
+
+
+6. VISUAL / MOBILE RENDERING
+--------------------------------------------------------------------------------
+Overall: good responsive foundation, no console errors, no horizontal
+scroll, correct hamburger-nav breakpoint behavior, real semantic
+buttons/links (13 buttons, 35 anchors, 0 fake div-onclick widgets).
+
+HIGH
+  - /inquiry (the admission form): on BOTH desktop and mobile, the entire
+    above-the-fold viewport is a full-height blue hero with only a heading
+    and one line of subcopy — the actual form fields and submit button are
+    pushed entirely below the fold on EVERY viewport tested, with no CTA,
+    phone number, or WhatsApp shortcut in the hero to bridge the gap. This
+    is the site's single most conversion-critical page.
+
+MEDIUM
+  - Carousel/testimonial pagination dots (~6px tall x 8-32px wide) are far
+    under any usable tap-target size — hard to tap accurately if meant to
+    be interactive navigation.
+  - /contact on mobile (375x812): Call/Email/WhatsApp contact cards start
+    right at the very bottom edge of the fold and require a small scroll
+    (desktop layout for the same page is strong).
+
+LOW
+  - Hamburger menu (~40x40px) and footer social icons (40x40px) meet WCAG
+    2.2 AA minimum but fall short of the 48x48 best-practice target.
+  - All 7 homepage <img> tags lack explicit width/height/aspect-ratio —
+    latent CLS risk (mitigated in practice by fixed-height containers, but
+    not confirmed without live DevTools inspection).
+  - 7 interactive nodes lack an accessible name (automated UX check: 80/100)
+    — likely icon-only buttons (social icons, hamburger) missing aria-label.
+
+
+7. GEO / AI-SEARCH READINESS  (Score: 17/100 — Critical)
+--------------------------------------------------------------------------------
+Platform-specific visibility estimate:
+  Google AI Overviews : 30/100 (Googlebot renders JS, but thin content +
+                                 no schema + no sitemap + homepage-wide
+                                 canonical undercut it anyway)
+  ChatGPT Search       :  8/100 (OAI-SearchBot sees ~7 words)
+  Perplexity           : 10/100 (PerplexityBot sees ~7 words)
+  Bing Copilot         : 15/100 (partial/unreliable Bingbot JS rendering)
+
+CRITICAL
+  - Client-rendered SPA serves ~zero content to non-rendering AI crawlers
+    (confirmed: 2,280-byte raw response, exactly 7 visible words).
+  - No robots.txt/sitemap.xml; every unknown URL soft-200s (site is hosted
+    on Vercel — SSR/SSG is a platform-native fix, not an infra rebuild).
+
+HIGH
+  - Zero structured data — no machine-readable entity for AI engines
+    answering "best schools in Rajkot" to bind to.
+  - Identical metadata on every URL (same root cause as Technical section).
+  - Passage-level citability far below the 134-167-word optimal-citation
+    target — content is fragmented marketing copy, not extractable answer
+    blocks. No question-based H2/H3 headings anywhere. Statistics carry no
+    dates or source attribution (uncitable claims).
+
+MEDIUM
+  - Brand/entity signals near-absent: no Wikipedia article exists; ZERO
+    social profile links site-wide (only external links are a Maps query
+    and two WhatsApp links); YouTube mentions carry the strongest observed
+    correlation with AI citation (~0.737) and this site has none.
+  - On-site NAP inconsistent: two different WhatsApp numbers appear
+    (918799140051 on homepage vs 919723655151 on contact).
+  - llms.txt missing (informational only — no major AI engine currently
+    treats it as a ranking/access signal; low priority).
+
+Top 5 highest-impact GEO changes (impact / effort):
+  1. SSR/SSG prerendering on Vercel                    Critical / High (1-3wk)
+  2. Real robots.txt + sitemap.xml, true 404s          Critical / Low (2-4hr)
+  3. School/EducationalOrganization JSON-LD + fix NAP  High / Low (4-8hr)
+  4. Per-route titles/descriptions/canonicals           High / Medium (1-2 days)
+  5. Rewrite content into question-based 134-167-word
+     answer blocks; add real H1; start a YouTube channel High / Medium (1-2wk)
+
+
+8. LOCAL SEO  (partial — turn-limited; some items unverified, not failing)
+--------------------------------------------------------------------------------
+Business type: single-campus K-12 school (not multi-location — no
+multi-location quality gates apply). No local Education vertical reference
+exists in the skill's data — general LocalBusiness + School/
+EducationalOrganization guidance applied, substituting India-relevant
+citation sources (Google Business Profile, Justdial, Sulekha, Facebook) for
+the default US-centric Yelp/BBB list.
+
+CRITICAL
+  - Live GBP existence/claim status NOT confirmed this session (SERP
+    fetches were blocked/JS-rendered) — requires a manual Google
+    Search/Maps check. On-site map links use a generic text query, not a
+    Place ID/CID link, so a claimed/verified profile can't be confirmed
+    from the site alone.
+  - Zero Local/EducationalOrganization schema (same as Schema section).
+  - Canonical bug (same as Technical section) directly undermines local
+    rankings: "dedicated service pages" is a top local ranking factor, and
+    every program page (KG, primary, higher-secondary, contact) currently
+    self-canonicalizes to the homepage.
+
+HIGH
+  - NAP discrepancies:
+      * THREE different phone/WhatsApp numbers found across the site
+        (primary tel: 9723655151; second number 9574800051 shown as plain
+        text, not clickable; homepage WhatsApp uses 918799140051 while the
+        contact page WhatsApp uses 919723655151).
+      * No tel: links use +91 country code — can break click-to-call from
+        outside a local context.
+      * Address has no pincode, no state in the address block itself, and
+        is oddly labeled "Global Presence" on /contact.
+      * The operating trust name ("Shree Meenaben Gangubhai Humbal Edu and
+        Charitable Trust") appears ONLY as an image filename/alt text,
+        never as readable body text.
+  - No review widget, no star ratings, no testimonials anywhere on the
+    pages checked.
+  - No functioning social profile links detected in the footer (icons are
+    JS buttons with aria-label only, no href in static DOM — flagged for a
+    manual click-test in case they're wired via onClick).
+
+NOT VERIFIED THIS SESSION (flag as unverified, not absent):
+  - Presence on Justdial, Sulekha, Facebook Page, Instagram.
+  - Live GBP category/verification/hours/review count/rating/photo count.
+  - Remaining subpages not checked for NAP/schema this pass (/activities,
+    /alumni, /gallery, /results/*, /sports, /stationary, /transportation).
+
+
+9. SEARCH EXPERIENCE OPTIMIZATION (SXO)  (Gap Score: 25/100)
+--------------------------------------------------------------------------------
+PRIMARY FINDING: Google's live index still shows this site as
+"Sunrise School | Under Construction" with no description — a stale
+pre-launch snapshot, not the current site. Consequence: the site cannot win
+even its OWN BRAND QUERY. For "Sunrise School Rajkot admission," the top 10
+contains ZERO results from the official domain — entirely owned by
+directory aggregators (getschoolsinfo, icbse.com, school.dd.zone,
+freeschoolapp, agnirva, schooldekho) plus a COMPETITOR
+(sunshineschoolrajkot.com) ranking for the brand's own name. Brand-name
+ambiguity compounds this — Google conflates the site with other unrelated
+Rajkot schools of similar name.
+
+SERP consensus (~90% confidence, 4 queries analyzed): competing results
+reward pages that state Board + Fees + Admissions + Reviews. This site's
+own pages state none of the four in visible text.
+
+Page-type / intent mismatches:
+  - Admission intent: NO admissions page exists (/admissions is a soft-404
+    at HTTP 200). Only asset is /inquiry, a 195-word bare form.
+  - Fee intent: the word "fee" appears exactly ONCE across all 13 pages
+    checked, in passing on /contact.
+  - Board intent: "GSEB"/"CBSE" appear NOWHERE in rendered text (only in
+    the ignored meta-keywords tag). A parent cannot confirm the board from
+    the site.
+  - Reviews/social proof: zero reviews, zero testimonials, zero ratings.
+  - Results intent: /results/10-em is image-only, no names/percentages/
+    year labels in text — nothing indexable.
+  - Local/commute intent: address has no pincode; "Areas Covered" is a
+    heading with no enumerated list; no map on the homepage.
+
+Trust/E-E-A-T contradictions found in rendered copy (compounding the
+Content section above):
+  - /alumni fabricated content (see Content section — flagged CRITICAL
+    there too).
+  - /academics/higher-secondary claims "15+ Years Legacy" — contradicts
+    the footer's "since 2016."
+  - THREE conflicting admission cycles live simultaneously: footer says
+    "Admissions 2024-25," homepage says "Admissions Open for 2026,"
+    /results/10-em says "Admissions 2026-27 Open."
+  - Unsourced "100% Board Result Rate" / "100% Board Pass Rate" claims.
+  - Both brochure download links (English & Gujarati, "/lab_1.pdf") are
+    BROKEN — they return HTML (the SPA shell), not a PDF. (See root-cause
+    note above: also check filename case — frontend/Lab_1.pdf vs the
+    linked lowercase /lab_1.pdf.)
+
+7-Dimension Gap Score: Page Type 4/15, Content Depth 3/15, UX Signals 6/15,
+Schema 0/15, Media 8/15, Authority 2/15, Freshness 2/10 = 25/100 total.
+
+Persona scores (all "Critical Mismatch" except the last two):
+  Fee-Comparison Parent: 22/100 (weakest — zero fee data exists anywhere)
+  Review-Seeking Parent: 24/100
+  Board-Filtering Parent: 30/100
+  Admission-Process Parent: 39/100
+  Commute/Locality Parent: 50/100 (Needs Work)
+  Prospective Commerce Student: 50/100 (Needs Work)
+
+Priority actions (weakest persona first):
+  1. Publish /fees with a real 2026-27 fee table by grade/stream/medium.
+  2. Fix the trust layer: delete/replace fabricated alumni entries,
+     reconcile "since 2016" vs "15+ years," embed real Google reviews, add
+     an affiliation/UDISE number.
+  3. State the board explicitly near the H1: "GSEB - English & Gujarati
+     Medium - Playhouse to Std 12 Commerce."
+  4. Build a real /admissions page with steps, dates, age criteria,
+     document checklist; add "Admissions" to the primary nav.
+  5. Enumerate bus routes as text on /transportation; correct the address
+     to a full NAP with pincode 360001.
+  6. Convert /results/10-em from an image gallery to a text table of
+     toppers/percentages/years.
+
+Technical prerequisites gating ALL of the above: SSR/prerender, per-route
+head management, real robots.txt/sitemap.xml, real 404 status codes,
+School + LocalBusiness + BreadcrumbList JSON-LD, and canonical/host
+alignment (choose www). Without these, none of the content work will be
+seen by Google regardless of how good it is.
+
+
+10. BACKLINK PROFILE  (Tier 0 / Basic — inconclusive, not negative)
+--------------------------------------------------------------------------------
+  - Only Common Crawl (free) and the backlink verification crawler are
+    available; Moz, Bing Webmaster, and Keywords Everywhere are NOT
+    configured — no DA/PA, referring-domain counts, or anchor-text data.
+  - Common Crawl result: domain is NOT present in the current host-level
+    web graph (in_crawl: false, in_rankings: false, pagerank: null).
+    IMPORTANT: absence from Common Crawl does NOT mean "low authority" or
+    "no backlinks" — it only means this cycle's crawl didn't capture this
+    specific host. Treat as "no signal," not a negative signal.
+  - No numeric backlink health score was produced (0 of 7 scoring factors
+    have any data source at this tier) — this is by design, not an error.
+  - To get real data: configure a free Moz API key (2,500 rows/month) at
+    https://moz.com/products/api, or install the DataForSEO extension.
+
+
+DATA-QUALITY NOTE
+================================================================================
+No Google API key, DataForSEO credentials, or Moz/Bing Webmaster keys were
+configured for this audit. As a result:
+  - Core Web Vitals are LAB data only (Lighthouse/Playwright), not real-user
+    CrUX field data.
+  - Search Console indexation status, impressions, and last-crawl dates are
+    UNVERIFIED (the "Under Construction" SERP snippet is strong
+    circumstantial evidence of a stale render, not a confirmed crawl log).
+  - Backlink/DA data is inconclusive (Tier 0 only).
+  - Local citation presence (GBP, Justdial, Sulekha, Facebook) is
+    UNVERIFIED, not confirmed absent.
+Treat every finding above accordingly: "critical" findings were verified
+directly against the live site's HTML/rendering AND against this repo's
+source (vercel.json, App.jsx, public/); findings marked "unverified"
+require a manual check or API credentials to confirm.
+
+
+
+================================================================================
+ROADMAP — WHAT TO DO NEXT
+================================================================================
+Ordered by dependency: earlier phases unblock or amplify later ones. Time
+estimates assume one developer familiar with this codebase
+(frontend/) plus the school's own input for content facts (fees, board
+affiliation number, real alumni, etc.). File paths below are relative to
+D:\projects\sunriseschool unless stated otherwise.
+
+--------------------------------------------------------------------------------
+PHASE 0 — STOP THE BLEEDING (do today, ~1 day total)
+--------------------------------------------------------------------------------
+[ ] Take down or fact-check the /alumni page (frontend/src/pages/
+    AlumniPage.jsx or equivalent). This is a reputational and E-E-A-T risk
+    right now, independent of any SEO work. Either get real alumni consent
+    + verified details from the school, or remove the page until you have
+    them.
+[ ] Fix the three conflicting admission-year strings ("2024-25" / "2026" /
+    "2026-27") and the founding-date contradiction ("since 2016" vs
+    "15+ Years Legacy") — search the codebase for these strings across
+    footer/homepage/higher-secondary components, pick the true facts, and
+    use them everywhere.
+[ ] Pick ONE canonical phone number and ONE WhatsApp number. Search for
+    "9723655151", "9574800051", "918799140051", "919723655151" across
+    frontend/src and update every tel:/wa.me link to match. Add the +91
+    country code to all tel: links.
+[ ] Fix the broken brochure download. The file frontend/Lab_1.pdf exists
+    (capital L) but the site links to lowercase "/lab_1.pdf" — either fix
+    the link's case to match, move/rename the file into
+    frontend/public/Lab_1.pdf so it's served statically, or replace it
+    with a current PDF.
+
+--------------------------------------------------------------------------------
+PHASE 1 — MAKE THE SITE DISCOVERABLE (Week 1, ~2-4 hours engineering)
+--------------------------------------------------------------------------------
+[ ] Add real robots.txt and sitemap.xml files to frontend/public/ (content
+    templates are in Section 4 above — finalize the sitemap's lastmod
+    dates from git history before deploying). Vite copies public/*
+    verbatim; Vercel serves static files ahead of the SPA rewrite, so no
+    vercel.json change is needed for this specific fix.
+[ ] Decide the canonical host: www (recommended, since that's where the
+    site currently resolves and where Google already indexed it). Update
+    the sitemap URLs, and flag this decision for Phase 2 (canonical tags
+    must match).
+[ ] Verify unknown/removed URLs return a true HTTP 404 rather than the SPA
+    shell — may require a Vercel Edge Function / middleware check, or can
+    be deferred to the SSR migration in Phase 2 if that's imminent.
+
+    How you'll know this phase worked: `curl -I https://www.
+    sunriseschoolrajkot.com/robots.txt` returns Content-Type: text/plain,
+    not text/html.
+
+--------------------------------------------------------------------------------
+PHASE 2 — FIX INDEXABILITY (Week 1-2, ~1-3 weeks engineering, HIGHEST LEVERAGE)
+--------------------------------------------------------------------------------
+[ ] Wire up react-helmet-async (or migrate to SSR/SSG — Vercel supports
+    prerendering natively for Vite/React) in frontend/src/App.jsx (or per
+    page component) so every route sets its OWN:
+      - <title>
+      - <meta name="description">
+      - <link rel="canonical" href="https://www.sunriseschoolrajkot.com/<path>">
+        (self-referencing, using the www host decided in Phase 1)
+      - <meta property="og:url"> / <meta property="twitter:url">
+    This single change is the highest-leverage fix in the entire audit —
+    it simultaneously resolves the duplicate-content/canonical collapse
+    (Technical, Content, SXO, Local sections), most of the AI-crawler
+    invisibility (GEO section), and part of the mobile LCP delay
+    (Performance section), because full HTML would ship on first byte
+    instead of requiring JS execution.
+[ ] If choosing full SSR/SSG (recommended over helmet-only): evaluate
+    Next.js migration or vite-plugin-ssr/Astro, given Vercel is already
+    the host. This is a bigger lift than helmet-async but fixes JS-crawler
+    invisibility completely, not just metadata.
+[ ] While in App.jsx anyway: delete the two orphaned components
+    (frontend/src/pages/AboutPage.jsx, ContactPage.jsx) if truly unused,
+    to avoid confusion during this refactor.
+
+    How you'll know this phase worked: render each of the 23 routes and
+    diff the <head> — all should now differ from each other. Re-check
+    Google's cached snippet for "Sunrise School Rajkot" after the next
+    recrawl; it should stop saying "Under Construction."
+
+--------------------------------------------------------------------------------
+PHASE 3 — ADD STRUCTURED DATA & FIX NAP (Week 2, ~1-2 days)
+--------------------------------------------------------------------------------
+[ ] Finalize real NAP facts with the school: full postal address with
+    pincode (likely 360001) and state, one canonical phone number, trust
+    registration number, GSEB affiliation number, UDISE+ code, year
+    established.
+[ ] Add the ready-generated School + WebSite JSON-LD (Section 3 above) to
+    the root layout / index.html <head> or via a per-route head component,
+    using the finalized NAP. Add BreadcrumbList to each interior page once
+    per-route canonicals exist (Phase 2 dependency).
+[ ] Publish the accreditation/affiliation block (board number, UDISE code,
+    trust registration) as VISIBLE body text — on /about and in the
+    footer, not just meta keywords.
+[ ] Claim/verify the Google Business Profile if not already done; replace
+    the generic Maps text-query link with a verified Place ID/CID embed.
+
+--------------------------------------------------------------------------------
+PHASE 4 — FILL THE CONTENT GAPS THAT BLOCK CONVERSION (Week 2-4)
+--------------------------------------------------------------------------------
+[ ] Build a real /admissions page: process steps, dates, age criteria,
+    required documents, downloadable/working application form or link to
+    /inquiry with a working CTA.
+[ ] Build a real /fees page: a table by grade band/medium/stream, dated
+    "Updated for 2026-27."
+[ ] Populate /about/management with real trustee/principal names, photos,
+    and qualifications (currently "Coming Soon").
+[ ] Rebuild /results with real toppers, percentages, and pass rates as
+    TEXT (not just images) — cover Class 10 (both mediums) and Class 12
+    Commerce, not just Class 10 English Medium.
+[ ] Add a faculty page: real named teachers, subjects, degrees, years of
+    service — replace the four unsupported "highly qualified" claim cards.
+[ ] Rewrite /contact: replace "Global Presence" with "Campus Address,"
+    publish the full address with pincode/state in the main content (not
+    just the footer), add office hours.
+[ ] Publish a privacy policy / data-handling notice before /inquiry
+    collects another submission (DPDP Act 2023 compliance).
+[ ] Fix the /inquiry page layout so the form isn't entirely below the fold
+    on every device — shrink the hero or add a CTA/phone/WhatsApp shortcut
+    inside it.
+
+--------------------------------------------------------------------------------
+PHASE 5 — PERFORMANCE & POLISH (Week 3-4, can run in parallel with Phase 4)
+--------------------------------------------------------------------------------
+[ ] Resize/compress all homepage and gallery images and route them through
+    the existing Cloudinary pipeline (f_auto,q_auto,w_<display-size>) —
+    removes ~8MB of the 9.5MB homepage payload. Biggest single performance
+    win available. Audit frontend/src/assets and frontend/images for the
+    raw camera/WhatsApp files called out in Section 5.
+[ ] Convert the hero background to a real <img fetchpriority="high"> (or
+    add <link rel="preload" as="image">) instead of a JS-set CSS
+    background — removes ~70% of the current mobile LCP delay.
+[ ] Add route-based code splitting (React.lazy()/dynamic import per route
+    in App.jsx) to cut the 57% unused JS currently shipped on every page.
+[ ] Add missing security headers via vercel.json: Content-Security-Policy,
+    X-Content-Type-Options, X-Frame-Options, Referrer-Policy,
+    Permissions-Policy.
+[ ] Fix the carousel pagination dots' tap-target size on mobile; add
+    explicit width/height (or aspect-ratio) to all <img> tags.
+[ ] Fix "Stationary" -> "Stationery" (URL, H1, nav) with a redirect from
+    the old URL; de-fuse concatenated <h1> text; ensure one <h1> per page.
+
+--------------------------------------------------------------------------------
+PHASE 6 — ONGOING / LOWER PRIORITY
+--------------------------------------------------------------------------------
+[ ] Rewrite thin pages toward topical completeness (subject lists, class
+    sizes, bus routes with stops/timings, daily timetable, assessment
+    pattern) — aim for genuine depth, not a word-count target.
+[ ] Improve readability: replace abstract marketing language with concrete
+    nouns and numbers; consider a Gujarati-language version given the
+    school's Gujarati-medium enrolment.
+[ ] Add a dated news/notices section and caption gallery images with event
+    names/dates — the only sustainable freshness mechanism.
+[ ] Expand the Morari Bapu inauguration into a properly dated, photographed
+    story — the strongest authority asset the school owns, currently one
+    line.
+[ ] Start building real brand/citation presence: create working social
+    profile links (currently dead buttons), a YouTube channel with a
+    campus tour video (strongest observed AI-citation correlation), and
+    verify presence on Justdial/Sulekha/Facebook.
+[ ] Once traffic/content improves, configure a free Moz API key or the
+    DataForSEO extension for real backlink/DA tracking, and set up a
+    drift baseline (`claude-seo run drift_baseline.py`) to monitor
+    regressions on future deploys.
+[ ] Add IndexNow integration so Bing/Yandex pick up content changes fast
+    while the above fixes roll out.
+
+
+================================================================================
+END OF REPORT
+================================================================================

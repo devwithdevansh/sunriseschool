@@ -121,7 +121,7 @@ const Result10EMPage = () => {
             </div>
 
             <h1 className="text-[clamp(2.5rem,6vw,5rem)] font-black uppercase tracking-tighter leading-[0.9] text-slate-900 mb-6">
-              Class 10 <span className="text-brand-orange">EM</span><br />
+              Class 10 <span className="text-brand-orange">EM</span> <br />
               <span className="font-light text-slate-400">Results</span>
             </h1>
 

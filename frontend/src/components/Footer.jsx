@@ -24,12 +24,13 @@ const Footer = () => {
       { label: 'Sports', to: '/sports' },
       { label: 'Co-Curricular', to: '/co-curricular' },
       { label: 'Transportation', to: '/transportation' },
-      { label: 'Stationary', to: '/stationary' },
+      { label: 'Stationery', to: '/stationery' },
     ],
     Connect: [
       { label: 'Contact Us', to: '/contact' },
       { label: 'Admission Inquiry', to: '/inquiry' },
       { label: 'Activities', to: '/activities' },
+      { label: 'Privacy Policy', to: '/privacy-policy' },
     ],
   };
 
@@ -72,9 +73,9 @@ const Footer = () => {
             </div>
             {/* Contact pills */}
             <div className="space-y-3 pt-2">
-              <a href="tel:8799140051" className="flex items-center gap-3 text-sm text-gray-500 hover:text-brand-orange transition-colors group">
+              <a href="tel:+918799140051" className="flex items-center gap-3 text-sm text-gray-500 hover:text-brand-orange transition-colors group">
                 <Phone size={14} className="text-brand-orange shrink-0" />
-                8799140051
+                +91 87991 40051
               </a>
               <a href="mailto:sunriseschool8261@gmail.com" className="flex items-center gap-3 text-sm text-gray-500 hover:text-brand-orange transition-colors group">
                 <Mail size={14} className="text-brand-orange shrink-0" />
@@ -112,7 +113,7 @@ const Footer = () => {
           <div className="absolute inset-0 opacity-5 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:20px_20px]" />
           <div className="flex flex-col md:flex-row items-center justify-between gap-8 relative z-10">
             <div>
-              <p className="text-[10px] font-black tracking-[0.5em] uppercase text-brand-orange mb-2">Admissions 2024-25</p>
+              <p className="text-[10px] font-black tracking-[0.5em] uppercase text-brand-orange mb-2">Admissions 2026-27</p>
               <h3 className="text-2xl md:text-3xl font-black text-white uppercase tracking-tight">Ready to Join Sunrise School?</h3>
             </div>
             <Link to="/inquiry"

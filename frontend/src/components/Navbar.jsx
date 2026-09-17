@@ -49,7 +49,7 @@ const MENU_ITEMS = [
     path: '/facilities',
     dropdown: [
       { name: 'Transportation', path: '/transportation' },
-      { name: 'Stationary', path: '/stationary' },
+      { name: 'Stationery', path: '/stationery' },
     ]
   },
   { name: 'Gallery', path: '/gallery' },
@@ -272,10 +272,10 @@ const Navbar = () => {
               <ChevronDown size={14} className="group-hover:rotate-180 transition-transform duration-300" />
             </button>
             <div className="absolute top-full right-0 mt-3 w-48 bg-white border border-gray-100 shadow-2xl rounded-xl overflow-hidden opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform origin-top translate-y-2 group-hover:translate-y-0 z-50">
-              <a href="/lab_1.pdf" download="English_Brochure.pdf" className="block px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-gray-600 hover:text-brand-orange hover:bg-gray-50 border-b border-gray-50 transition-colors">
+              <a href="/Lab_1.pdf" download="English_Brochure.pdf" className="block px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-gray-600 hover:text-brand-orange hover:bg-gray-50 border-b border-gray-50 transition-colors">
                 English
               </a>
-              <a href="/lab_1.pdf" download="Gujarati_Brochure.pdf" className="block px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-gray-600 hover:text-brand-orange hover:bg-gray-50 transition-colors">
+              <a href="/Lab_1.pdf" download="Gujarati_Brochure.pdf" className="block px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-gray-600 hover:text-brand-orange hover:bg-gray-50 transition-colors">
                 Gujarati
               </a>
             </div>
@@ -391,10 +391,10 @@ const Navbar = () => {
 
                   <div className="pt-8 pb-6 flex flex-col space-y-3 px-2">
                     <span className="text-[10px] font-black uppercase text-gray-400 tracking-[0.3em] mb-1">Download Brochure</span>
-                    <a href="/lab_1.pdf" download="English_Brochure.pdf" className="btn-premium w-full py-4 text-[11px] font-bold uppercase tracking-widest shadow-md flex justify-center text-center">
+                    <a href="/Lab_1.pdf" download="English_Brochure.pdf" className="btn-premium w-full py-4 text-[11px] font-bold uppercase tracking-widest shadow-md flex justify-center text-center">
                       English Mode
                     </a>
-                    <a href="/lab_1.pdf" download="Gujarati_Brochure.pdf" className="w-full py-4 text-[11px] font-bold uppercase tracking-widest shadow-sm border border-gray-200 text-gray-600 hover:text-brand-orange hover:bg-gray-50 flex justify-center text-center rounded-lg transition-colors">
+                    <a href="/Lab_1.pdf" download="Gujarati_Brochure.pdf" className="w-full py-4 text-[11px] font-bold uppercase tracking-widest shadow-sm border border-gray-200 text-gray-600 hover:text-brand-orange hover:bg-gray-50 flex justify-center text-center rounded-lg transition-colors">
                       Gujarati Mode
                     </a>
                   </div>
