@@ -5,15 +5,15 @@ export const DEFAULT_OG_IMAGE = `${SITE_URL}/logo.jpg`
 // title/description per route. Breadcrumb labels feed the BreadcrumbList JSON-LD.
 export const ROUTE_SEO = {
   '/': {
-    title: 'Sunrise School Rajkot | GSEB English & Gujarati Medium School',
+    title: 'Sunrise School Rajkot | Best School in Rajkot, Near Railnagar',
     description:
-      'Sunrise School Rajkot offers GSEB-affiliated English and Gujarati medium education from Playhouse/Kindergarten to Class 12 Commerce. Admissions open for 2026-27.',
+      'Sunrise School Rajkot is a GSEB-affiliated English and Gujarati medium school near Railnagar, Rajkot, offering education from Playhouse/Kindergarten to Class 12 Commerce. Admissions open for 2026-27.',
     breadcrumb: 'Home',
   },
   '/about': {
-    title: 'About Us | Sunrise School Rajkot',
+    title: 'About Us | One of the Best Schools in Rajkot',
     description:
-      'Learn about Sunrise School Rajkot’s mission, vision, and journey since 2016, run by Shree Meenaben Gangubhai Humbal Education and Charitable Trust.',
+      'Sunrise School Rajkot, located near Railnagar, is one of the best schools in Rajkot. Learn about our mission, vision, and journey since 2016, run by Shree Meenaben Gangubhai Humbal Education and Charitable Trust.',
     breadcrumb: 'About',
   },
   '/about/management': {
@@ -132,5 +132,5 @@ export const ROUTE_SEO = {
 export const DEFAULT_SEO = {
   title: 'Sunrise School Rajkot',
   description:
-    'Sunrise School Rajkot offers GSEB-affiliated English and Gujarati medium education from Playhouse to Class 12 Commerce.',
+    'Sunrise School Rajkot, located near Railnagar, offers GSEB-affiliated English and Gujarati medium education from Playhouse to Class 12 Commerce.',
 }

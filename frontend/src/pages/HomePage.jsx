@@ -113,7 +113,7 @@ const HomePage = () => {
               transition={{ duration: 1.2, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
               className="text-xl md:text-2xl text-gray-500 mb-12 max-w-2xl mx-auto font-medium leading-relaxed"
             >
-              Empowering students with knowledge, discipline, and excellence for a future of unlimited possibilities.
+              Empowering students in Rajkot with knowledge, discipline, and excellence for a future of unlimited possibilities.
             </motion.p>
 
             <motion.div

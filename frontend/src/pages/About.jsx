@@ -80,7 +80,7 @@ const About = () => {
             <motion.span variants={itemVariants} className="text-[10px] font-black tracking-[0.4em] uppercase mb-6 block text-brand-orange">Overview</motion.span>
             <motion.h2 variants={itemVariants} className="text-sm font-bold tracking-[0.3em] uppercase mb-10 text-gray-400">Who We Are</motion.h2>
             <motion.p variants={itemVariants} className="text-3xl md:text-5xl font-light leading-snug text-gray-800">
-              Sunrise School Rajkot provides quality education from kindergarten to higher secondary level. We focus on{' '}
+              Sunrise School Rajkot is one of the best schools in Rajkot, located near Railnagar, providing quality education from kindergarten to higher secondary level. We focus on{' '}
               <span className="font-bold border-b-2 border-brand-orange text-gray-900">discipline</span>, academic excellence, and overall student development.
             </motion.p>
           </motion.div>
