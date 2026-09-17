@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Mail, Phone, MapPin, Send, ChevronDown, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -16,6 +16,7 @@ const itemVariants = {
 const Inquiry = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
   const [formData, setFormData] = useState({
     studentName: '',
     parentName: '',
@@ -32,6 +33,7 @@ const Inquiry = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setSubmitError(null);
     try {
       const response = await fetch('https://sunriseschool.onrender.com/api/inquiries', {
         method: 'POST',
@@ -51,16 +53,45 @@ const Inquiry = () => {
       } else {
         const errorData = await response.json();
         console.error("Submission failed:", errorData);
-        // Handle Zod validation errors format
-        let errorMessage = errorData.message || 'Unknown error';
-        if (errorData.errors && errorData.errors.length > 0) {
-          errorMessage = errorData.errors.map(e => `${e.path}: ${e.message}`).join(', ');
+        
+        const tryParseZodJSON = (str) => {
+          try {
+            const parsed = JSON.parse(str);
+            if (Array.isArray(parsed)) {
+              return parsed.map(err => {
+                const field = err.path && err.path.length > 0 ? err.path[err.path.length - 1] : 'Input';
+                return `• ${String(field).charAt(0).toUpperCase() + String(field).slice(1)}: ${err.message || 'Invalid format'}`;
+              }).join('\n');
+            }
+          } catch (e) {}
+          return null;
+        };
+
+        let finalMessage = errorData.message || 'Unknown error occurred. Please try again.';
+
+        if (errorData.errors && Array.isArray(errorData.errors)) {
+          finalMessage = errorData.errors.map(err => {
+            if (err.message) {
+              const parsed = tryParseZodJSON(err.message);
+              if (parsed) return parsed;
+              return `• ${err.path && err.path !== 'unknown' ? err.path + ': ' : ''}${err.message}`;
+            }
+            if (typeof err === 'string') {
+              const parsed = tryParseZodJSON(err);
+              return parsed || `• ${err}`;
+            }
+            return '• Invalid input provided.';
+          }).join('\n');
+        } else if (errorData.message) {
+          const parsed = tryParseZodJSON(errorData.message);
+          if (parsed) finalMessage = parsed;
         }
-        alert("Failed to submit inquiry:\n" + errorMessage);
+
+        setSubmitError(finalMessage);
       }
     } catch (error) {
       console.error("Error submitting inquiry:", error);
-      alert("Error submitting inquiry. Please check your connection to the backend.");
+      setSubmitError("Error connecting to server. Please check your connection.");
     } finally {
       setIsSubmitting(false);
     }
@@ -125,8 +156,8 @@ const Inquiry = () => {
                 <button onClick={() => setIsSubmitted(false)} className="px-8 py-4 bg-brand-orange text-white font-black text-sm uppercase tracking-widest rounded-2xl hover:bg-orange-600 transition-all shadow-lg hover:shadow-brand-orange/30 hover:-translate-y-0.5">Submit Another Inquiry</button>
               </motion.div>
             ) : (
-              <form className="space-y-6" onSubmit={handleSubmit}>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <motion.form key="form" onSubmit={handleSubmit} className="space-y-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Student Name</label>
                     <input type="text" name="studentName" value={formData.studentName} onChange={handleChange} placeholder="Enter student name" required
@@ -180,7 +211,7 @@ const Inquiry = () => {
                   {isSubmitting ? 'Submitting...' : 'Submit Inquiry'}
                   <Send className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                 </button>
-              </form>
+              </motion.form>
             )}
           </motion.div>
         </div>
@@ -195,8 +226,8 @@ const Inquiry = () => {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
-              { icon: Phone, label: 'Call Us', value: '+91 87991 40051', color: 'bg-brand-blue' },
-              { icon: Mail, label: 'Email Us', value: 'sunriseschool8261@gmail.com', color: 'bg-brand-orange' },
+              { icon: Phone, label: 'Call Us', value: '+91 97236 55151 / 95748 00051', color: 'bg-brand-blue' },
+              { icon: Mail, label: 'Email Us', value: 'info@sunriseschoolrajkot.com', color: 'bg-brand-orange' },
               { icon: MapPin, label: 'Visit Us', value: 'Sadhuvasvani Kunj Road, Near Railnagar, Rajkot, Gujarat', color: 'bg-brand-blue' },
             ].map((info, index) => (
               <motion.div key={index}
@@ -254,6 +285,39 @@ const Inquiry = () => {
           </motion.div>
         </div>
       </section>
+
+      {/* Error Modal */}
+      <AnimatePresence>
+        {submitError && (
+          <motion.div 
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-sm"
+            onClick={() => setSubmitError(null)}
+          >
+            <motion.div 
+              initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.9, y: 20 }}
+              className="bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl relative overflow-hidden flex flex-col items-center"
+              onClick={e => e.stopPropagation()}
+            >
+              <div className="w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center mb-6">
+                <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-black text-gray-900 mb-4 uppercase tracking-tight text-center">Action Required</h3>
+              <div className="text-gray-600 mb-8 whitespace-pre-wrap font-semibold text-sm leading-relaxed text-left w-full bg-red-50/50 p-4 rounded-xl border border-red-100">
+                {submitError}
+              </div>
+              <button 
+                onClick={() => setSubmitError(null)}
+                className="w-full py-4 bg-brand-orange text-white rounded-xl font-black text-sm uppercase tracking-widest hover:bg-orange-600 transition-all active:scale-95 shadow-lg shadow-brand-orange/20"
+              >
+                Got it
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
     </div>
   );

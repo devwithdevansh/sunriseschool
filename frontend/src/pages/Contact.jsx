@@ -5,6 +5,7 @@ import { Phone, Mail, MapPin, MessageCircle, ArrowRight, Send, Globe, Clock, Che
 const Contact = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
   const [activeCard, setActiveCard] = useState(null);
   const [formData, setFormData] = useState({
     studentName: '',
@@ -22,6 +23,7 @@ const Contact = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setSubmitError(null);
     try {
       const response = await fetch('https://sunriseschool.onrender.com/api/inquiries', {
         method: 'POST',
@@ -40,24 +42,54 @@ const Contact = () => {
         });
       } else {
         const errorData = await response.json();
-        let errorMessage = errorData.message || 'Unknown error';
-        if (errorData.errors && errorData.errors.length > 0) {
-          errorMessage = errorData.errors.map(err => `${err.path}: ${err.message}`).join(', ');
+        
+        const tryParseZodJSON = (str) => {
+          try {
+            const parsed = JSON.parse(str);
+            if (Array.isArray(parsed)) {
+              return parsed.map(err => {
+                const field = err.path && err.path.length > 0 ? err.path[err.path.length - 1] : 'Input';
+                return `• ${String(field).charAt(0).toUpperCase() + String(field).slice(1)}: ${err.message || 'Invalid format'}`;
+              }).join('\n');
+            }
+          } catch (e) {}
+          return null;
+        };
+
+        let finalMessage = errorData.message || 'Unknown error occurred. Please try again.';
+
+        if (errorData.errors && Array.isArray(errorData.errors)) {
+          finalMessage = errorData.errors.map(err => {
+            if (err.message) {
+              const parsed = tryParseZodJSON(err.message);
+              if (parsed) return parsed;
+              return `• ${err.path && err.path !== 'unknown' ? err.path + ': ' : ''}${err.message}`;
+            }
+            if (typeof err === 'string') {
+              const parsed = tryParseZodJSON(err);
+              return parsed || `• ${err}`;
+            }
+            return '• Invalid input provided.';
+          }).join('\n');
+        } else if (errorData.message) {
+          const parsed = tryParseZodJSON(errorData.message);
+          if (parsed) finalMessage = parsed;
         }
-        alert("Failed to send message:\n" + errorMessage);
+
+        setSubmitError(finalMessage);
       }
     } catch (error) {
       console.error("Error submitting contact form:", error);
-      alert("Error sending message. Please check your connection.");
+      setSubmitError("Error connecting to server. Please check your connection.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const contactMethods = [
-    { id: 'phone', icon: Phone, title: 'Call Us', value: '+91 87991 40051', sub: 'Mon-Sat, 8am to 4pm', link: 'tel:+918799140051', color: 'bg-brand-blue' },
-    { id: 'email', icon: Mail, title: 'Email Us', value: 'sunriseschool8261@gmail.com', sub: 'Online support 24/7', link: 'mailto:sunriseschool8261@gmail.com', color: 'bg-brand-orange' },
-    { id: 'whatsapp', icon: MessageCircle, title: 'WhatsApp', value: 'Quick Chat', sub: 'Instant replies', link: 'https://wa.me/918799140051', color: 'bg-green-500' }
+    { id: 'phone', icon: Phone, title: 'Call Us', value: '+91 97236 55151 / 95748 00051', sub: 'Mon-Sat, 8am to 4pm', link: 'tel:+919723655151', color: 'bg-brand-blue' },
+    { id: 'email', icon: Mail, title: 'Email Us', value: 'info@sunriseschoolrajkot.com', sub: 'Online support 24/7', link: 'mailto:info@sunriseschoolrajkot.com', color: 'bg-brand-orange' },
+    { id: 'whatsapp', icon: MessageCircle, title: 'WhatsApp', value: 'Quick Chat', sub: 'Instant replies', link: 'https://wa.me/919723655151', color: 'bg-green-500' }
   ];
 
   return (
@@ -267,6 +299,39 @@ const Contact = () => {
 
         </div>
       </section>
+
+      {/* Error Modal */}
+      <AnimatePresence>
+        {submitError && (
+          <motion.div 
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-sm"
+            onClick={() => setSubmitError(null)}
+          >
+            <motion.div 
+              initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.9, y: 20 }}
+              className="bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl relative overflow-hidden flex flex-col items-center"
+              onClick={e => e.stopPropagation()}
+            >
+              <div className="w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center mb-6">
+                <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-black text-gray-900 mb-4 uppercase tracking-tight text-center">Action Required</h3>
+              <div className="text-gray-600 mb-8 whitespace-pre-wrap font-semibold text-sm leading-relaxed text-left w-full bg-red-50/50 p-4 rounded-xl border border-red-100">
+                {submitError}
+              </div>
+              <button 
+                onClick={() => setSubmitError(null)}
+                className="w-full py-4 bg-brand-orange text-white rounded-xl font-black text-sm uppercase tracking-widest hover:bg-orange-600 transition-all active:scale-95 shadow-lg shadow-brand-orange/20"
+              >
+                Got it
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
     </div>
   );

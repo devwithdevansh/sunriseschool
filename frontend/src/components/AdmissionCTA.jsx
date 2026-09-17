@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Phone, MessageSquare, MapPin } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const AdmissionCTA = () => {
   return (
@@ -24,18 +25,19 @@ const AdmissionCTA = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
-            <motion.a
-              href="tel:+918799140051"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="bg-white text-gray-900 px-10 py-4 rounded-full font-black text-lg transition-all hover:bg-gray-200 shadow-xl flex items-center gap-2"
-            >
-              <Phone size={20} />
-              Contact Admissions
-            </motion.a>
+            <Link to="/inquiry">
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="bg-white text-gray-900 px-10 py-4 rounded-full font-black text-lg transition-all hover:bg-gray-200 shadow-xl flex items-center gap-2"
+              >
+                <Phone size={20} />
+                Contact Admissions
+              </motion.div>
+            </Link>
 
             <motion.a
-              href="https://wa.me/918799140051"
+              href="https://wa.me/919723655151"
               target="_blank"
               rel="noopener noreferrer"
               whileHover={{ scale: 1.05 }}

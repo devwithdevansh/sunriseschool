@@ -73,13 +73,13 @@ const Footer = () => {
             </div>
             {/* Contact pills */}
             <div className="space-y-3 pt-2">
-              <a href="tel:+918799140051" className="flex items-center gap-3 text-sm text-gray-500 hover:text-brand-orange transition-colors group">
+              <a href="tel:+919723655151" className="flex items-center gap-3 text-sm text-gray-500 hover:text-brand-orange transition-colors group">
                 <Phone size={14} className="text-brand-orange shrink-0" />
-                +91 87991 40051
+                +91 97236 55151 / 95748 00051
               </a>
-              <a href="mailto:sunriseschool8261@gmail.com" className="flex items-center gap-3 text-sm text-gray-500 hover:text-brand-orange transition-colors group">
+              <a href="mailto:info@sunriseschoolrajkot.com" className="flex items-center gap-3 text-sm text-gray-500 hover:text-brand-orange transition-colors group">
                 <Mail size={14} className="text-brand-orange shrink-0" />
-                sunriseschool8261@gmail.com
+                info@sunriseschoolrajkot.com
               </a>
               <div className="flex items-start gap-3 text-sm text-gray-500">
                 <MapPin size={14} className="text-brand-orange shrink-0 mt-0.5" />
