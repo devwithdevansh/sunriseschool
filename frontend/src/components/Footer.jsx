@@ -83,7 +83,7 @@ const Footer = () => {
               </a>
               <div className="flex items-start gap-3 text-sm text-gray-500">
                 <MapPin size={14} className="text-brand-orange shrink-0 mt-0.5" />
-                Sadhuvasvani Kunj road, near railnagar, rajkot
+                Sadhuvasvani Kunj Road, Near Railnagar, Ami Residency, Rajkot 360001
               </div>
             </div>
           </div>
