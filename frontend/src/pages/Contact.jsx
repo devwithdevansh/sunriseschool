@@ -129,7 +129,7 @@ const Contact = () => {
                 <div className="flex flex-col gap-2">
                   <span className="text-gray-500 uppercase tracking-widest text-[10px] font-bold">Campus Address</span>
                   <div className="flex items-center gap-2 text-gray-300 font-medium">
-                    <Globe size={18} className="text-brand-blue" /> Sadhuvasvani Kunj Road, Near Railnagar, Rajkot, Gujarat
+                    <Globe size={18} className="text-brand-blue" /> Sadhuvasvani Kunj Road, Near Railnagar, Rajkot 360001
                   </div>
                 </div>
               </div>
@@ -283,7 +283,7 @@ const Contact = () => {
                 <MapPin size={24} />
               </div>
               <h3 className="text-xl font-black uppercase tracking-tight mb-2">Sunrise School</h3>
-              <p className="text-gray-600 font-medium leading-relaxed mb-6">Sadhuvasvani Kunj road,<br/>near railnagar, rajkot</p>
+              <p className="text-gray-600 font-medium leading-relaxed mb-6">Sadhuvasvani Kunj Road,<br/>Near Railnagar, Rajkot 360001</p>
               <a href="https://maps.google.com/?q=Sunrise+School+Rajkot" target="_blank" rel="noreferrer" className="text-[10px] font-black uppercase tracking-[0.2em] text-brand-orange hover:text-brand-blue transition-colors flex items-center gap-2">
                 Open in Google Maps <ArrowRight size={14} />
               </a>

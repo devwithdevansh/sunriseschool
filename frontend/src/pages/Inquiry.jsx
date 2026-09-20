@@ -228,7 +228,7 @@ const Inquiry = () => {
             {[
               { icon: Phone, label: 'Call Us', value: '+91 97236 55151 / 95748 00051', color: 'bg-brand-blue' },
               { icon: Mail, label: 'Email Us', value: 'info@sunriseschoolrajkot.com', color: 'bg-brand-orange' },
-              { icon: MapPin, label: 'Visit Us', value: 'Sadhuvasvani Kunj Road, Near Railnagar, Rajkot, Gujarat', color: 'bg-brand-blue' },
+              { icon: MapPin, label: 'Visit Us', value: 'Sadhuvasvani Kunj Road, Near Railnagar, Rajkot 360001', color: 'bg-brand-blue' },
             ].map((info, index) => (
               <motion.div key={index}
                 initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
